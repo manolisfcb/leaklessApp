@@ -1,0 +1,38 @@
+# Strict static analysis for leakless.
+#
+# Builds on the recommended Flutter lint set and tightens a few rules that
+# matter for a long-lived, multi-developer codebase.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
+    - "lib/generated/**"
+
+linter:
+  rules:
+    # Style / correctness
+    always_declare_return_types: true
+    avoid_print: true
+    prefer_single_quotes: true
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_final_locals: true
+    prefer_relative_imports: true
+    require_trailing_commas: true
+    sort_child_properties_last: true
+    unawaited_futures: true
+    use_key_in_widget_constructors: true
+    # API hygiene
+    avoid_dynamic_calls: true
+    cancel_subscriptions: true
+    close_sinks: true
+    directives_ordering: true
+    unnecessary_lambdas: true
+    use_super_parameters: true
