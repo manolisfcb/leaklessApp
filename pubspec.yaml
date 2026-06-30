@@ -47,6 +47,16 @@ dependencies:
   shared_preferences: ^2.5.5
   logging: ^1.3.0
 
+# The newest path_provider plugin implementations (foundation ≥2.5.0 / android
+# ≥2.3.0) ship native build hooks (objective_c / jni). On the current Dart SDK
+# `dart compile` rejects build hooks, which breaks build_runner's bootstrap
+# ("'dart compile' does not support build hooks"). Pinning to the last pre-hook
+# versions keeps codegen working; they are fully API-compatible. Remove once the
+# toolchain supports build hooks during codegen.
+dependency_overrides:
+  path_provider_foundation: 2.4.4
+  path_provider_android: 2.2.23
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

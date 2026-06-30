@@ -44,10 +44,10 @@ abstract final class AppTheme {
           color: colors.textPrimary,
         ),
       ),
-      bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadii.sheetRadius),
+        shape: RoundedRectangleBorder(borderRadius: AppRadii.sheetRadius),
       ),
       // Brand color extensions consumed via `context.colors`.
       extensions: const [AppColors.light],
