@@ -31,7 +31,7 @@ abstract final class DemoData {
       id: 'demo-partner',
       householdId: householdId,
       userId: 'demo-partner',
-      displayName: 'Sofía',
+      displayName: 'Marien',
     ),
   ];
 
