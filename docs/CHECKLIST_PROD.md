@@ -69,9 +69,9 @@
   - Incluye aportar a una meta (RPC o `update` transaccional). Revisa cómo la
     UI llama a `contribute` hoy.
 - [x] **T5 — `SupabaseSubscriptionsRepository` + cableado.** ✅ **APROBADO (2026-07-01)**
-- [ ] **T6 — `SupabaseProfileRepository` + cableado.** ⏭️ **SIGUIENTE**
+- [x] **T6 — `SupabaseProfileRepository` + cableado.** ✅ **APROBADO (2026-07-01)**
   - Leer/editar `profiles`; subir avatar al bucket `avatars` (Storage). 
-- [ ] **T7 — 🔴 Checkpoint HUMANO: smoke test e2e en simulador.**
+- [ ] **T7 — 🔴 Checkpoint HUMANO: smoke test e2e en simulador.** ⏭️ **SIGUIENTE**
   - Registrar un usuario nuevo → verificar en el dashboard de Supabase que el
     trigger creó `profiles` + `households` + `household_members` + 6
     `categories` → registrar un gasto rápido → confirmar que aterriza en la
@@ -342,4 +342,134 @@ defecto, así que la lista real puede venir vacía hasta que se inserten filas.
 
 ---
 
-### T6 — _(pendiente: el próximo agente escribe aquí)_
+### T6 — `SupabaseProfileRepository` — ✅ APROBADO (2026-07-01)
+
+**Por qué esta tarea ahora:** es el último repo de la Fase 1 antes del checkpoint
+humano (T7). A diferencia de T1–T5 (lecturas), `profiles` **se edita** y además
+implica **Storage** (avatar en el bucket `avatars`), así que hubo que resolver
+lectura + escritura + subida de archivo. El `profiles` es per-usuario (RLS
+`id = auth.uid()`), no per-household, así que no depende del `householdId`.
+
+**Qué hice:**
+- Nuevo mapper [profile_mapper.dart](../lib/src/features/profile/data/profile_mapper.dart)
+  con `ProfileMapper.fromRow` (snake_case → dominio: `display_name`,
+  `household_id`, `avatar_url`, `currency`, `created_at`, `updated_at`), igual que
+  `TransactionMapper`.
+- Extendí el interface `ProfileRepository` en [profile_repository.dart](../lib/src/features/profile/data/profile_repository.dart)
+  de sólo `fetchCurrentProfile()` a **3 métodos**: `fetchCurrentProfile()`,
+  `updateProfile({displayName, currency})` y
+  `uploadAvatar({bytes, fileExtension})`. Los dos de escritura **devuelven el
+  `UserProfile` fresco** (mismo contrato que `transactions.add`, que devuelve la
+  fila insertada).
+- `SupabaseProfileRepository`:
+  - `fetchCurrentProfile()` lee la fila `profiles` del `auth.currentUser` con
+    `maybeSingle()` (tolera "aún sin fila"), como `household.fetchCurrentHousehold`.
+  - `updateProfile()` hace `update(...).eq('id', userId).select().single()`,
+    seteando sólo los campos no nulos vía **null-aware map entries**
+    (`'display_name': ?displayName`). Si no hay nada que actualizar, re-lee y
+    devuelve el perfil actual (evita un `update` vacío que PostgREST rechaza).
+  - `uploadAvatar()` sube los bytes a `avatars/<user-id>/avatar.<ext>` con
+    `upsert: true`, genera un **signed URL** y lo persiste en `avatar_url`; luego
+    devuelve el perfil actualizado.
+  - Todo envuelto en `ServerException`; helpers `_requireUserId` (→
+    `AuthFailureException` si no hay sesión) y `_requireProfile` (→
+    `NotFoundException`).
+- Actualicé el `MockProfileRepository` para implementar los 3 métodos con estado
+  **mutable** en memoria (antes era `const`), igual que `MockTransactions`/
+  `MockGoals` mutan y reflejan el cambio, para que la UI de ajustes vea las
+  ediciones antes de tener backend.
+- Cablée [profile_providers.dart](../lib/src/features/profile/application/profile_providers.dart)
+  para elegir Supabase vs mock con `supabaseEnabledProvider` (antes estaba clavado
+  en `const MockProfileRepository()`).
+
+**Decisiones / trampas:**
+- **Bucket privado ⟹ guardo un signed URL en `avatar_url`.** El bucket `avatars`
+  es privado (`public = false` en la migración), así que `getPublicUrl` no sirve.
+  Guardo un signed URL de **1 año** que se refresca en cada subida; así el
+  `ProfileBubble` (que usa `NetworkImage(avatarUrl)`) funciona **de inmediato**
+  sin infra nueva. **Tradeoff honesto:** el URL caduca. El hardening correcto es
+  resolver un signed URL fresco **en cada lectura** (o hacer el bucket público);
+  lo dejo anotado como follow-up §1.x, análogo al `budgets.spent`/`goals` de
+  T3/T4. No lo hice ahora porque `ProfileMapper.fromRow` es síncrono y resolver el
+  URL en lectura exigiría await/branching extra sin un consumidor que lo pida aún.
+- **Path `<user-id>/avatar.<ext>`** para cumplir la RLS `avatars owner manage`
+  (`owner = auth.uid()`, convención `avatars/<user-id>/…` de la migración).
+  `upsert: true` reemplaza el avatar anterior; el token nuevo del signed URL
+  invalida el cache del `NetworkImage` de paso.
+- **No seteo `updated_at`** en los `update`: `profiles` tiene el trigger
+  `set_updated_at before update` (migración `20260630000001`, arrays de la línea
+  195), igual que `transactions`/`goals` que tampoco lo setean.
+- **Null-aware map entries** (`'display_name': ?displayName`) en vez de
+  `if (x != null) 'display_name': x`: el lint `use_null_aware_elements` de
+  `flutter_lints` (SDK Dart 3.10) marca el `if` como issue; la sintaxis nueva lo
+  evita y deja `flutter analyze` limpio.
+- **No** reusé `UserProfile.fromJson`: el freezed espera camelCase
+  (`displayName`, `avatarUrl`, `householdId`) y el DB devuelve snake_case; de ahí
+  el mapper dedicado (misma razón que T1–T5).
+- El interface cambió (2 métodos nuevos), pero **ningún consumidor se rompe**: el
+  `settings_screen.dart` sólo lee `currentProfileProvider` (`.asData?.value`); la
+  UI de edición/subida de avatar aún no existe (es trabajo futuro de Fase 2).
+
+**Verificación:** `flutter analyze` → **No issues found!** No se tocaron modelos
+freezed, así que no hizo falta `build_runner`. No corrí la app (eso es T7).
+
+**Pendiente que dejo anotado para T7:** al probar en simulador, confirmar que
+(1) `currentProfileProvider` devuelve el perfil real del usuario tras el signup,
+(2) editar `display_name`/`currency` persiste en la tabla real, y (3) subir un
+avatar aterriza en `avatars/<user-id>/…` y el `ProfileBubble` lo pinta vía el
+signed URL. Ojo con el tradeoff del signed URL que caduca (ver arriba).
+
+---
+
+### T7 — 🔴 Checkpoint HUMANO — ⏳ PENDIENTE (bloqueado por diseño: requiere humano)
+
+**Por qué NO lo marco APROBADO:** T7 es un checkpoint humano por definición.
+Verificar el trigger en el **dashboard de Supabase**, registrar un usuario en la
+app **corriendo**, y confirmar que un gasto **sincroniza entre dos sesiones** son
+acciones interactivas que un agente no puede ejecutar ni observar de forma
+fiable. Marcarlo `✅ APROBADO` sería afirmar una verificación que no hice. Lo dejo
+en `⏳ PENDIENTE` y hago en su lugar el **pre-flight estático** que sí puedo, para
+des-riesgar la prueba humana.
+
+**Pre-flight estático que sí verifiqué (2026-07-01):**
+- **`flutter analyze` → No issues found** (proyecto completo). Incluye el trabajo
+  de T6 aún sin commitear (profile repo/mapper/providers).
+- **Los 6 repos de la Fase 1 están cableados a Supabase**: los 8 providers
+  relevantes leen `supabaseEnabledProvider` (household, categories, budgets,
+  goals, subscriptions, profile, transactions, auth). No queda ninguno clavado en
+  mock.
+- **El trigger `handle_new_user`** (migración `20260630000002_auto_provision_user.sql`)
+  crea **exactamente** lo que T7 espera confirmar: 1 `households` ('Nuestra casa'),
+  1 `profiles` (enlazado al household), 1 `household_members` (`role='owner'`), y
+  **6 `categories`** por defecto (Supermercado, Restaurantes, Transporte, Ocio,
+  Suscripciones, Ahorro, todas `is_default=true`). El conteo "6 categorías" del
+  checklist es correcto.
+
+**Runbook para el humano (ejecutar la prueba e2e):**
+1. `flutter run` en el simulador (con `.env` cargado ⟹ `supabaseReady=true`).
+2. **Registrar un usuario nuevo** desde la pantalla de auth.
+3. En el **dashboard de Supabase** (`project-ref = zgngezrlalklqnlwscgd` →
+   Table editor), confirmar que aparecieron: fila en `profiles`, fila en
+   `households`, fila en `household_members` (owner), y **6 filas** en `categories`
+   para ese `household_id`.
+4. En la app, **registrar un gasto** rápido y confirmar en `transactions` (misma
+   fila en la tabla real).
+5. **Sincronización:** abrir una **segunda sesión** (otro simulador/dispositivo
+   con el mismo usuario, o el segundo miembro del household) y confirmar que el
+   gasto/objetivo aparece **en tiempo real** sin refrescar. Esto valida de paso
+   que la **replicación realtime** de `transactions`/`goals` esté activa (ver
+   pendientes que anotaron T4 y T6 sobre realtime).
+6. Si todo pasa: marcar T7 como `✅ APROBADO` con fecha, mover `⏭️ SIGUIENTE` a
+   **T8**, y anotar aquí la evidencia (capturas del dashboard / IDs de filas).
+
+**Trampas heredadas a vigilar durante la prueba** (de los registros previos):
+- **T4 (goals):** el aporte express es **read-modify-write no atómico**; dos
+  aportes simultáneos pueden perder una actualización. Y la sync del progreso
+  depende de que la replicación de `goals` esté activa.
+- **T6 (profile):** `avatar_url` guarda un **signed URL que caduca** (1 año); el
+  bucket `avatars` es privado. Al probar el avatar, tenerlo presente.
+- **Estado git:** el trabajo de T6 sigue **sin commitear** (working tree con
+  `profile_*` + este checklist). Commitear antes o después de T7 según prefiera el
+  humano.
+
+_(Detente aquí: no puedo cerrar un checkpoint humano. Handoff listo para la persona.)_
