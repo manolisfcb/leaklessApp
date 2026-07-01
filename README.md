@@ -65,8 +65,8 @@ repositorios _mock_ (ver `lib/src/core/dev/demo_data.dart`) y es 100% navegable.
 
 ## Arquitectura
 
-**Feature-first + Clean Architecture** con Riverpod, inspirada en el starter que
-usamos en Dreamly / DUKAPP. Cada feature separa sus capas; lo transversal vive en
+**Feature-first + Clean Architecture** con Riverpod, adoptada para Leakless. Cada
+feature separa sus capas; lo transversal vive en
 `core/`; los widgets reutilizables en `shared/`; el dominio es Dart puro.
 
 ```

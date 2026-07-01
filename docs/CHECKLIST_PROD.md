@@ -81,8 +81,10 @@
   - Verificar que un usuario del household A **no** puede leer datos del B
     (pgTAP o script con 2 usuarios). Riesgo clave de una app financiera.
 
-> **Fase 1 cerrada.** ⏭️ **SIGUIENTE:** crear el checklist separado de **Fase 2
-> (auth + invitar pareja)** antes de empezar; no forma parte de T8.
+> **Fase 1 cerrada.** El handoff a Fase 2 quedó creado en
+> [CHECKLIST_PROD_FASE_2.md](CHECKLIST_PROD_FASE_2.md).
+
+- [x] **Handoff F1→F2 — Crear checklist separado de Fase 2.** ✅ **APROBADO (2026-07-01)**
 
 ---
 
@@ -530,3 +532,43 @@ un checklist separado, con el mismo formato de este documento, para **Fase 2
 era hacer sólo T8 y detenerse.
 
 _(Detente aquí. T8 aprobada; Fase 1 cerrada.)_
+
+---
+
+### Handoff F1→F2 — Checklist separado — ✅ APROBADO (2026-07-01)
+
+**Por qué esta tarea ahora:** T1–T8 ya estaban aprobadas y el propio handoff de
+T8 pedía no empezar funcionalidad nueva hasta crear un documento independiente
+para **Fase 2 (autenticación + household compartido)**. Mantener las fases
+separadas evita mezclar el historial cerrado de backend/RLS con las nuevas
+migraciones y flujos de producto.
+
+**Qué hice:**
+- Creé [CHECKLIST_PROD_FASE_2.md](CHECKLIST_PROD_FASE_2.md) con el mismo contrato
+  de trabajo tarea por tarea, estado comprobado del código, orden de dependencia,
+  criterios de aceptación y registro de razonamiento.
+- Dejé como `⏭️ SIGUIENTE` únicamente **F2-T1: contrato backend seguro de
+  invitaciones + pruebas RLS/RPC**. No implementé ninguna tarea de Fase 2.
+- Desconté del trabajo pendiente lo que el repo ya trae: validación y mensajes
+  del formulario auth, envío de correo de recuperación, cierre de sesión básico,
+  y repositorio de perfil con edición/subida de avatar.
+
+**Decisiones / trampas:**
+- El trigger `handle_new_user` crea un household propio para cada alta. Aceptar
+  una invitación no puede limitarse a insertar otro `household_member`: debe
+  mover de forma atómica el perfil/membresía del invitado y decidir qué hacer con
+  su household inicial vacío. Por eso el backend va antes que deep links y UI.
+- Las invitaciones requieren operaciones privilegiadas y tokens de un solo uso;
+  no deben resolverse con inserts directos desde Flutter. El checklist exige RPC
+  `security definer`, expiración, hash del token y pruebas de abuso/RLS.
+- Borrar al owner actual activa hoy `on delete cascade` sobre `households`, lo
+  que podría borrar los datos de la pareja. El nuevo checklist obliga a definir
+  transferencia de ownership antes de implementar borrado de cuenta.
+
+**Verificación:** `flutter analyze` se ejecutó después de crear y enlazar el
+documento. No se tocó código Dart ni modelos freezed.
+
+**Handoff:** continuar exclusivamente en
+[CHECKLIST_PROD_FASE_2.md](CHECKLIST_PROD_FASE_2.md), empezando por F2-T1.
+
+_(Detente aquí. Creación del checklist de Fase 2 aprobada; no se adelantó F2-T1.)_
