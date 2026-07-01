@@ -1,11 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/core_providers.dart';
+import '../../../core/supabase/supabase_providers.dart';
 import '../../../domain/models/goal.dart';
 import '../../household/application/household_providers.dart';
 import '../data/goals_repository.dart';
 
+/// Real (Supabase) or mock repository, chosen by config — same pattern as
+/// [transactionsRepositoryProvider].
 final goalsRepositoryProvider = Provider<GoalsRepository>((ref) {
+  if (ref.watch(supabaseEnabledProvider)) {
+    return SupabaseGoalsRepository(ref.watch(supabaseClientProvider));
+  }
   final repo = MockGoalsRepository();
   ref.onDispose(repo.dispose);
   return repo;

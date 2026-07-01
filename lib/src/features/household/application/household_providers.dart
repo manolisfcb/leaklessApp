@@ -1,12 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/supabase/supabase_providers.dart';
 import '../../../domain/models/household.dart';
 import '../../../domain/models/household_member.dart';
 import '../data/household_repository.dart';
 
-final householdRepositoryProvider = Provider<HouseholdRepository>(
-  (ref) => const MockHouseholdRepository(),
-);
+/// Real (Supabase) or mock repository, chosen by config — same pattern as
+/// [transactionsRepositoryProvider]. This resolves the real `householdId` that
+/// scopes every other feature.
+final householdRepositoryProvider = Provider<HouseholdRepository>((ref) {
+  if (ref.watch(supabaseEnabledProvider)) {
+    return SupabaseHouseholdRepository(ref.watch(supabaseClientProvider));
+  }
+  return const MockHouseholdRepository();
+});
 
 /// The user's active household.
 final currentHouseholdProvider = FutureProvider<Household?>(
