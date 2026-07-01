@@ -71,18 +71,18 @@
 - [x] **T5 — `SupabaseSubscriptionsRepository` + cableado.** ✅ **APROBADO (2026-07-01)**
 - [x] **T6 — `SupabaseProfileRepository` + cableado.** ✅ **APROBADO (2026-07-01)**
   - Leer/editar `profiles`; subir avatar al bucket `avatars` (Storage). 
-- [ ] **T7 — 🔴 Checkpoint HUMANO: smoke test e2e en simulador.** ⏭️ **SIGUIENTE**
+- [x] **T7 — 🔴 Checkpoint HUMANO: smoke test e2e en simulador.** ✅ **APROBADO (2026-07-01)**
   - Registrar un usuario nuevo → verificar en el dashboard de Supabase que el
     trigger creó `profiles` + `households` + `household_members` + 6
     `categories` → registrar un gasto rápido → confirmar que aterriza en la
     tabla real y **sincroniza** entre dos sesiones. Requiere correr la app; un
     agente no puede cerrarla solo. Deja evidencia aquí.
-- [ ] **T8 — Test de aislamiento RLS (2 households distintos).**
+- [x] **T8 — Test de aislamiento RLS (2 households distintos).** ✅ **APROBADO (2026-07-01)**
   - Verificar que un usuario del household A **no** puede leer datos del B
     (pgTAP o script con 2 usuarios). Riesgo clave de una app financiera.
 
-> Al terminar la Fase 1, el siguiente bloque del roadmap es **Fase 2 (auth +
-> invitar pareja)**. No empezar antes de cerrar la Fase 1.
+> **Fase 1 cerrada.** ⏭️ **SIGUIENTE:** crear el checklist separado de **Fase 2
+> (auth + invitar pareja)** antes de empezar; no forma parte de T8.
 
 ---
 
@@ -421,7 +421,7 @@ signed URL. Ojo con el tradeoff del signed URL que caduca (ver arriba).
 
 ---
 
-### T7 — 🔴 Checkpoint HUMANO — ⏳ PENDIENTE (bloqueado por diseño: requiere humano)
+### T7 — 🔴 Checkpoint HUMANO — ✅ APROBADO (2026-07-01)
 
 **Por qué NO lo marco APROBADO:** T7 es un checkpoint humano por definición.
 Verificar el trigger en el **dashboard de Supabase**, registrar un usuario en la
@@ -472,4 +472,61 @@ des-riesgar la prueba humana.
   `profile_*` + este checklist). Commitear antes o después de T7 según prefiera el
   humano.
 
-_(Detente aquí: no puedo cerrar un checkpoint humano. Handoff listo para la persona.)_
+**Cierre por el humano (2026-07-01):** el humano ejecutó la prueba e2e y **confirmó
+que pasó** ("queda aprobada la T7"). Esta aprobación queda registrada por decisión
+humana; el pre-flight estático de arriba es lo que verificó el agente. Con esto, la
+**Fase 1 (backend real) queda cerrada**: los 6 repos están cableados a Supabase y el
+flujo de alta de usuario + sincronización quedó validado en vivo. Siguiente eslabón:
+**T8 — test de aislamiento RLS**.
+
+_(Detente aquí. Handoff listo: T7 cerrada por el humano, ⏭️ SIGUIENTE movido a T8.)_
+
+---
+
+### T8 — Test de aislamiento RLS — ✅ APROBADO (2026-07-01)
+
+**Por qué esta tarea ahora:** T7 confirmó el flujo e2e contra el backend real,
+pero faltaba demostrar de forma reproducible la frontera de seguridad más
+importante de la app: que dos usuarios autenticados de households distintos no
+pueden leer ni escribir datos financieros del otro.
+
+**Qué hice:**
+- Añadí el test pgTAP
+  [rls_household_isolation.test.sql](../supabase/tests/database/rls_household_isolation.test.sql).
+- El test inserta dos usuarios fixture en `auth.users` y deja que el trigger real
+  `on_auth_user_created` aprovisione un perfil, household, membership y seis
+  categorías para cada uno. No fabrica el estado derivado manualmente.
+- Crea una fila por household en `transactions`, `budgets`, `goals`,
+  `subscriptions` y `notification_events`; después cambia al rol real
+  `authenticated` y configura el `auth.uid()` de A y B por turno.
+- Comprueba en ambos sentidos que cada usuario sólo ve su perfil, household,
+  membership, categorías y filas financieras. También verifica que insertar una
+  transacción en el household ajeno falla con SQLSTATE `42501` por RLS.
+
+**Decisiones / trampas:**
+- Se prueban las políticas reales (`USING` + `WITH CHECK` sobre
+  `is_household_member(household_id)`), no una función mock ni consultas como
+  `postgres`, que bypassarían RLS.
+- La cuenta enlazada no permite `supabase test db --linked` (`403`; sin
+  `SUPABASE_DB_PASSWORD`). El PostgreSQL local en `127.0.0.1:54322` pertenecía a
+  otro stack y no tenía las tablas de leakless. Para no ejecutar un
+  `supabase db reset` destructivo, apliqué las dos migraciones necesarias y el
+  test en **una única transacción**, terminada con `ROLLBACK`.
+- Verifiqué después del rollback que `public.profiles` no existe en ese stack y
+  que ninguno de los dos UUID fixture quedó en `auth.users`: cero residuos.
+- El test cubre lectura para las seis tablas household-scoped y escritura
+  cruzada en `transactions`. Como todas comparten la misma política generada en
+  el loop de la migración, la aserción de escritura valida el `WITH CHECK`
+  común sin duplicar cinco casos idénticos.
+
+**Verificación:**
+- pgTAP → **21/21 aserciones aprobadas**.
+- `flutter analyze` → **No issues found!**
+- No se tocaron modelos Dart/freezed; no hizo falta `build_runner`.
+
+**Handoff:** la **Fase 1 queda cerrada**. En el siguiente turno se puede crear
+un checklist separado, con el mismo formato de este documento, para **Fase 2
+(auth + invitar pareja)**. No lo creé aquí porque la instrucción de esta pasada
+era hacer sólo T8 y detenerse.
+
+_(Detente aquí. T8 aprobada; Fase 1 cerrada.)_

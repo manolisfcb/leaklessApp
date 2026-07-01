@@ -16,9 +16,11 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 /// Streams the signed-in [AppUser] (or null). Drives route redirects.
-final authStateChangesProvider = StreamProvider<AppUser?>(
-  (ref) => ref.watch(authRepositoryProvider).authStateChanges(),
-);
+final authStateChangesProvider = StreamProvider<AppUser?>((ref) async* {
+  final repository = ref.watch(authRepositoryProvider);
+  yield repository.currentUser;
+  yield* repository.authStateChanges();
+});
 
 /// The current user, synchronously, once known.
 final currentUserProvider = Provider<AppUser?>(

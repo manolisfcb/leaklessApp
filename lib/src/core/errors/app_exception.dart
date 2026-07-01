@@ -16,8 +16,19 @@ sealed class AppException implements Exception {
 }
 
 /// Authentication / authorization problems.
+///
+/// [code] carries the backend's machine-readable error code (e.g. Supabase's
+/// `invalid_credentials`, `user_already_exists`) when available, so the UI can
+/// show a specific, friendly message instead of a generic one.
 class AuthFailureException extends AppException {
-  const AuthFailureException(super.message, {super.cause, super.stackTrace});
+  const AuthFailureException(
+    super.message, {
+    this.code,
+    super.cause,
+    super.stackTrace,
+  });
+
+  final String? code;
 }
 
 /// Connectivity / timeout problems.

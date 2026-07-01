@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/models/app_user.dart';
 import '../../features/auth/application/auth_providers.dart';
 import '../../features/auth/presentation/auth_screen.dart';
 import '../../features/budgets/presentation/budgets_screen.dart';
@@ -20,11 +23,21 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 /// Rebuilds the router's redirect when auth or onboarding state changes.
 class _RouterRefresh extends ChangeNotifier {
   _RouterRefresh(this._ref) {
-    _ref
-      ..listen(authStateChangesProvider, (_, _) => notifyListeners())
-      ..listen(onboardingCompletedProvider, (_, _) => notifyListeners());
+    _authSubscription = _ref
+        .read(authRepositoryProvider)
+        .authStateChanges()
+        .listen((_) => notifyListeners());
+    _ref.listen(onboardingCompletedProvider, (_, _) => notifyListeners());
   }
+
   final Ref _ref;
+  late final StreamSubscription<AppUser?> _authSubscription;
+
+  @override
+  void dispose() {
+    unawaited(_authSubscription.cancel());
+    super.dispose();
+  }
 }
 
 /// The app's [GoRouter]. Redirects enforce: onboarding → auth → app.
@@ -38,7 +51,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: refresh,
     redirect: (context, state) {
       final onboardingDone = ref.read(onboardingCompletedProvider);
-      final signedIn = ref.read(isSignedInProvider);
+      final signedIn = ref.read(authRepositoryProvider).currentUser != null;
       final location = state.matchedLocation;
       final atOnboarding = location == AppRoutes.onboarding;
       final atAuth = location == AppRoutes.auth;

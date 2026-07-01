@@ -1,13 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../application/auth_controller.dart';
+import '../application/auth_error_message.dart';
+import '../application/auth_providers.dart';
+import '../data/auth_repository.dart';
 
-/// Auth placeholder. The structure is real (controller + async state), but the
-/// fields are visual until Supabase Auth screens are built out.
+final _emailRegExp = RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$');
+
+/// Sign-in / sign-up screen. A single validated form toggles between the two
+/// modes; on success the auth state changes and the router redirects to the app
+/// (rule #4/#6 — no business logic here, just the controller + async state).
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
@@ -16,26 +23,82 @@ class AuthScreen extends ConsumerStatefulWidget {
 }
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
-  final _email = TextEditingController(text: 'demo@leakless.app');
-  final _password = TextEditingController(text: 'demo1234');
+  final _formKey = GlobalKey<FormState>();
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _confirm = TextEditingController();
+
   bool _isSignUp = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirm = true;
+
+  /// Success / informational copy (email confirmation, reset sent) shown in a
+  /// banner. Errors come from the controller's async state instead.
+  String? _info;
 
   @override
   void dispose() {
+    _name.dispose();
     _email.dispose();
     _password.dispose();
+    _confirm.dispose();
     super.dispose();
   }
 
+  void _toggleMode() {
+    setState(() {
+      _isSignUp = !_isSignUp;
+      _info = null;
+      _confirm.clear();
+    });
+    // Drop any lingering error from the previous mode.
+    ref.invalidate(authControllerProvider);
+  }
+
   Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() => _info = null);
+
     final controller = ref.read(authControllerProvider.notifier);
+    final email = _email.text.trim();
+
     if (_isSignUp) {
-      await controller.signUp(_email.text.trim(), _password.text);
+      final outcome = await controller.signUp(
+        email: email,
+        password: _password.text,
+        displayName: _name.text.trim(),
+      );
+      if (!mounted) return;
+      if (outcome == SignUpOutcome.emailConfirmationRequired) {
+        setState(() {
+          _info =
+              'Te enviamos un correo para confirmar tu cuenta. Ábrelo y '
+              'vuelve para iniciar sesión.';
+          _isSignUp = false;
+          _confirm.clear();
+        });
+      }
+      // SignUpOutcome.signedIn → the router redirects automatically.
     } else {
-      await controller.signIn(_email.text.trim(), _password.text);
+      await controller.signIn(email, _password.text);
     }
-    // On success the Fake/Supabase auth state changes and the router redirects
-    // to the dashboard automatically.
+  }
+
+  Future<void> _openForgotPassword() async {
+    final sent = await GlassBottomSheet.show<bool>(
+      context,
+      title: 'Restablecer contraseña',
+      builder: (_) => _ForgotPasswordSheet(initialEmail: _email.text.trim()),
+    );
+    if (sent == true && mounted) {
+      setState(() {
+        _info =
+            'Si el correo está registrado, te enviamos un enlace para '
+            'restablecer tu contraseña.';
+      });
+    }
   }
 
   @override
@@ -43,93 +106,349 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final colors = context.colors;
     final state = ref.watch(authControllerProvider);
     final loading = state.isLoading;
+    final errorMessage = state.hasError ? authErrorMessage(state.error!) : null;
 
     return GlassScaffold(
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 96,
-                width: 96,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: AppGradients.liquid(colors),
-                  boxShadow: AppShadows.glow(colors.goal),
-                ),
-                child: const Icon(
-                  CupertinoIcons.drop_fill,
-                  size: 44,
-                  color: Colors.white,
-                ),
-              ),
-              AppSpacing.gapLg,
-              Text('leakless', style: AppTypography.displayMedium),
-              AppSpacing.gapXs,
-              Text(
-                _isSignUp ? 'Crea tu cuenta' : 'Bienvenido de vuelta',
-                style: AppTypography.bodyLarge.copyWith(
-                  color: colors.textSecondary,
-                ),
-              ),
-              AppSpacing.gapXxl,
-              GlassCard(
-                child: Column(
-                  children: [
-                    _GlassField(
-                      controller: _email,
-                      hint: 'Correo electrónico',
-                      icon: CupertinoIcons.mail,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    AppSpacing.gapMd,
-                    _GlassField(
-                      controller: _password,
-                      hint: 'Contraseña',
-                      icon: CupertinoIcons.lock,
-                      obscure: true,
-                    ),
-                  ],
-                ),
-              ),
-              if (state.hasError) ...[
-                AppSpacing.gapMd,
-                Text(
-                  'No pudimos continuar. Revisa tus datos e inténtalo de nuevo.',
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodySmall.copyWith(color: colors.expense),
-                ),
-              ],
-              AppSpacing.gapXl,
-              GlassButton(
-                label: _isSignUp ? 'Crear cuenta' : 'Iniciar sesión',
-                loading: loading,
-                onPressed: loading ? null : _submit,
-              ),
-              AppSpacing.gapMd,
-              TextButton(
-                onPressed: loading
-                    ? null
-                    : () => setState(() => _isSignUp = !_isSignUp),
-                child: Text(
-                  _isSignUp
-                      ? '¿Ya tienes cuenta? Inicia sesión'
-                      : '¿Sin cuenta? Regístrate',
-                  style: AppTypography.labelLarge.copyWith(
-                    color: colors.primary,
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 96,
+                  width: 96,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppGradients.liquid(colors),
+                    boxShadow: AppShadows.glow(colors.goal),
+                  ),
+                  child: const Icon(
+                    CupertinoIcons.drop_fill,
+                    size: 44,
+                    color: Colors.white,
                   ),
                 ),
-              ),
-            ],
+                AppSpacing.gapLg,
+                Text('leakless', style: AppTypography.displayMedium),
+                AppSpacing.gapXs,
+                Text(
+                  _isSignUp ? 'Crea tu cuenta' : 'Bienvenido de vuelta',
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+                AppSpacing.gapXxl,
+                GlassCard(
+                  child: Column(
+                    children: [
+                      if (_isSignUp) ...[
+                        _GlassField(
+                          controller: _name,
+                          hint: 'Tu nombre',
+                          icon: CupertinoIcons.person,
+                          textInputAction: TextInputAction.next,
+                          textCapitalization: TextCapitalization.words,
+                          autofillHints: const [AutofillHints.name],
+                          validator: _validateName,
+                        ),
+                        AppSpacing.gapMd,
+                      ],
+                      _GlassField(
+                        controller: _email,
+                        hint: 'Correo electrónico',
+                        icon: CupertinoIcons.mail,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        autofillHints: const [AutofillHints.email],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                        ],
+                        validator: _validateEmail,
+                      ),
+                      AppSpacing.gapMd,
+                      _GlassField(
+                        controller: _password,
+                        hint: 'Contraseña',
+                        icon: CupertinoIcons.lock,
+                        obscure: _obscurePassword,
+                        textInputAction: _isSignUp
+                            ? TextInputAction.next
+                            : TextInputAction.done,
+                        autofillHints: _isSignUp
+                            ? const [AutofillHints.newPassword]
+                            : const [AutofillHints.password],
+                        validator: _validatePassword,
+                        onSubmitted: _isSignUp ? null : (_) => _submit(),
+                        suffix: _ObscureToggle(
+                          obscured: _obscurePassword,
+                          onTap: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
+                        ),
+                      ),
+                      if (_isSignUp) ...[
+                        AppSpacing.gapMd,
+                        _GlassField(
+                          controller: _confirm,
+                          hint: 'Confirmar contraseña',
+                          icon: CupertinoIcons.lock_shield,
+                          obscure: _obscureConfirm,
+                          textInputAction: TextInputAction.done,
+                          autofillHints: const [AutofillHints.newPassword],
+                          validator: _validateConfirm,
+                          onSubmitted: (_) => _submit(),
+                          suffix: _ObscureToggle(
+                            obscured: _obscureConfirm,
+                            onTap: () => setState(
+                              () => _obscureConfirm = !_obscureConfirm,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (!_isSignUp) ...[
+                  AppSpacing.gapXs,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: loading ? null : _openForgotPassword,
+                      child: Text(
+                        '¿Olvidaste tu contraseña?',
+                        style: AppTypography.labelLarge.copyWith(
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                if (errorMessage != null) ...[
+                  AppSpacing.gapMd,
+                  _MessageBanner(message: errorMessage, isError: true),
+                ] else if (_info != null) ...[
+                  AppSpacing.gapMd,
+                  _MessageBanner(message: _info!, isError: false),
+                ],
+                AppSpacing.gapXl,
+                GlassButton(
+                  label: _isSignUp ? 'Crear cuenta' : 'Iniciar sesión',
+                  loading: loading,
+                  onPressed: loading ? null : _submit,
+                ),
+                AppSpacing.gapMd,
+                TextButton(
+                  onPressed: loading ? null : _toggleMode,
+                  child: Text(
+                    _isSignUp
+                        ? '¿Ya tienes cuenta? Inicia sesión'
+                        : '¿Sin cuenta? Regístrate',
+                    style: AppTypography.labelLarge.copyWith(
+                      color: colors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
+  String? _validateName(String? value) {
+    if ((value ?? '').trim().isEmpty) return 'Escribe tu nombre.';
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    final email = (value ?? '').trim();
+    if (email.isEmpty) return 'Escribe tu correo.';
+    if (!_emailRegExp.hasMatch(email)) return 'Correo no válido.';
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    final password = value ?? '';
+    if (password.isEmpty) return 'Escribe tu contraseña.';
+    if (password.length < 6) return 'Mínimo 6 caracteres.';
+    return null;
+  }
+
+  String? _validateConfirm(String? value) {
+    if (value != _password.text) return 'Las contraseñas no coinciden.';
+    return null;
+  }
 }
 
+/// The password-reset content shown inside a [GlassBottomSheet]. Manages its own
+/// async state so it never bleeds into the main form's loading/error.
+class _ForgotPasswordSheet extends ConsumerStatefulWidget {
+  const _ForgotPasswordSheet({required this.initialEmail});
+
+  final String initialEmail;
+
+  @override
+  ConsumerState<_ForgotPasswordSheet> createState() =>
+      _ForgotPasswordSheetState();
+}
+
+class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
+  late final _email = TextEditingController(text: widget.initialEmail);
+  final _formKey = GlobalKey<FormState>();
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+
+  Future<void> _send() async {
+    FocusScope.of(context).unfocus();
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .sendPasswordReset(_email.text.trim());
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _error = authErrorMessage(error);
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Escribe tu correo y te enviaremos un enlace para crear una nueva '
+            'contraseña.',
+            style: AppTypography.bodyMedium.copyWith(
+              color: colors.textSecondary,
+            ),
+          ),
+          AppSpacing.gapLg,
+          _GlassField(
+            controller: _email,
+            hint: 'Correo electrónico',
+            icon: CupertinoIcons.mail,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.done,
+            autofillHints: const [AutofillHints.email],
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r'\s')),
+            ],
+            onSubmitted: (_) => _send(),
+            validator: (value) {
+              final email = (value ?? '').trim();
+              if (email.isEmpty) return 'Escribe tu correo.';
+              if (!_emailRegExp.hasMatch(email)) return 'Correo no válido.';
+              return null;
+            },
+          ),
+          if (_error != null) ...[
+            AppSpacing.gapMd,
+            _MessageBanner(message: _error!, isError: true),
+          ],
+          AppSpacing.gapLg,
+          GlassButton(
+            label: 'Enviar enlace',
+            loading: _loading,
+            onPressed: _loading ? null : _send,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Password visibility toggle used as a field suffix.
+class _ObscureToggle extends StatelessWidget {
+  const _ObscureToggle({required this.obscured, required this.onTap});
+
+  final bool obscured;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onTap,
+      icon: Icon(
+        obscured ? CupertinoIcons.eye : CupertinoIcons.eye_slash,
+        color: context.colors.textTertiary,
+        size: 20,
+      ),
+      splashRadius: 20,
+    );
+  }
+}
+
+/// Inline error / info banner beneath the form.
+class _MessageBanner extends StatelessWidget {
+  const _MessageBanner({required this.message, required this.isError});
+
+  final String message;
+  final bool isError;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final accent = isError ? colors.expense : colors.income;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        color: isError ? colors.expenseSoft : colors.incomeSoft,
+        borderRadius: AppRadii.cardRadius,
+        border: Border.all(color: accent.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            isError
+                ? CupertinoIcons.exclamationmark_circle
+                : CupertinoIcons.checkmark_circle,
+            size: 18,
+            color: accent,
+          ),
+          AppSpacing.gapSm,
+          Expanded(
+            child: Text(
+              message,
+              style: AppTypography.bodySmall.copyWith(color: colors.textPrimary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A frosted glass text field wired for [Form] validation.
 class _GlassField extends StatelessWidget {
   const _GlassField({
     required this.controller,
@@ -137,6 +456,13 @@ class _GlassField extends StatelessWidget {
     required this.icon,
     this.obscure = false,
     this.keyboardType,
+    this.textInputAction,
+    this.textCapitalization = TextCapitalization.none,
+    this.autofillHints,
+    this.inputFormatters,
+    this.validator,
+    this.onSubmitted,
+    this.suffix,
   });
 
   final TextEditingController controller;
@@ -144,37 +470,51 @@ class _GlassField extends StatelessWidget {
   final IconData icon;
   final bool obscure;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
+  final Iterable<String>? autofillHints;
+  final List<TextInputFormatter>? inputFormatters;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onSubmitted;
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return TextField(
+    OutlineInputBorder border(Color color) => OutlineInputBorder(
+      borderRadius: AppRadii.cardRadius,
+      borderSide: BorderSide(color: color),
+    );
+
+    return TextFormField(
       controller: controller,
       obscureText: obscure,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
+      autofillHints: autofillHints,
+      inputFormatters: inputFormatters,
+      validator: validator,
+      onFieldSubmitted: onSubmitted,
       style: AppTypography.bodyLarge,
+      cursorColor: colors.primary,
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(icon, color: colors.textSecondary, size: 20),
+        suffixIcon: suffix,
         filled: true,
         fillColor: colors.glassFill,
         hintStyle: AppTypography.bodyLarge.copyWith(color: colors.textTertiary),
+        errorStyle: AppTypography.bodySmall.copyWith(color: colors.expense),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
           vertical: AppSpacing.lg,
         ),
-        border: OutlineInputBorder(
-          borderRadius: AppRadii.cardRadius,
-          borderSide: BorderSide(color: colors.glassBorder),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: AppRadii.cardRadius,
-          borderSide: BorderSide(color: colors.glassBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadii.cardRadius,
-          borderSide: BorderSide(color: colors.primary),
-        ),
+        border: border(colors.glassBorder),
+        enabledBorder: border(colors.glassBorder),
+        focusedBorder: border(colors.primary),
+        errorBorder: border(colors.expense),
+        focusedErrorBorder: border(colors.expense),
       ),
     );
   }

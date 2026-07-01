@@ -21,6 +21,7 @@ supabase db push
 | --- | --- |
 | `20260630000001_init.sql` | Tables, indexes, `updated_at` triggers, RLS policies, avatars storage bucket. |
 | `20260630000002_auto_provision_user.sql` | On sign-up, auto-create profile + starter household + owner membership + default categories. |
+| `20260701000001_enable_realtime.sql` | Add the streamed tables (`transactions`, `goals`) to the `supabase_realtime` publication. |
 
 ## Model
 
@@ -36,6 +37,8 @@ translation tables.
 
 ## Realtime
 
-Enable Realtime for the `transactions` table (and any others you want live) in
-**Database → Replication**. The app already subscribes via
-`SupabaseTransactionsRepository.watchForHousehold`.
+`20260701000001_enable_realtime.sql` adds the streamed tables (`transactions`,
+`goals`) to the `supabase_realtime` publication — the SQL equivalent of the
+**Database → Replication** toggle. Without it, `.stream()` channel joins are
+accepted and then rejected with a `system` error, breaking the dashboard. Add
+any new streamed table to the array in that migration.
