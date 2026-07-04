@@ -7,6 +7,9 @@ import 'package:leakless/src/core/router/app_routes.dart';
 import 'package:leakless/src/core/theme/theme.dart';
 import 'package:leakless/src/domain/models/household.dart';
 import 'package:leakless/src/features/auth/application/auth_controller.dart';
+import 'package:leakless/src/features/auth/application/auth_providers.dart';
+import 'package:leakless/src/features/auth/application/password_recovery_controller.dart';
+import 'package:leakless/src/features/auth/data/auth_repository.dart';
 import 'package:leakless/src/features/household/application/household_providers.dart';
 import 'package:leakless/src/features/household/application/invitation_intent_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,6 +113,55 @@ void main() {
       expect(
         container.read(routerProvider).routeInformationProvider.value.uri.path,
         AppRoutes.householdSetup,
+      );
+    },
+  );
+
+  testWidgets(
+    'a password-recovery session is pinned to the reset screen, not the dashboard',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      final prefs = await SharedPreferences.getInstance();
+      final container = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          invitationIntentStoreProvider.overrideWithValue(
+            _MemoryInvitationIntentStore(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(container: container, child: const _TestApp()),
+      );
+      await tester.pumpAndSettle();
+      final router = container.read(routerProvider);
+
+      // Opening the recovery deep link establishes a session AND flags recovery.
+      final auth =
+          container.read(authRepositoryProvider) as FakeAuthRepository;
+      auth.emitPasswordRecovery();
+      await tester.pumpAndSettle();
+
+      // Signed in, but must not have reached the dashboard.
+      expect(
+        router.routerDelegate.currentConfiguration.uri.path,
+        AppRoutes.resetPassword,
+      );
+
+      // Saving a new password clears recovery; the router redirects onward.
+      final saved = await container
+          .read(resetPasswordControllerProvider.notifier)
+          .submit('newpass123');
+      expect(saved, isTrue);
+      // Not pumpAndSettle: the onward screen may hold a perpetual loader.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(
+        router.routerDelegate.currentConfiguration.uri.path,
+        isNot(AppRoutes.resetPassword),
       );
     },
   );

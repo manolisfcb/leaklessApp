@@ -44,6 +44,25 @@ translation tables.
 accepted and then rejected with a `system` error, breaking the dashboard. Add
 any new streamed table to the array in that migration.
 
+## Auth redirect allowlist (password recovery & deep links)
+
+The app authenticates by email/password and completes password recovery through
+a custom-scheme deep link. Configure the project's **Authentication → URL
+Configuration → Redirect URLs** allowlist to include:
+
+- `leakless://app/reset-password` — target of the recovery email
+  (`resetPasswordForEmail(..., redirectTo:)`, see `kPasswordRecoveryRedirect`).
+- `leakless://app/invite` — invitation deep link (delivery only; authorization
+  still lives in the RPCs).
+
+Opening the recovery link establishes a short-lived recovery session; the app
+pins the user to the reset-password screen (it can never reach the dashboard
+before the password is changed) and calls `updateUser(password:)`. Because the
+custom scheme is an opening mechanism, not an authorization one, keep the
+allowlist tight and rely on Supabase's one-time recovery token for security.
+Universal Links / App Links with a web fallback require a published domain and
+are left to distribution configuration.
+
 ## Household invitations
 
 Invitation operations are exposed only through the authenticated

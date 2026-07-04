@@ -33,6 +33,11 @@
                     android:scheme="leakless"
                     android:host="app"
                     android:pathPrefix="/invite"/>
+                <!-- Supabase password-recovery deep link (F2-T6). -->
+                <data
+                    android:scheme="leakless"
+                    android:host="app"
+                    android:pathPrefix="/reset-password"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

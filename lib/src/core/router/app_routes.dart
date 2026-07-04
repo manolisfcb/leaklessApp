@@ -5,6 +5,7 @@ abstract final class AppRoutes {
 
   static const String onboarding = '/onboarding';
   static const String auth = '/auth';
+  static const String resetPassword = '/reset-password';
 
   static const String dashboard = '/dashboard';
   static const String transactions = '/transactions';
@@ -24,6 +25,7 @@ abstract final class AppRoutes {
   /// Route names (used with `context.goNamed`).
   static const String onboardingName = 'onboarding';
   static const String authName = 'auth';
+  static const String resetPasswordName = 'reset-password';
   static const String dashboardName = 'dashboard';
   static const String transactionsName = 'transactions';
   static const String budgetsName = 'budgets';

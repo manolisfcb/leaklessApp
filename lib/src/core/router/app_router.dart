@@ -7,7 +7,9 @@ import 'package:go_router/go_router.dart';
 import '../../domain/models/app_user.dart';
 import '../../domain/models/household_invitation.dart';
 import '../../features/auth/application/auth_providers.dart';
+import '../../features/auth/application/password_recovery_controller.dart';
 import '../../features/auth/presentation/auth_screen.dart';
+import '../../features/auth/presentation/reset_password_screen.dart';
 import '../../features/budgets/presentation/budgets_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/goals/presentation/goals_screen.dart';
@@ -40,6 +42,7 @@ class _RouterRefresh extends ChangeNotifier {
       invitationIntentControllerProvider,
       (_, _) => notifyListeners(),
     );
+    _ref.listen(passwordRecoveryPendingProvider, (_, _) => notifyListeners());
     _ref.listen(householdSetupStateProvider, (_, _) => notifyListeners());
   }
 
@@ -81,9 +84,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       final atAuth = location == AppRoutes.auth;
       final atInvitation = location == AppRoutes.invitation;
       final atHouseholdSetup = location == AppRoutes.householdSetup;
+      final atResetPassword = location == AppRoutes.resetPassword;
 
       if (!onboardingDone) return atOnboarding ? null : AppRoutes.onboarding;
       if (!signedIn) return atAuth ? null : AppRoutes.auth;
+
+      // A recovery deep link establishes a session; pin it to the reset screen
+      // so it can never reach the dashboard before the password is changed.
+      if (ref.read(passwordRecoveryPendingProvider)) {
+        return atResetPassword ? null : AppRoutes.resetPassword;
+      }
+
       if (incomingToken != null) return AppRoutes.invitation;
       if (pendingInvitation != null && !atInvitation) {
         return AppRoutes.invitation;
@@ -96,7 +107,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!householdReady) {
         return atHouseholdSetup ? null : AppRoutes.householdSetup;
       }
-      if (atHouseholdSetup || atOnboarding || atAuth) {
+      if (atHouseholdSetup || atOnboarding || atAuth || atResetPassword) {
         return AppRoutes.dashboard;
       }
       return null;
@@ -111,6 +122,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.auth,
         name: AppRoutes.authName,
         builder: (_, _) => const AuthScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.resetPassword,
+        name: AppRoutes.resetPasswordName,
+        builder: (_, _) => const ResetPasswordScreen(),
       ),
       GoRoute(
         path: AppRoutes.quickEntry,
