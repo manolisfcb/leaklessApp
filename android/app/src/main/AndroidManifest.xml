@@ -1,4 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Network access for Supabase / Firebase / RevenueCat. Required in the
+         main manifest so release builds (which don't merge the debug/profile
+         manifests) can reach the backend. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Runtime push-notification permission on Android 13+ (API 33). Without
+         it the FCM permission request is silently denied. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application
         android:label="leakless"
         android:name="${applicationName}"

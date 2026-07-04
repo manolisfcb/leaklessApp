@@ -1,0 +1,15 @@
+# Android release signing — copy to android/key.properties and fill in.
+#
+#     cp android/key.properties.example android/key.properties
+#
+# key.properties, *.keystore and *.jks are git-ignored (see android/.gitignore).
+# NEVER commit the real keystore or its passwords.
+#
+# Generate an upload keystore once with:
+#   keytool -genkey -v -keystore ~/upload-keystore.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+
+storeFile=/absolute/path/to/upload-keystore.jks
+storePassword=your-store-password
+keyAlias=upload
+keyPassword=your-key-password

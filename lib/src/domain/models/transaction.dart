@@ -17,6 +17,8 @@ abstract class Transaction with _$Transaction {
     required TransactionPriority priority,
     required ResponsibleType responsible,
     required DateTime occurredAt,
+    @Default(TransactionSource.manual) TransactionSource source,
+    String? externalId,
     String? categoryId,
     String? responsibleMemberId,
     String? description,

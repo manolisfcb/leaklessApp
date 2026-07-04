@@ -29,6 +29,12 @@ abstract final class TransactionMapper {
         row['responsible_type'],
         ResponsibleType.shared,
       ),
+      source: _enumByName(
+        TransactionSource.values,
+        row['source'],
+        TransactionSource.manual,
+      ),
+      externalId: row['external_id'] as String?,
       categoryId: row['category_id'] as String?,
       responsibleMemberId: row['responsible_member_id'] as String?,
       description: row['description'] as String?,
@@ -46,6 +52,9 @@ abstract final class TransactionMapper {
     'type': tx.type.name,
     'priority': tx.priority.name,
     'responsible_type': tx.responsible.name,
+    'source': tx.source.name,
+    // external_id stays null for manual entries; the aggregator sync sets it.
+    if (tx.externalId != null) 'external_id': tx.externalId,
     'category_id': tx.categoryId,
     'responsible_member_id': tx.responsibleMemberId,
     'description': tx.description,

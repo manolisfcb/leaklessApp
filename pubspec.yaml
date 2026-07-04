@@ -78,6 +78,14 @@ dev_dependencies:
   # --- Testing ---
   mocktail: ^1.0.4
 
+  # --- App icon + splash generation ---
+  # Drop a 1024×1024 PNG at assets/icon/icon.png (and optionally
+  # icon_foreground.png for the Android adaptive layer), then run:
+  #   dart run flutter_launcher_icons
+  #   dart run flutter_native_splash:create
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
+
 flutter:
   uses-material-design: true
   generate: true
@@ -86,3 +94,24 @@ flutter:
     - .env
     - assets/images/
     - assets/icons/
+
+# Replaces the default Flutter launcher icon on both platforms. Requires
+# assets/icon/icon.png to exist (see dev_dependencies note above).
+flutter_launcher_icons:
+  image_path: "assets/icon/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  # Android 8+ adaptive icon. Point image_path_android at a transparent
+  # foreground if you have one; otherwise it reuses the main image.
+  adaptive_icon_background: "#0B1220"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+
+# Branded launch screen (replaces the white flash). Regenerate with
+# `dart run flutter_native_splash:create` after editing.
+flutter_native_splash:
+  color: "#0B1220"
+  image: "assets/icon/splash.png"
+  android_12:
+    color: "#0B1220"
+    image: "assets/icon/splash.png"
