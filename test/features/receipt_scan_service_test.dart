@@ -1,52 +1,17 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:leakless/src/features/quick_entry/data/receipt_scan_service.dart';
 
-/// Wraps [text] in the Gemini `generateContent` envelope the service unwraps.
-String _geminiEnvelope(String text) => jsonEncode({
-  'candidates': [
-    {
-      'content': {
-        'parts': [
-          {'text': text},
-        ],
-      },
-    },
-  ],
-});
-
 void main() {
-  final bytes = Uint8List.fromList([1, 2, 3]);
-
-  GeminiReceiptScanService serviceReturning(
-    String body, {
-    int status = 200,
-  }) => GeminiReceiptScanService(
-    apiKey: 'test-key',
-    client: MockClient((_) async => http.Response(body, status)),
-  );
-
-  group('GeminiReceiptScanService.scan', () {
-    test('maps a full receipt into a ReceiptScanResult', () async {
-      final service = serviceReturning(
-        _geminiEnvelope(
-          jsonEncode({
-            'amount': 12.50,
-            'description': 'Cafetería Central',
-            'date': '2026-07-01',
-            'category': 'Comida',
-          }),
-        ),
-      );
-
-      final result = await service.scan(
-        bytes,
+  group('SupabaseReceiptScanService.mapExtracted', () {
+    test('maps a full extracted payload into a ReceiptScanResult', () {
+      final result = SupabaseReceiptScanService.mapExtracted(
+        {
+          'amount': 12.50,
+          'description': 'Cafetería Central',
+          'date': '2026-07-01',
+          'category': 'Comida',
+        },
         currency: 'USD',
-        categoryNames: const ['Comida', 'Transporte'],
       );
 
       expect(result.amount?.minorUnits, 1250);
@@ -57,36 +22,35 @@ void main() {
       expect(result.isEmpty, isFalse);
     });
 
-    test('accepts a numeric amount sent as a string', () async {
-      final service = serviceReturning(
-        _geminiEnvelope(jsonEncode({'amount': '9.99'})),
-      );
-
-      final result = await service.scan(
-        bytes,
+    test('accepts a numeric amount sent as a string', () {
+      final result = SupabaseReceiptScanService.mapExtracted(
+        {'amount': '9.99'},
         currency: 'USD',
-        categoryNames: const [],
       );
 
       expect(result.amount?.minorUnits, 999);
     });
 
-    test('drops unusable fields and reports the result as empty', () async {
-      final service = serviceReturning(
-        _geminiEnvelope(
-          jsonEncode({
-            'amount': null,
-            'description': 'null',
-            'date': 'not-a-date',
-            'category': '',
-          }),
-        ),
+    test('respects currencies with different minor-unit scales', () {
+      // JPY has 0 decimal digits, so the major value maps 1:1 to minor units.
+      final result = SupabaseReceiptScanService.mapExtracted(
+        {'amount': 1500},
+        currency: 'JPY',
       );
 
-      final result = await service.scan(
-        bytes,
+      expect(result.amount?.minorUnits, 1500);
+      expect(result.amount?.currency, 'JPY');
+    });
+
+    test('drops unusable fields and reports the result as empty', () {
+      final result = SupabaseReceiptScanService.mapExtracted(
+        {
+          'amount': null,
+          'description': 'null',
+          'date': 'not-a-date',
+          'category': '',
+        },
         currency: 'USD',
-        categoryNames: const [],
       );
 
       expect(result.amount, isNull);
@@ -96,34 +60,18 @@ void main() {
       expect(result.isEmpty, isTrue);
     });
 
-    test('surfaces a rate-limit as a coded ReceiptScanException', () async {
-      final service = serviceReturning('{}', status: 429);
-
-      expect(
-        () => service.scan(bytes, currency: 'USD', categoryNames: const []),
-        throwsA(
-          isA<ReceiptScanException>().having(
-            (e) => e.code,
-            'code',
-            'rate_limited',
-          ),
-        ),
+    test('ignores a zero or negative total', () {
+      final zero = SupabaseReceiptScanService.mapExtracted(
+        {'amount': 0},
+        currency: 'USD',
       );
-    });
-
-    test('surfaces other HTTP errors with the status in the code', () async {
-      final service = serviceReturning('boom', status: 500);
-
-      expect(
-        () => service.scan(bytes, currency: 'USD', categoryNames: const []),
-        throwsA(
-          isA<ReceiptScanException>().having(
-            (e) => e.code,
-            'code',
-            'http_500',
-          ),
-        ),
+      final negative = SupabaseReceiptScanService.mapExtracted(
+        {'amount': -5},
+        currency: 'USD',
       );
+
+      expect(zero.amount, isNull);
+      expect(negative.amount, isNull);
     });
   });
 }

@@ -22,9 +22,6 @@ dependencies:
   # --- Media: avatar picker (gallery/camera) + receipt capture ---
   image_picker: ^1.1.2
 
-  # --- Networking: REST calls (Gemini receipt OCR) ---
-  http: ^1.2.2
-
   # --- State management ---
   flutter_riverpod: ^3.3.2
 

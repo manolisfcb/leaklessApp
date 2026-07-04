@@ -3,20 +3,22 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/config_providers.dart';
+import '../../../core/supabase/supabase_providers.dart';
 import '../data/receipt_scan_result.dart';
 import '../data/receipt_scan_service.dart';
 
-/// The receipt OCR service, or `null` when no Gemini key is configured.
+/// The receipt OCR service, or `null` when scanning isn't available yet.
 ///
-/// The Quick Entry UI keys the "Escanear recibo" button off this being
-/// non-null, so the feature simply disappears on builds without a key instead
-/// of failing at tap time (same guard pattern as the Supabase/RevenueCat
-/// providers).
+/// Scanning runs through the `scan-receipt` Supabase Edge Function (which holds
+/// the Gemini key server-side), so it needs both Supabase configured and the
+/// `RECEIPT_SCAN_ENABLED` flag on. Until the function is deployed and the flag
+/// flipped, this stays `null` and Quick Entry is manual-only — the UI keys the
+/// "Escanear recibo" button off this being non-null.
 final receiptScanServiceProvider = Provider<ReceiptScanService?>((ref) {
   final config = ref.watch(appConfigProvider);
-  if (!config.hasGemini) return null;
-  final service = GeminiReceiptScanService(apiKey: config.geminiApiKey);
-  return service;
+  if (!config.receiptScanEnabled) return null;
+  if (!ref.watch(supabaseEnabledProvider)) return null;
+  return SupabaseReceiptScanService(ref.watch(supabaseClientProvider));
 });
 
 /// Whether receipt scanning is available in this build.
