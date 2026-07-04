@@ -105,16 +105,15 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  # Android 8+ adaptive icon. Point image_path_android at a transparent
-  # foreground if you have one; otherwise it reuses the main image.
-  adaptive_icon_background: "#0B1220"
+  # Android 8+ adaptive icon. Brand teal background from the icon pack.
+  adaptive_icon_background: "#00282A"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 # Branded launch screen (replaces the white flash). Regenerate with
 # `dart run flutter_native_splash:create` after editing.
 flutter_native_splash:
-  color: "#0B1220"
+  color: "#00282A"
   image: "assets/icon/splash.png"
   android_12:
-    color: "#0B1220"
+    color: "#00282A"
     image: "assets/icon/splash.png"
