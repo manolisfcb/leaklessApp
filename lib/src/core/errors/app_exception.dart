@@ -38,7 +38,20 @@ class NetworkException extends AppException {
 
 /// Backend (Supabase/Postgres/RPC) errors.
 class ServerException extends AppException {
-  const ServerException(super.message, {super.cause, super.stackTrace});
+  const ServerException(
+    super.message, {
+    this.code,
+    super.cause,
+    super.stackTrace,
+  });
+
+  /// Stable backend error identifier when one is available.
+  ///
+  /// Invitation RPCs intentionally raise identifiers such as
+  /// `invalid_invitation_token` as their Postgres message. Repositories keep
+  /// that value here so presentation code can map it without importing a
+  /// Supabase exception type.
+  final String? code;
 }
 
 /// A requested entity was not found.

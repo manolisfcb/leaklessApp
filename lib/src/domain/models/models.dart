@@ -6,6 +6,7 @@ export 'budget.dart';
 export 'entitlement.dart';
 export 'goal.dart';
 export 'household.dart';
+export 'household_invitation.dart';
 export 'household_member.dart';
 export 'money.dart';
 export 'notification_event.dart';

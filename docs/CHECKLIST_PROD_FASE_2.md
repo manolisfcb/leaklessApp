@@ -6,7 +6,7 @@
 >
 > Fase anterior: [CHECKLIST_PROD.md](CHECKLIST_PROD.md). Roadmap completo:
 > [PRODUCCION_Y_MONETIZACION.md](PRODUCCION_Y_MONETIZACION.md).
-> Última actualización: 2026-07-01.
+> Última actualización: 2026-07-03.
 
 ---
 
@@ -46,8 +46,8 @@
   pantalla para elegir la nueva contraseña y `updateUser`.
 - `SupabaseProfileRepository` ya puede leer/editar perfil y subir avatar privado;
   falta la UI que consume sus métodos de escritura.
-- `SupabaseHouseholdRepository` es de sólo lectura. No existe modelo, tabla,
-  mapper, RPC, controller ni UI de invitaciones.
+- El contrato backend y el boundary Flutter de invitaciones ya existen (modelo,
+  mapper, repositorio y controller/providers); todavía no hay deep links ni UI.
 - `handle_new_user` crea para **cada** usuario un perfil, un household propio,
   membership owner y seis categorías. La aceptación de una invitación debe
   reconciliar ese household inicial de forma atómica y sin perder datos.
@@ -81,8 +81,7 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
   - Probar happy path, token inválido/expirado/reutilizado, no-owner, email
     distinto, household ajeno y aislamiento RLS. Documentar cómo se entrega el
     token sin guardar el secreto en claro.
-- [ ] **F2-T2 — Dominio + repositorio + controller/providers de invitaciones.**
-  ⏭️ **SIGUIENTE**
+- [x] **F2-T2 — Dominio + repositorio + controller/providers de invitaciones.** ✅ **APROBADO (2026-07-03)**
   - Añadir modelo/mapper de invitación y extender el boundary de household
     siguiendo `transactions` (mock + Supabase + `AppException`).
   - Exponer crear/cancelar/aceptar y refrescar `currentHouseholdProvider`,
@@ -90,6 +89,7 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
     aceptación, evitando caché del usuario anterior.
   - Tests unitarios de mapper, estados y errores.
 - [ ] **F2-T3 — Deep link/QR + experiencia de invitar y aceptar.**
+  ⏭️ **SIGUIENTE**
   - Rutas centralizadas para invitación y persistencia segura del intento cuando
     el receptor aún debe registrarse/iniciar sesión.
   - Pantalla owner para compartir enlace/código/QR, ver estado y revocar.
@@ -251,3 +251,60 @@ F2-T1 ni se modificó código de producto. `flutter analyze` → **No issues fou
 repositorio, controller/providers, deep links ni UI.
 
 _(Detente aquí. F2-T1 aprobada; ⏭️ SIGUIENTE = F2-T2.)_
+
+### F2-T2 — Boundary Flutter de invitaciones — ✅ APROBADO (2026-07-03)
+
+**Implementación:**
+- Se añadieron `HouseholdInvitationStatus` y el modelo inmutable
+  `HouseholdInvitation`. El modelo representa las respuestas parciales y
+  deliberadamente distintas de crear/inspeccionar/cancelar/aceptar; el token
+  sólo está presente en la creación. No se generó serialización JSON para
+  reducir el riesgo de persistir accidentalmente ese secreto.
+- Se añadió `HouseholdInvitationMapper` con entradas separadas para cada RPC.
+  Convierte snake_case a dominio, fechas y estados, incluido `expired` derivado;
+  un estado desconocido falla explícitamente en vez de degradarse a `pending`.
+- `HouseholdRepository` ahora expone crear, inspeccionar, cancelar y aceptar.
+  La implementación Supabase llama las cuatro RPCs existentes con `rpc<T>`
+  tipado y `.single()`; normaliza el email y convierte `Duration` al intervalo
+  esperado por Postgres. La implementación mock reproduce el ciclo básico,
+  incluido reintento idempotente de aceptación.
+- `ServerException` conserva ahora un `code` opcional. Para las RPCs se guarda
+  el mensaje estable emitido por Postgres (`invalid_invitation_token`,
+  `invitation_email_mismatch`, etc.) sin filtrar `PostgrestException` fuera de
+  la capa de datos.
+- `HouseholdInvitationsController` expone las cuatro acciones con
+  `AsyncValue<HouseholdInvitation?>`. Tras aceptar invalida hogar, miembros y
+  perfil; transactions/categories/budgets/goals/subscriptions se reconstruyen
+  a través de su dependencia de `currentHouseholdProvider`, evitando conservar
+  datos del starter household.
+
+**Decisiones / trampas:**
+- No se añadió UI, QR, rutas ni persistencia del intento: pertenecen a F2-T3.
+- Las RPCs retornan columnas diferentes por diseño de seguridad. Un solo modelo
+  con campos opcionales mantiene una API pequeña sin inventar datos que el
+  backend decidió no revelar.
+- El lint estricto no pudo inferir el genérico de `rpc`; se declaró
+  `List<Map<String, dynamic>>` explícitamente antes de `.single()` según la API
+  del SDK resuelto.
+- La invalidación se concentra en `currentHouseholdProvider` en lugar de
+  importar todos los providers de features dentro de household y crear ciclos
+  de dependencias. Los consumidores household-scoped ya observan ese provider.
+
+**Verificación:**
+- `dart run build_runner build --delete-conflicting-outputs` → código Freezed
+  generado correctamente (la opción está deprecada y el runner la ignora, sin
+  afectar la generación).
+- Tests nuevos de mapper y controller → **6/6 PASS**: shapes de RPC, estado
+  expirado, aceptación idempotente, rechazo de estados desconocidos,
+  invalidación de scope y propagación de códigos de error.
+- `flutter test` → **24/24 PASS**.
+- `flutter analyze` → **No issues found!**
+- `git diff --check` → sin errores.
+- La instancia local de Supabase no estaba levantada
+  (`supabase_db_leaklessApp` no existe), por lo que no se repitió pgTAP. No hubo
+  cambios SQL; el contrato consumido sigue siendo el F2-T1 ya probado 29/29.
+
+**Handoff:** implementar únicamente **F2-T3**; añadir deep link/QR y UI sobre
+este boundary, sin volver a exponer ni persistir el token en logs o analytics.
+
+_(Detente aquí. F2-T2 aprobada; ⏭️ SIGUIENTE = F2-T3.)_
