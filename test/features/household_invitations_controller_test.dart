@@ -104,6 +104,19 @@ class _FakeHouseholdRepository implements HouseholdRepository {
   ];
 
   @override
+  Future<Household> configureHousehold({
+    required String householdId,
+    required String name,
+    required String currency,
+  }) async => Household(
+    id: householdId,
+    name: name,
+    ownerId: 'owner',
+    currency: currency,
+    setupCompleted: true,
+  );
+
+  @override
   Future<HouseholdInvitation> createInvitation({
     required String householdId,
     required String email,

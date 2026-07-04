@@ -12,6 +12,7 @@ abstract class Household with _$Household {
     required String name,
     required String ownerId,
     @Default('USD') String currency,
+    @Default(false) bool setupCompleted,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _Household;

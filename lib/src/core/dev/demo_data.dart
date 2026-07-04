@@ -17,6 +17,7 @@ abstract final class DemoData {
     name: 'Nuestra casa',
     ownerId: 'demo-me',
     currency: currency,
+    setupCompleted: true,
   );
 
   static const List<HouseholdMember> members = [

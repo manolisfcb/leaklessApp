@@ -4,6 +4,7 @@ import '../../../core/supabase/supabase_providers.dart';
 import '../../../domain/models/household.dart';
 import '../../../domain/models/household_invitation.dart';
 import '../../../domain/models/household_member.dart';
+import '../../auth/application/auth_providers.dart';
 import '../../profile/application/profile_providers.dart';
 import '../data/household_repository.dart';
 
@@ -30,6 +31,75 @@ final householdMembersProvider = FutureProvider<List<HouseholdMember>>((
   if (household == null) return const [];
   return ref.watch(householdRepositoryProvider).fetchMembers(household.id);
 });
+
+enum HouseholdSetupState {
+  missingHousehold,
+  ownerSetupRequired,
+  waitingForOwner,
+  readySolo,
+  readyShared,
+}
+
+/// Explicit routing state for the post-auth household setup gate.
+final householdSetupStateProvider = FutureProvider<HouseholdSetupState>((
+  ref,
+) async {
+  final household = await ref.watch(currentHouseholdProvider.future);
+  if (household == null) return HouseholdSetupState.missingHousehold;
+
+  final userId = ref.watch(currentUserProvider)?.id;
+  final isOwner = household.ownerId == userId;
+  if (!household.setupCompleted) {
+    return isOwner
+        ? HouseholdSetupState.ownerSetupRequired
+        : HouseholdSetupState.waitingForOwner;
+  }
+
+  final members = await ref.watch(householdMembersProvider.future);
+  return members.length > 1
+      ? HouseholdSetupState.readyShared
+      : HouseholdSetupState.readySolo;
+});
+
+class HouseholdSetupController extends Notifier<AsyncValue<Household?>> {
+  @override
+  AsyncValue<Household?> build() => const AsyncData(null);
+
+  Future<Household?> save({
+    required String householdId,
+    required String name,
+    required String currency,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      final household = await ref
+          .read(householdRepositoryProvider)
+          .configureHousehold(
+            householdId: householdId,
+            name: name,
+            currency: currency,
+          );
+      state = AsyncData(household);
+      return household;
+    } catch (error, stack) {
+      state = AsyncError(error, stack);
+      return null;
+    }
+  }
+
+  Future<void> refreshScope() async {
+    ref.invalidate(currentHouseholdProvider);
+    ref.invalidate(householdMembersProvider);
+    ref.invalidate(householdSetupStateProvider);
+    ref.invalidate(currentProfileProvider);
+    await ref.read(householdSetupStateProvider.future);
+  }
+}
+
+final householdSetupControllerProvider =
+    NotifierProvider<HouseholdSetupController, AsyncValue<Household?>>(
+      HouseholdSetupController.new,
+    );
 
 /// Coordinates invitation actions and exposes their latest result/error.
 class HouseholdInvitationsController

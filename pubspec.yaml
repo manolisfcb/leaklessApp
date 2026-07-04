@@ -25,6 +25,11 @@ dependencies:
   # --- Navigation ---
   go_router: ^17.3.0
 
+  # --- Invitation links / secure handoff / sharing ---
+  flutter_secure_storage: ^10.3.1
+  qr_flutter: ^4.1.0
+  share_plus: ^13.2.0
+
   # --- Immutable models + serialization ---
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0

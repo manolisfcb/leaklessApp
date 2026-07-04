@@ -13,6 +13,11 @@ import 'household_mapper.dart';
 abstract interface class HouseholdRepository {
   Future<Household?> fetchCurrentHousehold();
   Future<List<HouseholdMember>> fetchMembers(String householdId);
+  Future<Household> configureHousehold({
+    required String householdId,
+    required String name,
+    required String currency,
+  });
   Future<HouseholdInvitation> createInvitation({
     required String householdId,
     required String email,
@@ -28,16 +33,38 @@ abstract interface class HouseholdRepository {
 class MockHouseholdRepository implements HouseholdRepository {
   MockHouseholdRepository();
 
+  Household _household = DemoData.household;
   HouseholdInvitation? _invitation;
   String? _invitationToken;
   var _invitationSequence = 0;
 
   @override
-  Future<Household?> fetchCurrentHousehold() async => DemoData.household;
+  Future<Household?> fetchCurrentHousehold() async => _household;
 
   @override
   Future<List<HouseholdMember>> fetchMembers(String householdId) async =>
       DemoData.members;
+
+  @override
+  Future<Household> configureHousehold({
+    required String householdId,
+    required String name,
+    required String currency,
+  }) async {
+    if (householdId != _household.id) {
+      throw const ServerException(
+        'Household not found',
+        code: 'not_household_owner',
+      );
+    }
+    _household = _household.copyWith(
+      name: name.trim(),
+      currency: currency.trim().toUpperCase(),
+      setupCompleted: true,
+      updatedAt: DateTime.now().toUtc(),
+    );
+    return _household;
+  }
 
   @override
   Future<HouseholdInvitation> createInvitation({
@@ -173,6 +200,35 @@ class SupabaseHouseholdRepository implements HouseholdRepository {
     } catch (e, s) {
       throw ServerException(
         'Failed to load household members',
+        cause: e,
+        stackTrace: s,
+      );
+    }
+  }
+
+  @override
+  Future<Household> configureHousehold({
+    required String householdId,
+    required String name,
+    required String currency,
+  }) async {
+    try {
+      final row = await _client
+          .rpc<List<Map<String, dynamic>>>(
+            'configure_household',
+            params: {
+              'p_household_id': householdId,
+              'p_name': name.trim(),
+              'p_currency': currency.trim().toUpperCase(),
+            },
+          )
+          .single();
+      return HouseholdMapper.fromRow(row);
+    } catch (e, s) {
+      if (e is ServerException) rethrow;
+      throw ServerException(
+        'Failed to configure household',
+        code: e is PostgrestException ? e.message : null,
         cause: e,
         stackTrace: s,
       );

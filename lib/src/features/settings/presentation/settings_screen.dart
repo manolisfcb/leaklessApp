@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/notifications/notification_providers.dart';
 import '../../../core/purchases/purchases_providers.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../auth/application/auth_controller.dart';
@@ -69,9 +71,22 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 _SettingsRow(
+                  icon: CupertinoIcons.house,
+                  label: 'Nombre y moneda',
+                  value: household == null
+                      ? 'Sin hogar'
+                      : '${household.name} · ${household.currency}',
+                  onTap: household == null
+                      ? null
+                      : () => context.push(AppRoutes.householdConfiguration),
+                ),
+                const _RowDivider(),
+                _SettingsRow(
                   icon: CupertinoIcons.person_2,
-                  label: 'Pareja / Household',
-                  value: '${ref.watch(householdMembersProvider).asData?.value.length ?? 0} miembros',
+                  label: 'Pareja',
+                  value:
+                      '${ref.watch(householdMembersProvider).asData?.value.length ?? 0} miembros',
+                  onTap: () => context.push(AppRoutes.householdInvitations),
                 ),
                 const _RowDivider(),
                 _SettingsRow(
@@ -99,7 +114,8 @@ class SettingsScreen extends ConsumerWidget {
             icon: CupertinoIcons.square_arrow_right,
             variant: GlassButtonVariant.glass,
             accent: colors.expense,
-            onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
+            onPressed: () =>
+                ref.read(authControllerProvider.notifier).signOut(),
           ),
         ],
       ),
@@ -113,33 +129,45 @@ class _SettingsRow extends StatelessWidget {
     required this.label,
     this.value,
     this.valueColor,
+    this.onTap,
   });
 
   final IconData icon;
   final String label;
   final String? value;
   final Color? valueColor;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: colors.textSecondary),
-          AppSpacing.gapMd,
-          Expanded(child: Text(label, style: AppTypography.titleMedium)),
-          if (value != null)
-            Text(
-              value!,
-              style: AppTypography.bodyMedium.copyWith(
-                color: valueColor ?? colors.textSecondary,
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+          child: Row(
+            children: [
+              Icon(icon, size: 20, color: colors.textSecondary),
+              AppSpacing.gapMd,
+              Expanded(child: Text(label, style: AppTypography.titleMedium)),
+              if (value != null)
+                Text(
+                  value!,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: valueColor ?? colors.textSecondary,
+                  ),
+                ),
+              AppSpacing.gapSm,
+              Icon(
+                CupertinoIcons.chevron_right,
+                size: 16,
+                color: colors.textTertiary,
               ),
-            ),
-          AppSpacing.gapSm,
-          Icon(CupertinoIcons.chevron_right, size: 16, color: colors.textTertiary),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -88,8 +88,7 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
     `householdMembersProvider`, perfil y datos household-scoped después de una
     aceptación, evitando caché del usuario anterior.
   - Tests unitarios de mapper, estados y errores.
-- [ ] **F2-T3 — Deep link/QR + experiencia de invitar y aceptar.**
-  ⏭️ **SIGUIENTE**
+- [x] **F2-T3 — Deep link/QR + experiencia de invitar y aceptar.** ✅ **APROBADO (2026-07-03)**
   - Rutas centralizadas para invitación y persistencia segura del intento cuando
     el receptor aún debe registrarse/iniciar sesión.
   - Pantalla owner para compartir enlace/código/QR, ver estado y revocar.
@@ -97,7 +96,8 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
     y manejo de enlace inválido/expirado/usado.
   - No registrar tokens completos en analytics, logs, crash reports ni URLs
     persistidas por la app.
-- [ ] **F2-T4 — Onboarding/configuración del household compartido.**
+- [x] **F2-T4 — Onboarding/configuración del household compartido.**
+  ✅ **IMPLEMENTADO (2026-07-03) · pendiente checkpoint pgTAP local**
   - Permitir al owner editar nombre y moneda, revisar categorías iniciales e
     invitar a la pareja; permitir omitir la invitación y retomarla en Ajustes.
   - Manejar explícitamente usuario sin household, invitación pendiente y hogar
@@ -308,3 +308,101 @@ _(Detente aquí. F2-T1 aprobada; ⏭️ SIGUIENTE = F2-T2.)_
 este boundary, sin volver a exponer ni persistir el token en logs o analytics.
 
 _(Detente aquí. F2-T2 aprobada; ⏭️ SIGUIENTE = F2-T3.)_
+
+### F2-T3 — Deep links/QR y experiencia de invitación — ✅ APROBADO (2026-07-03)
+
+**Implementación:**
+- Se centralizó el contrato `leakless://app/invite?token=…` y las rutas
+  `/invite` y `/household/invitations`. Android registra un `VIEW` intent
+  filter y iOS un URL scheme; `go_router` captura el intento tanto en cold
+  start como con la app abierta.
+- El router valida que el token sean exactamente 64 caracteres hexadecimales,
+  lo normaliza, elimina inmediatamente el query param de la ruta visible y
+  conserva únicamente el token en Keychain/Keystore mediante
+  `flutter_secure_storage`. Nunca se persiste la URL completa. Android desactiva
+  Auto Backup para evitar restaurar ciphertext sin su clave e iOS declara el
+  entitlement de Keychain.
+- Un intento pendiente sobrevive onboarding/auth y se reanuda al autenticar. La
+  pantalla de auth avisa que debe usarse el correo destinatario; una captura
+  nueva gana frente a una lectura tardía del almacenamiento seguro. Aceptar o
+  descartar elimina el intento.
+- La pantalla owner permite crear para un email, ver estado/expiración, mostrar
+  QR y código, copiar enlace/código, compartir mediante el share sheet y
+  revocar. También ofrece entrada manual para quien recibió sólo el código.
+- La pantalla receptor inspecciona el preview autorizado, muestra hogar,
+  invitante, email y expiración, y cubre aceptar, descartar, loading, success,
+  token inválido, expirado, usado, cancelado, email distinto y starter household
+  no vacío. Ante email distinto permite cambiar de cuenta sin perder el intento.
+
+**Decisiones / seguridad:**
+- El custom scheme es un mecanismo de apertura, no de autorización: otro cliente
+  podría copiarlo o reclamar el scheme. La seguridad sigue en la RPC, que exige
+  sesión con el mismo email, token de un solo uso y estado vigente. Universal
+  Links/App Links con fallback web requieren un dominio publicado y se dejan
+  para la configuración de distribución, sin inventar aquí un host no controlado.
+- “Rechazar” en el receptor descarta sólo su intento local. No cancela la
+  invitación de todos porque la RPC de cancelación pertenece exclusivamente al
+  owner.
+- El secreto existe en UI sólo para la entrega explícita (QR, clipboard o share
+  sheet). No se envía a analytics/crash reporting, no se escribe en logs y el
+  controller se limpia después de cada acción.
+- La pantalla owner conserva el estado de la invitación emitida durante esa
+  sesión. El backend de F2-T1 no expone enumeración/listado deliberadamente; no
+  se debilitó RLS ni se añadió lectura directa de la tabla para reconstruirlo.
+
+**Verificación:**
+- Tests nuevos de links, validación, persistencia/restauración segura y carrera
+  de hidratación; test de router signed-out → auth → `/invite` confirma que el
+  token desaparece del URL. Suite completa: `flutter test` → **29/29 PASS**.
+- `flutter analyze` → **No issues found!**; `git diff --check` → sin errores.
+- `flutter build apk --debug` → APK construido correctamente.
+- `flutter build ios --simulator --debug` → `Runner.app` construido
+  correctamente, incluidos URL scheme, entitlements y plugins.
+- `plutil -lint` sobre `Info.plist`/entitlements y `xmllint` sobre el Manifest →
+  válidos. No había un Simulator booted y, conforme al workflow de depuración,
+  no se arrancó uno sin permiso; la apertura física del scheme queda como
+  evidencia humana del checkpoint F2-T9.
+- No hubo cambios SQL. El preview/accept/cancel siguen consumiendo las RPCs de
+  F2-T1 ya aprobadas y su aislamiento 29/29 pgTAP.
+
+**Handoff:** implementar únicamente **F2-T4**; integrar la invitación en el
+onboarding/configuración del household sin rehacer el contrato de F2-T3.
+
+_(Detente aquí. F2-T3 aprobada; ⏭️ SIGUIENTE = F2-T4.)_
+
+### F2-T4 — Configuración del household compartido — ✅ IMPLEMENTADO (2026-07-03)
+
+**Implementación:**
+- Se añadió un gate post-auth persistido en `households.setup_completed`: un
+  owner nuevo configura nombre y moneda, revisa las seis categorías iniciales
+  e invita a su pareja o continúa sin invitar. La invitación opcional reutiliza
+  el contrato y la pantalla de compartir de F2-T3.
+- El router da prioridad a una invitación recibida y clasifica explícitamente
+  hogar ausente, configuración pendiente del owner, espera de un miembro,
+  hogar individual listo y hogar compartido. Ya no abre el dashboard mientras
+  el estado del household es desconocido o inconsistente.
+- Ajustes permite volver a editar nombre/moneda y mantiene la entrada para
+  invitar a la pareja. Omitir la invitación durante onboarding es una decisión
+  persistida y no bloquea el uso individual del hogar.
+
+**Seguridad de moneda:**
+- `configure_household` normaliza y valida nombre/ISO 4217, exige ownership y
+  sincroniza la moneda del perfil del owner.
+- Un trigger de base de datos impide cambiar la moneda —incluso mediante un
+  `UPDATE` directo que evite la RPC— cuando existen transacciones,
+  presupuestos, metas o suscripciones. Los importes históricos nunca se
+  reinterpretan silenciosamente.
+
+**Verificación:**
+- `flutter analyze` → **No issues found**; `flutter test` → **32/32 PASS**.
+- `flutter build apk --debug` → APK construido correctamente.
+- Se añadieron 11 aserciones pgTAP para permisos, ownership, validación,
+  persistencia y bloqueo de cambios de moneda. Docker no permitió completar el
+  checkpoint pgTAP final: otro proyecto ocupa los puertos estándar y el daemon
+  dejó de responder al levantar la instancia aislada.
+  Reejecutar `supabase test db` con Docker saludable antes de aprobar F2-T4.
+
+**Handoff:** completar el checkpoint pgTAP local y aprobar F2-T4; después,
+implementar únicamente F2-T5.
+
+_(Detente aquí. F2-T4 implementada; ⏭️ SIGUIENTE tras checkpoint = F2-T5.)_

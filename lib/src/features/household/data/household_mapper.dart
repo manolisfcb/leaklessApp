@@ -16,6 +16,7 @@ abstract final class HouseholdMapper {
     name: row['name'] as String,
     ownerId: row['owner_id'] as String,
     currency: (row['currency'] as String?) ?? 'USD',
+    setupCompleted: (row['setup_completed'] as bool?) ?? false,
     createdAt: _parseDate(row['created_at']),
     updatedAt: _parseDate(row['updated_at']),
   );
@@ -38,7 +39,11 @@ abstract final class HouseholdMemberMapper {
     createdAt: _parseDate(row['created_at']),
   );
 
-  static T _enumByName<T extends Enum>(List<T> values, Object? raw, T fallback) {
+  static T _enumByName<T extends Enum>(
+    List<T> values,
+    Object? raw,
+    T fallback,
+  ) {
     final name = raw as String?;
     return values.firstWhere((e) => e.name == name, orElse: () => fallback);
   }

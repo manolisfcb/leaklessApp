@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../household/application/invitation_intent_controller.dart';
 import '../application/auth_controller.dart';
 import '../application/auth_error_message.dart';
 import '../application/auth_providers.dart';
@@ -105,6 +106,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final state = ref.watch(authControllerProvider);
+    final hasPendingInvitation =
+        ref.watch(invitationIntentControllerProvider).token != null;
     final loading = state.isLoading;
     final errorMessage = state.hasError ? authErrorMessage(state.error!) : null;
 
@@ -136,11 +139,35 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 Text('leakless', style: AppTypography.displayMedium),
                 AppSpacing.gapXs,
                 Text(
-                  _isSignUp ? 'Crea tu cuenta' : 'Bienvenido de vuelta',
+                  _isSignUp
+                      ? 'Crea tu cuenta'
+                      : hasPendingInvitation
+                      ? 'Entra para revisar tu invitación'
+                      : 'Bienvenido de vuelta',
                   style: AppTypography.bodyLarge.copyWith(
                     color: colors.textSecondary,
                   ),
                 ),
+                if (hasPendingInvitation) ...[
+                  AppSpacing.gapLg,
+                  GlassCard(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    borderColor: colors.goal.withValues(alpha: 0.35),
+                    child: Row(
+                      children: [
+                        Icon(CupertinoIcons.person_2, color: colors.goal),
+                        AppSpacing.gapMd,
+                        Expanded(
+                          child: Text(
+                            'Usa el correo al que enviaron la invitación. '
+                            'Continuaremos automáticamente al entrar.',
+                            style: AppTypography.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 AppSpacing.gapXxl,
                 GlassCard(
                   child: Column(
@@ -355,9 +382,7 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,
             autofillHints: const [AutofillHints.email],
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'\s')),
-            ],
+            inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
             onSubmitted: (_) => _send(),
             validator: (value) {
               final email = (value ?? '').trim();
@@ -439,7 +464,9 @@ class _MessageBanner extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: AppTypography.bodySmall.copyWith(color: colors.textPrimary),
+              style: AppTypography.bodySmall.copyWith(
+                color: colors.textPrimary,
+              ),
             ),
           ),
         ],

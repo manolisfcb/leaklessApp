@@ -5,7 +5,10 @@ import 'package:leakless/src/core/prefs/prefs_providers.dart';
 import 'package:leakless/src/core/router/app_router.dart';
 import 'package:leakless/src/core/router/app_routes.dart';
 import 'package:leakless/src/core/theme/theme.dart';
+import 'package:leakless/src/domain/models/household.dart';
 import 'package:leakless/src/features/auth/application/auth_controller.dart';
+import 'package:leakless/src/features/household/application/household_providers.dart';
+import 'package:leakless/src/features/household/application/invitation_intent_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Mirrors the real [LeaklessApp]: a ConsumerWidget that *watches* routerProvider.
@@ -36,7 +39,12 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     final container = ProviderContainer(
-      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        invitationIntentStoreProvider.overrideWithValue(
+          _MemoryInvitationIntentStore(),
+        ),
+      ],
     );
     addTearDown(container.dispose);
 
@@ -63,4 +71,104 @@ void main() {
       AppRoutes.dashboard,
     );
   });
+
+  testWidgets(
+    'a signed-in owner must configure the household before the dashboard',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      final prefs = await SharedPreferences.getInstance();
+      final container = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          invitationIntentStoreProvider.overrideWithValue(
+            _MemoryInvitationIntentStore(),
+          ),
+          currentHouseholdProvider.overrideWith(
+            (ref) async => const Household(
+              id: 'starter',
+              name: 'Nuestra casa',
+              ownerId: 'demo-me',
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _TestApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await container
+          .read(authControllerProvider.notifier)
+          .signIn('owner@leakless.app', 'demo1234');
+      await tester.pumpAndSettle();
+
+      expect(
+        container.read(routerProvider).routeInformationProvider.value.uri.path,
+        AppRoutes.householdSetup,
+      );
+    },
+  );
+
+  testWidgets(
+    'an invite survives auth and its token is stripped from the URL',
+    (tester) async {
+      const token =
+          'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
+      SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      final prefs = await SharedPreferences.getInstance();
+      final store = _MemoryInvitationIntentStore();
+      final container = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          invitationIntentStoreProvider.overrideWithValue(store),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _TestApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final router = container.read(routerProvider);
+
+      router.go('${AppRoutes.invitation}?token=$token');
+      await tester.pumpAndSettle();
+
+      expect(
+        router.routerDelegate.currentConfiguration.uri.path,
+        AppRoutes.auth,
+      );
+      expect(store.value, token);
+
+      await container
+          .read(authControllerProvider.notifier)
+          .signIn('demo@leakless.app', 'demo1234');
+      await tester.pumpAndSettle();
+
+      final uri = router.routerDelegate.currentConfiguration.uri;
+      expect(uri.path, AppRoutes.invitation);
+      expect(uri.queryParameters, isEmpty);
+    },
+  );
+}
+
+class _MemoryInvitationIntentStore implements InvitationIntentStore {
+  String? value;
+
+  @override
+  Future<String?> read() async => value;
+
+  @override
+  Future<void> write(String token) async => value = token;
+
+  @override
+  Future<void> clear() async => value = null;
 }
