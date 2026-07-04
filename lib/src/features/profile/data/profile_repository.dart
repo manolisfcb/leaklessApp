@@ -76,10 +76,15 @@ class SupabaseProfileRepository implements ProfileRepository {
 
   /// TTL for the avatar's signed URL persisted in `profiles.avatar_url`. The
   /// bucket is private, so we store a signed URL rather than a public one; it
-  /// refreshes on every upload. Resolving a fresh signed URL on read (or making
-  /// the bucket public) is the proper hardening — tracked with the app's other
-  /// §1.x backend follow-ups.
+  /// refreshes on every upload. This is what the *partner* sees for this user
+  /// (the member representation reads the persisted column), so it stays
+  /// long-lived until the proper server-side signing lands (§1.x follow-up).
   static const _avatarUrlTtlSeconds = 60 * 60 * 24 * 365; // 1 year.
+
+  /// TTL for the freshly-signed URL handed to the *owner's* own profile read —
+  /// short, because [fetchCurrentProfile] re-signs it every time rather than
+  /// relying on the year-long persisted value.
+  static const _readUrlTtlSeconds = 60 * 60; // 1 hour.
 
   SupabaseQueryBuilder get _table => _client.from('profiles');
 
@@ -89,9 +94,34 @@ class SupabaseProfileRepository implements ProfileRepository {
     if (userId == null) return null;
     try {
       final row = await _table.select().eq('id', userId).maybeSingle();
-      return row == null ? null : ProfileMapper.fromRow(row);
+      if (row == null) return null;
+      final profile = ProfileMapper.fromRow(row);
+      if (profile.avatarUrl == null) return profile;
+      // Don't trust the persisted (year-long) URL for our own view — resolve a
+      // fresh short-lived signed URL from the object itself.
+      return profile.copyWith(
+        avatarUrl: await _freshAvatarUrl(userId, fallback: profile.avatarUrl),
+      );
     } catch (e, s) {
       throw ServerException('Failed to load profile', cause: e, stackTrace: s);
+    }
+  }
+
+  /// Re-signs the user's avatar object into a short-lived URL. Best-effort: on
+  /// any failure it returns [fallback] so a signing hiccup never fails the whole
+  /// profile load.
+  Future<String?> _freshAvatarUrl(String userId, {String? fallback}) async {
+    try {
+      final objects = await _client.storage.from(_bucket).list(path: userId);
+      for (final object in objects) {
+        if (!object.name.startsWith('avatar.')) continue;
+        return await _client.storage
+            .from(_bucket)
+            .createSignedUrl('$userId/${object.name}', _readUrlTtlSeconds);
+      }
+      return fallback;
+    } catch (_) {
+      return fallback;
     }
   }
 

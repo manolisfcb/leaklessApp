@@ -104,7 +104,8 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
     con un solo miembro, sin mandar al dashboard con datos inconsistentes.
   - Asegurar que cambiar moneda no reinterprete silenciosamente importes ya
     guardados.
-- [ ] **F2-T5 — Edición de perfil y avatar en UI.**
+- [x] **F2-T5 — Edición de perfil y avatar en UI.**
+  ✅ **IMPLEMENTADO (2026-07-04)**
   - Conectar Ajustes a `updateProfile`/`uploadAvatar`: nombre, moneda, selector
     de imagen, permisos, compresión/límites y estados de error/loading.
   - Mantener sincronizados `profiles` y la representación visible del miembro;
@@ -406,3 +407,37 @@ _(Detente aquí. F2-T3 aprobada; ⏭️ SIGUIENTE = F2-T4.)_
 implementar únicamente F2-T5.
 
 _(Detente aquí. F2-T4 implementada; ⏭️ SIGUIENTE tras checkpoint = F2-T5.)_
+
+---
+
+### F2-T5 — Edición de perfil y avatar en UI — ✅ IMPLEMENTADO (2026-07-04)
+
+**Implementación:**
+- Nueva pantalla `ProfileEditScreen` (`/profile/edit`) accesible desde la tarjeta
+  de perfil en Ajustes. Edita nombre visible y moneda contra `updateProfile`, y
+  el avatar contra `uploadAvatar`, mediante `ProfileController` (patrón `Notifier`
+  como `HouseholdSetupController`: los errores caen en `state`, nunca se lanzan a
+  la UI). Estados de carga/guardado/subida y errores mapeados a mensajes en
+  español; éxito confirma con SnackBar y cierra la pantalla.
+- Selector de imagen con `image_picker` (galería o cámara vía hoja de acción
+  glass). Compresión/límites en el propio picker (`maxWidth/Height: 1024`,
+  `imageQuality: 85`) más una red de seguridad de 5 MB; extensión normalizada a
+  un formato seguro para Storage. Permisos declarados en `Info.plist`
+  (`NSPhotoLibraryUsageDescription`, `NSCameraUsageDescription`) y los
+  `PlatformException` de acceso denegado se traducen a un aviso accionable.
+- Sincronización: tras editar/subir se invalidan `currentProfileProvider` y
+  `householdMembersProvider`, de modo que la cabecera de Ajustes y la
+  representación del miembro reflejan el nuevo nombre/avatar.
+- Signed URL: `fetchCurrentProfile` ya no confía en el URL persistido por un año
+  para la vista propia; re-firma un URL corto (1 h) desde el objeto en el bucket
+  privado, con degradación al valor persistido si la firma falla. El URL de un
+  año se conserva sólo para lo que ve la pareja (columna del miembro) hasta la
+  firma server-side de §1.x.
+- Se extrajo `supportedCurrencies` a `core/utils/currencies.dart` para no
+  duplicar la lista entre onboarding de hogar y perfil.
+
+**Verificación:**
+- `flutter analyze` → **No issues found**; `flutter test` → **35/35 PASS**
+  (3 nuevas pruebas de `ProfileController`: éxito, avatar, error + refresco de
+  scope). Falta evidencia humana en dispositivo del picker/permisos de cámara y
+  galería, que el agente no puede ejercitar aquí.
