@@ -55,6 +55,16 @@ abstract interface class AuthRepository {
   /// recovery never lands on the dashboard before the password is changed.
   Stream<void> passwordRecoveryEvents();
 
+  /// Verifies the signed-in user's password before a sensitive operation
+  /// (e.g. account deletion). Throws [AuthFailureException] on a wrong password.
+  Future<void> reauthenticate(String password);
+
+  /// Permanently deletes the signed-in account server-side and clears the local
+  /// session. When the caller owns a *shared* household ownership is transferred
+  /// to the partner; a *solo* household is deleted only when
+  /// [confirmHouseholdDeletion] is `true` (the data is gone with it).
+  Future<void> deleteAccount({required bool confirmHouseholdDeletion});
+
   Future<void> signOut();
 }
 
@@ -120,6 +130,41 @@ class SupabaseAuthRepository implements AuthRepository {
       .map((_) {});
 
   @override
+  Future<void> reauthenticate(String password) => _guard(() async {
+    final email = _client.auth.currentUser?.email;
+    if (email == null) {
+      throw const AuthFailureException('Not signed in');
+    }
+    // Verifying the password refreshes the session; a wrong one raises an
+    // AuthException that `_guard` maps to AuthFailureException.
+    await _client.auth.signInWithPassword(email: email, password: password);
+  });
+
+  @override
+  Future<void> deleteAccount({required bool confirmHouseholdDeletion}) async {
+    try {
+      await _client.rpc<void>(
+        'delete_account',
+        params: {'p_confirm_household_deletion': confirmHouseholdDeletion},
+      );
+    } on sb.PostgrestException catch (e, s) {
+      throw ServerException(
+        'Failed to delete account',
+        code: e.message,
+        cause: e,
+        stackTrace: s,
+      );
+    } catch (e, s) {
+      throw ServerException('Failed to delete account', cause: e, stackTrace: s);
+    }
+    // The account is gone; drop the local session. Best-effort — the token may
+    // already be invalid.
+    try {
+      await _client.auth.signOut();
+    } catch (_) {}
+  }
+
+  @override
   Future<void> signOut() => _guard(_client.auth.signOut);
 
   Future<T> _guard<T>(Future<T> Function() action) async {
@@ -182,6 +227,22 @@ class FakeAuthRepository implements AuthRepository {
 
   @override
   Stream<void> passwordRecoveryEvents() => _recovery.stream;
+
+  @override
+  Future<void> reauthenticate(String password) async {
+    // Sentinel used by tests to exercise the wrong-password branch.
+    if (password == 'wrong') {
+      throw const AuthFailureException(
+        'Invalid login credentials',
+        code: 'invalid_credentials',
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteAccount({required bool confirmHouseholdDeletion}) async {
+    _setUser(null);
+  }
 
   /// Test/dev hook: simulates opening the recovery deep link. The SDK would
   /// establish a recovery session, so we also mark the user as signed in.

@@ -111,14 +111,16 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
   - Mantener sincronizados `profiles` y la representación visible del miembro;
     resolver/renovar el signed URL del bucket privado en vez de depender del URL
     persistido por un año.
-- [ ] **F2-T6 — Recuperación completa y ciclo de sesión.**
+- [x] **F2-T6 — Recuperación completa y ciclo de sesión.**
+  ✅ **IMPLEMENTADO (2026-07-04)**
   - Configurar redirect allowlist y callback/deep link de recovery; añadir la
     pantalla para definir contraseña nueva y reautenticación cuando corresponda.
   - Manejar refresh/expiración/revocación de sesión y limpiar/invalidar providers
     sensibles en sign out y cambio de usuario.
   - Tests de redirect: recovery no debe caer en dashboard antes de completar el
     cambio de contraseña.
-- [ ] **F2-T7 — Decisión e implementación de login social.**
+- [x] **F2-T7 — Decisión e implementación de login social.**
+  ✅ **DECIDIDO: email-only para el MVP (2026-07-04)**
   - Decidir y registrar si el MVP será email-only. Si se ofrece Google en iOS,
     implementar también Sign in with Apple conforme a la regla de la Store.
   - Si se habilita: OAuth/deep links, nonce de Apple, account linking, errores y
@@ -441,3 +443,82 @@ _(Detente aquí. F2-T4 implementada; ⏭️ SIGUIENTE tras checkpoint = F2-T5.)_
   (3 nuevas pruebas de `ProfileController`: éxito, avatar, error + refresco de
   scope). Falta evidencia humana en dispositivo del picker/permisos de cámara y
   galería, que el agente no puede ejercitar aquí.
+
+---
+
+### F2-T6 — Recuperación completa y ciclo de sesión — ✅ IMPLEMENTADO (2026-07-04)
+
+**Implementación:**
+- Recuperación por deep link: `sendPasswordReset` ahora pasa
+  `redirectTo: kPasswordRecoveryRedirect` (`leakless://app/reset-password`).
+  Se registró el nuevo path en el intent-filter de Android (iOS ya cubre por
+  scheme). El SDK procesa el enlace, establece una sesión de recuperación y
+  emite `AuthChangeEvent.passwordRecovery`.
+- `AuthRepository` expone `updatePassword` (via `updateUser`) y
+  `passwordRecoveryEvents()`. `PasswordRecoveryController` escucha ese stream y
+  levanta `passwordRecoveryPendingProvider`. El router lo prioriza: con la
+  bandera activa fija al usuario en `/reset-password` y **nunca** llega al
+  dashboard antes de cambiar la contraseña; al guardarla se limpia la bandera y
+  el redirect continúa a household/dashboard.
+- Nueva `ResetPasswordScreen` (`/reset-password`) con nueva contraseña +
+  confirmación, estados de carga/error y opción de cancelar (que cierra la
+  sesión de recuperación para no dejarla colgada). `ResetPasswordController`
+  sigue el patrón `Notifier` (los errores caen en `state`).
+- Ciclo de sesión: `sessionGuardProvider` (vivo desde el root en `app.dart`)
+  observa `authStateChanges` y, ante cualquier cambio de cuenta —incluido sign
+  out—, invalida `currentProfile`, `currentHousehold`, `householdMembers` y
+  `householdSetupState`. Como todo dato household-scoped observa
+  `currentHouseholdProvider`, la invalidación cascada evita ver datos del
+  usuario anterior. En sign out además resuelve una posible bandera de recovery.
+
+**Decisiones / trampas:**
+- El custom scheme abre la app pero no autoriza: la seguridad sigue en el token
+  de un solo uso de Supabase. El allowlist de Redirect URLs se documentó en
+  `supabase/README.md` (recovery + invite) y debe configurarse en el proyecto.
+- `AppUser` es freezed (igualdad por valor), así que un token refresh que
+  reemite el mismo usuario no dispara invalidaciones espurias; sólo un cambio
+  real de `id` lo hace.
+- El stream de recovery es broadcast sin buffer: el provider debe estar
+  suscrito antes de que llegue el evento. En producción lo garantiza el
+  `_RouterRefresh`; en tests se construye el provider antes de emitir.
+- Reautenticación: la ruta de recovery usa la sesión fresca del enlace, por lo
+  que `updateUser` no requiere re-login. La re-auth explícita se reserva para
+  operaciones sensibles (borrado de cuenta, F2-T8).
+
+**Verificación:**
+- `flutter analyze` → **No issues found**; `flutter test` → **39/39 PASS**.
+- Test de router: una sesión de recuperación queda fijada en `/reset-password`
+  y sólo sale de ahí tras guardar la nueva contraseña (no cae en dashboard).
+- Tests de ciclo de sesión: el guard refetcha el household al cambiar de cuenta
+  y al cerrar sesión, y limpia la bandera de recovery en sign out.
+- Sin cambios SQL. La apertura física del deep link de recovery en dispositivo
+  queda como evidencia humana del checkpoint F2-T9.
+
+---
+
+### F2-T7 — Decisión de login social — ✅ DECIDIDO: email-only MVP (2026-07-04)
+
+**Decisión:** el MVP se publica **email-only**. No se implementa login social
+(ni Google ni Apple) en esta fase.
+
+**Razones:**
+- El flujo de pareja (invitación, aceptación por email verificado, household
+  compartido) se apoya en que el email autenticado coincide con el de la
+  invitación. Email/password cubre el caso de uso completo del MVP sin superficie
+  adicional de OAuth/deep links.
+- La regla de la App Store obliga a ofrecer *Sign in with Apple* si se ofrece
+  cualquier login social de terceros (Google) en iOS. Añadir Google implicaría
+  también Apple (nonce, account linking, deep links, pruebas iOS/Android): un
+  costo que no aporta al MVP y que puede diferirse sin bloquear el lanzamiento.
+
+**Verificación de "sin affordances sociales" (requisito de la tarea al diferir):**
+- No hay dependencias `google_sign_in` ni `sign_in_with_apple` en `pubspec.yaml`
+  (la única referencia a "google" es `google_fonts`, tipografía).
+- `grep` sobre `lib/` no encuentra botones/entradas sociales, `signInWithOAuth`,
+  `signInWithIdToken` ni copy de "continuar con Google/Apple". `AuthScreen`
+  ofrece únicamente email/password + recuperación.
+- `flutter analyze` → **No issues found**; no se tocó código de producto.
+
+**Reversibilidad:** habilitar social en el futuro es una tarea propia (OAuth,
+nonce de Apple, account linking, allowlist de redirect y pruebas por plataforma)
+y no requiere deshacer nada de lo entregado aquí.

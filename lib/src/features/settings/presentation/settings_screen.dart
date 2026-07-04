@@ -9,8 +9,10 @@ import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../auth/application/auth_controller.dart';
+import '../../auth/application/auth_providers.dart';
 import '../../household/application/household_providers.dart';
 import '../../profile/application/profile_providers.dart';
+import 'delete_account_sheet.dart';
 
 /// Settings: profile, household, notifications, subscription and sign out.
 class SettingsScreen extends ConsumerWidget {
@@ -118,9 +120,39 @@ class SettingsScreen extends ConsumerWidget {
             onPressed: () =>
                 ref.read(authControllerProvider.notifier).signOut(),
           ),
+          AppSpacing.gapMd,
+          TextButton(
+            onPressed: () => _confirmDeleteAccount(context, ref),
+            child: Text(
+              'Eliminar cuenta',
+              style: AppTypography.labelLarge.copyWith(color: colors.expense),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  /// Opens the re-authenticated deletion sheet, choosing the consequence copy
+  /// from the caller's role in their household.
+  Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
+    final userId = ref.read(currentUserProvider)?.id;
+    final household = ref.read(currentHouseholdProvider).asData?.value;
+    final memberCount =
+        ref.read(householdMembersProvider).asData?.value.length ?? 1;
+
+    final DeleteAccountMode mode;
+    if (memberCount <= 1) {
+      mode = DeleteAccountMode.soloOwner;
+    } else if (household?.ownerId == userId) {
+      mode = DeleteAccountMode.sharedOwner;
+    } else {
+      mode = DeleteAccountMode.member;
+    }
+
+    await DeleteAccountSheet.show(context, mode: mode);
+    // On success the session is cleared and the router redirects to auth; no
+    // further navigation is needed here.
   }
 }
 
