@@ -24,6 +24,7 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
     required ResponsibleType responsible,
     String? categoryId,
     String? description,
+    DateTime? occurredAt,
   }) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
@@ -39,7 +40,9 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
         priority: priority,
         responsible: responsible,
         categoryId: categoryId,
-        occurredAt: DateTime.now(),
+        // A scanned receipt carries its own purchase date; manual entries fall
+        // back to now.
+        occurredAt: occurredAt ?? DateTime.now(),
         description: description,
       );
       await ref.read(transactionsRepositoryProvider).add(transaction);

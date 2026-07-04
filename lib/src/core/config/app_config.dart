@@ -13,6 +13,7 @@ class AppConfig {
     required this.supabaseAnonKey,
     required this.revenueCatKeyIos,
     required this.revenueCatKeyAndroid,
+    required this.geminiApiKey,
     required this.appEnv,
   });
 
@@ -22,6 +23,7 @@ class AppConfig {
     supabaseAnonKey: Env.get('SUPABASE_ANON_KEY'),
     revenueCatKeyIos: Env.get('REVENUECAT_PUBLIC_KEY_IOS'),
     revenueCatKeyAndroid: Env.get('REVENUECAT_PUBLIC_KEY_ANDROID'),
+    geminiApiKey: Env.get('GEMINI_API_KEY'),
     appEnv: Env.get('APP_ENV', fallback: 'dev'),
   );
 
@@ -29,6 +31,7 @@ class AppConfig {
   final String supabaseAnonKey;
   final String revenueCatKeyIos;
   final String revenueCatKeyAndroid;
+  final String geminiApiKey;
   final String appEnv;
 
   /// Whether Supabase credentials are present and the client can be started.
@@ -36,6 +39,9 @@ class AppConfig {
 
   /// Whether a RevenueCat key exists for the current platform.
   bool get hasRevenueCat => revenueCatKeyForPlatform.isNotEmpty;
+
+  /// Whether a Gemini key is present, enabling receipt photo OCR.
+  bool get hasGemini => geminiApiKey.isNotEmpty;
 
   /// The RevenueCat public key for the running platform (empty if unset).
   String get revenueCatKeyForPlatform {
