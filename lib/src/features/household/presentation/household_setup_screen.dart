@@ -8,6 +8,7 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
+import '../../../core/utils/currencies.dart';
 import '../../../domain/models/household.dart';
 import '../../../domain/models/transaction_category.dart';
 import '../../../shared/widgets/widgets.dart';
@@ -17,21 +18,6 @@ import '../application/household_providers.dart';
 import 'invitation_error_message.dart';
 
 final _emailPattern = RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$');
-
-const _currencies = <(String, String)>[
-  ('CAD', 'Dólar canadiense'),
-  ('USD', 'Dólar estadounidense'),
-  ('EUR', 'Euro'),
-  ('MXN', 'Peso mexicano'),
-  ('COP', 'Peso colombiano'),
-  ('ARS', 'Peso argentino'),
-  ('CLP', 'Peso chileno'),
-  ('PEN', 'Sol peruano'),
-  ('BRL', 'Real brasileño'),
-  ('GBP', 'Libra esterlina'),
-  ('JPY', 'Yen japonés'),
-  ('CHF', 'Franco suizo'),
-];
 
 /// Post-auth setup gate and reusable household settings form.
 class HouseholdSetupScreen extends ConsumerStatefulWidget {
@@ -246,12 +232,12 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                         prefixIcon: Icon(CupertinoIcons.money_dollar_circle),
                       ),
                       items: [
-                        if (!_currencies.any((entry) => entry.$1 == _currency))
+                        if (!supportedCurrencies.any((entry) => entry.$1 == _currency))
                           DropdownMenuItem(
                             value: _currency,
                             child: Text(_currency),
                           ),
-                        for (final entry in _currencies)
+                        for (final entry in supportedCurrencies)
                           DropdownMenuItem(
                             value: entry.$1,
                             child: Text('${entry.$1} · ${entry.$2}'),

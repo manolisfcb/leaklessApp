@@ -52,6 +52,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Selecciona una foto para usarla como tu avatar de perfil.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Toma una foto para usarla como tu avatar de perfil.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

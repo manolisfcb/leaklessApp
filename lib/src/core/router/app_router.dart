@@ -19,6 +19,7 @@ import '../../features/household/presentation/household_setup_screen.dart';
 import '../../features/household/presentation/invitation_screen.dart';
 import '../../features/onboarding/application/onboarding_providers.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/profile/presentation/profile_edit_screen.dart';
 import '../../features/quick_entry/presentation/quick_entry_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/transactions/presentation/transactions_screen.dart';
@@ -128,6 +129,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.householdConfigurationName,
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, _) => const HouseholdSetupScreen(isOnboarding: false),
+      ),
+      GoRoute(
+        path: AppRoutes.profileEdit,
+        name: AppRoutes.profileEditName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, _) => const ProfileEditScreen(),
       ),
       GoRoute(
         path: AppRoutes.invitation,

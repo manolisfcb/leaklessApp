@@ -19,6 +19,9 @@ dependencies:
   google_fonts: ^6.3.2 # Carga la tipografía "Outfit" del diseño sin empaquetar binarios.
   flutter_svg: ^2.3.0
 
+  # --- Media: avatar picker (gallery/camera) ---
+  image_picker: ^1.1.2
+
   # --- State management ---
   flutter_riverpod: ^3.3.2
 

@@ -35,6 +35,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         children: [
           GlassCard(
+            onTap: () => context.push(AppRoutes.profileEdit),
             child: Row(
               children: [
                 ProfileBubble(
