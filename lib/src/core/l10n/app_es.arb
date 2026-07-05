@@ -1,0 +1,86 @@
+{
+  "@@locale": "es",
+
+  "navHome": "Inicio",
+  "navHistory": "Historial",
+  "navBudgets": "Presupuestos",
+  "navGoals": "Metas",
+  "navSettings": "Ajustes",
+
+  "quickEntryWho": "¿Quién?",
+  "quickEntryCategory": "Categoría",
+  "quickEntryNote": "Nota",
+  "quickEntryNoteHint": "Descripción (ej. comercio)",
+  "quickEntryPriority": "Prioridad",
+  "quickEntrySave": "Guardar",
+  "quickEntryScanReceipt": "Escanear recibo",
+  "quickEntryScanningReceipt": "Leyendo recibo…",
+  "quickEntryTakePhoto": "Tomar una foto",
+  "quickEntryPickFromGallery": "Elegir de la galería",
+
+  "settingsTitle": "Ajustes",
+  "settingsProfileFallback": "Tu perfil",
+  "settingsHouseholdNameCurrency": "Nombre y moneda",
+  "settingsNoHousehold": "Sin hogar",
+  "settingsPartner": "Pareja",
+  "settingsMembersCount": "{count, plural, =1{1 miembro} other{{count} miembros}}",
+  "@settingsMembersCount": {
+    "description": "How many people belong to the household",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNotifications": "Notificaciones",
+  "settingsNotificationsOn": "Activadas",
+  "settingsNotificationsOff": "Desactivadas",
+  "settingsSubscription": "Suscripción",
+  "settingsPremium": "Premium",
+  "settingsFree": "Gratis",
+  "settingsLanguage": "Idioma",
+  "settingsSignOut": "Cerrar sesión",
+  "settingsDeleteAccount": "Eliminar cuenta",
+
+  "languageSystem": "Sistema",
+  "languageSpanish": "Español",
+  "languageEnglish": "English",
+  "languagePortuguese": "Português",
+  "@languageSystem": {
+    "description": "Follow the device language. Language names themselves are endonyms and identical across locales."
+  },
+
+  "transactionTypeIncome": "Ingreso",
+  "transactionTypeExpense": "Gasto",
+  "transactionTypeTransfer": "Transferencia",
+
+  "priorityNecessity": "Necesidad",
+  "priorityLifestyle": "Estilo de Vida",
+  "priorityFuture": "Futuro",
+  "priorityAnt": "Hormiga",
+  "@priorityAnt": {
+    "description": "\"Gasto hormiga\": small, frequent, easy-to-miss purchases — the product's core concept"
+  },
+
+  "sourceManual": "Manual",
+  "sourceBank": "Banco",
+  "sourceImport": "Importado",
+
+  "responsibleMe": "Tú",
+  "responsiblePartner": "Pareja",
+  "responsibleShared": "Compartido",
+
+  "budgetStatusNormal": "En control",
+  "budgetStatusWarning": "Cerca del límite",
+  "budgetStatusExceeded": "Límite superado",
+
+  "goalStatusActive": "Activa",
+  "goalStatusCompleted": "Completada",
+  "goalStatusPaused": "En pausa",
+  "goalStatusArchived": "Archivada",
+
+  "subscriptionStatusActive": "Activa",
+  "subscriptionStatusTrial": "Prueba",
+  "subscriptionStatusPaused": "En pausa",
+  "subscriptionStatusCanceled": "Cancelada"
+}

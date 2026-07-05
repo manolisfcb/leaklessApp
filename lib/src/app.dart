@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
+import 'core/l10n/l10n.dart';
+import 'core/prefs/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/theme.dart';
 import 'features/auth/application/session_guard.dart';
@@ -16,18 +18,23 @@ class LeaklessApp extends ConsumerWidget {
     // account change so no session ever sees the previous user's data.
     ref.watch(sessionGuardProvider);
     final router = ref.watch(routerProvider);
+    final localeOverride = ref.watch(localeControllerProvider);
     return MaterialApp.router(
       title: 'leakless',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       routerConfig: router,
-      locale: const Locale('es'),
-      supportedLocales: const [Locale('es'), Locale('en')],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+      // Null follows the device language; Spanish (listed first) is the
+      // fallback when that language isn't supported.
+      locale: localeOverride,
+      supportedLocales: const [Locale('es'), Locale('en'), Locale('pt')],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      builder: (context, child) {
+        // Keep bare DateFormat()/NumberFormat() calls in the resolved
+        // language; date symbols for all three are loaded in bootstrap.
+        Intl.defaultLocale = Localizations.localeOf(context).languageCode;
+        return child!;
+      },
     );
   }
 }

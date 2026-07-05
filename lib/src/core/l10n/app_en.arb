@@ -1,0 +1,72 @@
+{
+  "@@locale": "en",
+
+  "navHome": "Home",
+  "navHistory": "History",
+  "navBudgets": "Budgets",
+  "navGoals": "Goals",
+  "navSettings": "Settings",
+
+  "quickEntryWho": "Who?",
+  "quickEntryCategory": "Category",
+  "quickEntryNote": "Note",
+  "quickEntryNoteHint": "Description (e.g. store)",
+  "quickEntryPriority": "Priority",
+  "quickEntrySave": "Save",
+  "quickEntryScanReceipt": "Scan receipt",
+  "quickEntryScanningReceipt": "Reading receipt…",
+  "quickEntryTakePhoto": "Take a photo",
+  "quickEntryPickFromGallery": "Choose from gallery",
+
+  "settingsTitle": "Settings",
+  "settingsProfileFallback": "Your profile",
+  "settingsHouseholdNameCurrency": "Name & currency",
+  "settingsNoHousehold": "No household",
+  "settingsPartner": "Partner",
+  "settingsMembersCount": "{count, plural, =1{1 member} other{{count} members}}",
+  "settingsNotifications": "Notifications",
+  "settingsNotificationsOn": "On",
+  "settingsNotificationsOff": "Off",
+  "settingsSubscription": "Subscription",
+  "settingsPremium": "Premium",
+  "settingsFree": "Free",
+  "settingsLanguage": "Language",
+  "settingsSignOut": "Sign out",
+  "settingsDeleteAccount": "Delete account",
+
+  "languageSystem": "System",
+  "languageSpanish": "Español",
+  "languageEnglish": "English",
+  "languagePortuguese": "Português",
+
+  "transactionTypeIncome": "Income",
+  "transactionTypeExpense": "Expense",
+  "transactionTypeTransfer": "Transfer",
+
+  "priorityNecessity": "Necessity",
+  "priorityLifestyle": "Lifestyle",
+  "priorityFuture": "Future",
+  "priorityAnt": "Ant",
+
+  "sourceManual": "Manual",
+  "sourceBank": "Bank",
+  "sourceImport": "Imported",
+
+  "responsibleMe": "You",
+  "responsiblePartner": "Partner",
+  "responsibleShared": "Shared",
+
+  "budgetStatusNormal": "On track",
+  "budgetStatusWarning": "Near the limit",
+  "budgetStatusExceeded": "Over the limit",
+
+  "goalStatusActive": "Active",
+  "goalStatusCompleted": "Completed",
+  "goalStatusPaused": "Paused",
+  "goalStatusArchived": "Archived",
+
+  "subscriptionStatusActive": "Active",
+  "subscriptionStatusTrial": "Trial",
+  "subscriptionStatusPaused": "Paused",
+  "subscriptionStatusCanceled": "Canceled"
+}

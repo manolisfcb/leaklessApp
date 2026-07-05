@@ -1,0 +1,72 @@
+{
+  "@@locale": "pt",
+
+  "navHome": "Início",
+  "navHistory": "Histórico",
+  "navBudgets": "Orçamentos",
+  "navGoals": "Metas",
+  "navSettings": "Ajustes",
+
+  "quickEntryWho": "Quem?",
+  "quickEntryCategory": "Categoria",
+  "quickEntryNote": "Nota",
+  "quickEntryNoteHint": "Descrição (ex.: loja)",
+  "quickEntryPriority": "Prioridade",
+  "quickEntrySave": "Salvar",
+  "quickEntryScanReceipt": "Escanear recibo",
+  "quickEntryScanningReceipt": "Lendo recibo…",
+  "quickEntryTakePhoto": "Tirar uma foto",
+  "quickEntryPickFromGallery": "Escolher da galeria",
+
+  "settingsTitle": "Ajustes",
+  "settingsProfileFallback": "Seu perfil",
+  "settingsHouseholdNameCurrency": "Nome e moeda",
+  "settingsNoHousehold": "Sem lar",
+  "settingsPartner": "Parceiro(a)",
+  "settingsMembersCount": "{count, plural, =1{1 membro} other{{count} membros}}",
+  "settingsNotifications": "Notificações",
+  "settingsNotificationsOn": "Ativadas",
+  "settingsNotificationsOff": "Desativadas",
+  "settingsSubscription": "Assinatura",
+  "settingsPremium": "Premium",
+  "settingsFree": "Grátis",
+  "settingsLanguage": "Idioma",
+  "settingsSignOut": "Sair",
+  "settingsDeleteAccount": "Excluir conta",
+
+  "languageSystem": "Sistema",
+  "languageSpanish": "Español",
+  "languageEnglish": "English",
+  "languagePortuguese": "Português",
+
+  "transactionTypeIncome": "Receita",
+  "transactionTypeExpense": "Despesa",
+  "transactionTypeTransfer": "Transferência",
+
+  "priorityNecessity": "Necessidade",
+  "priorityLifestyle": "Estilo de Vida",
+  "priorityFuture": "Futuro",
+  "priorityAnt": "Formiga",
+
+  "sourceManual": "Manual",
+  "sourceBank": "Banco",
+  "sourceImport": "Importado",
+
+  "responsibleMe": "Você",
+  "responsiblePartner": "Parceiro(a)",
+  "responsibleShared": "Compartilhado",
+
+  "budgetStatusNormal": "Sob controle",
+  "budgetStatusWarning": "Perto do limite",
+  "budgetStatusExceeded": "Limite excedido",
+
+  "goalStatusActive": "Ativa",
+  "goalStatusCompleted": "Concluída",
+  "goalStatusPaused": "Pausada",
+  "goalStatusArchived": "Arquivada",
+
+  "subscriptionStatusActive": "Ativa",
+  "subscriptionStatusTrial": "Teste",
+  "subscriptionStatusPaused": "Pausada",
+  "subscriptionStatusCanceled": "Cancelada"
+}

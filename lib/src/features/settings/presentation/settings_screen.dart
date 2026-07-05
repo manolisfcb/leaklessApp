@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/notifications/notification_providers.dart';
+import '../../../core/prefs/locale_controller.dart';
 import '../../../core/purchases/purchases_providers.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
@@ -103,6 +107,16 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const _RowDivider(),
                 _SettingsRow(
+                  icon: CupertinoIcons.globe,
+                  label: context.l10n.settingsLanguage,
+                  value: _languageLabel(
+                    context.l10n,
+                    ref.watch(localeControllerProvider),
+                  ),
+                  onTap: () => _showLanguageSheet(context, ref),
+                ),
+                const _RowDivider(),
+                _SettingsRow(
                   icon: CupertinoIcons.star,
                   label: 'Suscripción',
                   value: isPremium ? 'Premium' : 'Gratis',
@@ -133,6 +147,52 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  /// Name of the active language for the row's trailing value.
+  String _languageLabel(AppLocalizations l10n, Locale? locale) =>
+      switch (locale?.languageCode) {
+        'es' => l10n.languageSpanish,
+        'en' => l10n.languageEnglish,
+        'pt' => l10n.languagePortuguese,
+        _ => l10n.languageSystem,
+      };
+
+  /// Lets the user pick the app language (or follow the system's).
+  Future<void> _showLanguageSheet(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final current = ref.read(localeControllerProvider);
+    final options = <(Locale?, String)>[
+      (null, l10n.languageSystem),
+      (const Locale('es'), l10n.languageSpanish),
+      (const Locale('en'), l10n.languageEnglish),
+      (const Locale('pt'), l10n.languagePortuguese),
+    ];
+    return GlassBottomSheet.show<void>(
+      context,
+      title: l10n.settingsLanguage,
+      builder: (sheetContext) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final (locale, label) in options)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: _LanguageOption(
+                label: label,
+                selected: locale?.languageCode == current?.languageCode,
+                onTap: () {
+                  unawaited(
+                    ref
+                        .read(localeControllerProvider.notifier)
+                        .setLocale(locale),
+                  );
+                  Navigator.of(sheetContext).pop();
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   /// Opens the re-authenticated deletion sheet, choosing the consequence copy
   /// from the caller's role in their household.
   Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
@@ -153,6 +213,38 @@ class SettingsScreen extends ConsumerWidget {
     await DeleteAccountSheet.show(context, mode: mode);
     // On success the session is cleared and the router redirects to auth; no
     // further navigation is needed here.
+  }
+}
+
+/// A tappable language choice inside the language sheet.
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return GlassCard(
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.lg,
+      ),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: AppTypography.titleMedium)),
+          if (selected)
+            Icon(CupertinoIcons.checkmark_alt, color: colors.primary),
+        ],
+      ),
+    );
   }
 }
 
