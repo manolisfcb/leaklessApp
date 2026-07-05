@@ -12,6 +12,7 @@ abstract final class AppRoutes {
   static const String budgets = '/budgets';
   static const String goals = '/goals';
   static const String settings = '/settings';
+  static const String categories = '/settings/categories';
   static const String profileEdit = '/profile/edit';
   static const String householdSetup = '/household/setup';
   static const String householdConfiguration = '/household/configuration';
@@ -31,6 +32,7 @@ abstract final class AppRoutes {
   static const String budgetsName = 'budgets';
   static const String goalsName = 'goals';
   static const String settingsName = 'settings';
+  static const String categoriesName = 'categories';
   static const String profileEditName = 'profile-edit';
   static const String householdSetupName = 'household-setup';
   static const String householdConfigurationName = 'household-configuration';

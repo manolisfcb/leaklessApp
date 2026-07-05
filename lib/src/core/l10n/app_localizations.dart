@@ -190,6 +190,102 @@ abstract class AppLocalizations {
   /// **'Salud'**
   String get categoryHealth;
 
+  /// No description provided for @categoryNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva categoría'**
+  String get categoryNew;
+
+  /// No description provided for @categoryEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar categoría'**
+  String get categoryEdit;
+
+  /// No description provided for @categoryNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get categoryNameLabel;
+
+  /// No description provided for @categoryNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Mascotas'**
+  String get categoryNameHint;
+
+  /// No description provided for @categoryNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un nombre.'**
+  String get categoryNameRequired;
+
+  /// No description provided for @categoryIconLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ícono'**
+  String get categoryIconLabel;
+
+  /// No description provided for @categoryColorLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Color'**
+  String get categoryColorLabel;
+
+  /// No description provided for @categoryCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear categoría'**
+  String get categoryCreate;
+
+  /// No description provided for @categorySaveChanges.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get categorySaveChanges;
+
+  /// No description provided for @categoryDefaultBadge.
+  ///
+  /// In es, this message translates to:
+  /// **'Predeterminada'**
+  String get categoryDefaultBadge;
+
+  /// No description provided for @categoryDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar categoría'**
+  String get categoryDeleteTitle;
+
+  /// Confirmation body when deleting a custom category; budgets cascade, transactions keep but lose the category
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará \"{name}\" y también sus presupuestos. Sus transacciones quedarán sin categoría.'**
+  String categoryDeleteWarning(String name);
+
+  /// No description provided for @categoriesLoadFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar las categorías'**
+  String get categoriesLoadFailed;
+
+  /// No description provided for @categoriesOperationFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar la operación. Inténtalo de nuevo.'**
+  String get categoriesOperationFailed;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get commonCancel;
+
+  /// No description provided for @commonDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get commonDelete;
+
   /// No description provided for @quickEntryWho.
   ///
   /// In es, this message translates to:
@@ -303,6 +399,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Desactivadas'**
   String get settingsNotificationsOff;
+
+  /// No description provided for @settingsCategories.
+  ///
+  /// In es, this message translates to:
+  /// **'Categorías'**
+  String get settingsCategories;
 
   /// No description provided for @settingsSubscription.
   ///

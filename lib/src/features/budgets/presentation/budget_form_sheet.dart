@@ -14,6 +14,7 @@ import '../../../domain/models/transaction_category.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../household/application/household_providers.dart';
 import '../../transactions/application/categories_providers.dart';
+import '../../transactions/presentation/category_form_sheet.dart';
 import '../application/budgets_providers.dart';
 
 /// Form for creating or editing one monthly category budget.
@@ -94,31 +95,40 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
           children: [
             Text('Categoría', style: AppTypography.labelLarge),
             AppSpacing.gapSm,
-            if (categories.isEmpty)
+            if (categories.isEmpty) ...[
               Text(
                 'Todas las categorías ya tienen presupuesto este mes.',
                 style: AppTypography.bodyMedium.copyWith(
                   color: context.colors.textSecondary,
                 ),
-              )
-            else
-              SizedBox(
-                height: 40,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  separatorBuilder: (_, _) => AppSpacing.gapSm,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return CategoryChip(
-                      label: categoryDisplayName(category, context.l10n),
-                      icon: CategoryIcons.forKey(category.iconName),
-                      selected: _categoryId == category.id,
-                      onTap: () => setState(() => _categoryId = category.id),
-                    );
-                  },
-                ),
               ),
+              AppSpacing.gapSm,
+            ],
+            SizedBox(
+              height: 40,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length + 1,
+                separatorBuilder: (_, _) => AppSpacing.gapSm,
+                itemBuilder: (context, index) {
+                  if (index == categories.length) {
+                    return CategoryChip(
+                      label: context.l10n.categoryNew,
+                      icon: CupertinoIcons.add,
+                      selected: false,
+                      onTap: () => CategoryFormSheet.show(context),
+                    );
+                  }
+                  final category = categories[index];
+                  return CategoryChip(
+                    label: categoryDisplayName(category, context.l10n),
+                    icon: CategoryIcons.forKey(category.iconName),
+                    selected: _categoryId == category.id,
+                    onTap: () => setState(() => _categoryId = category.id),
+                  );
+                },
+              ),
+            ),
             if (_categoryId == null) ...[
               AppSpacing.gapXs,
               Text(

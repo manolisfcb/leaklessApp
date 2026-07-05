@@ -54,6 +54,57 @@ class AppLocalizationsPt extends AppLocalizations {
   String get categoryHealth => 'Saúde';
 
   @override
+  String get categoryNew => 'Nova categoria';
+
+  @override
+  String get categoryEdit => 'Editar categoria';
+
+  @override
+  String get categoryNameLabel => 'Nome';
+
+  @override
+  String get categoryNameHint => 'Ex.: Pets';
+
+  @override
+  String get categoryNameRequired => 'Digite um nome.';
+
+  @override
+  String get categoryIconLabel => 'Ícone';
+
+  @override
+  String get categoryColorLabel => 'Cor';
+
+  @override
+  String get categoryCreate => 'Criar categoria';
+
+  @override
+  String get categorySaveChanges => 'Salvar alterações';
+
+  @override
+  String get categoryDefaultBadge => 'Padrão';
+
+  @override
+  String get categoryDeleteTitle => 'Excluir categoria';
+
+  @override
+  String categoryDeleteWarning(String name) {
+    return '\"$name\" e seus orçamentos serão excluídos. Suas transações permanecerão, sem categoria.';
+  }
+
+  @override
+  String get categoriesLoadFailed => 'Não foi possível carregar as categorias';
+
+  @override
+  String get categoriesOperationFailed =>
+      'Não foi possível concluir a operação. Tente novamente.';
+
+  @override
+  String get commonCancel => 'Cancelar';
+
+  @override
+  String get commonDelete => 'Excluir';
+
+  @override
   String get quickEntryWho => 'Quem?';
 
   @override
@@ -117,6 +168,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsNotificationsOff => 'Desativadas';
+
+  @override
+  String get settingsCategories => 'Categorias';
 
   @override
   String get settingsSubscription => 'Assinatura';

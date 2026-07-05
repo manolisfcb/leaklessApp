@@ -107,6 +107,12 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const _RowDivider(),
                 _SettingsRow(
+                  icon: CupertinoIcons.tag,
+                  label: context.l10n.settingsCategories,
+                  onTap: () => context.push(AppRoutes.categories),
+                ),
+                const _RowDivider(),
+                _SettingsRow(
                   icon: CupertinoIcons.globe,
                   label: context.l10n.settingsLanguage,
                   value: _languageLabel(

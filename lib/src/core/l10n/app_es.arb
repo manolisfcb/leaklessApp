@@ -18,6 +18,32 @@
   "categoryEmergencyFund": "Reserva de emergencia",
   "categoryHealth": "Salud",
 
+  "categoryNew": "Nueva categoría",
+  "categoryEdit": "Editar categoría",
+  "categoryNameLabel": "Nombre",
+  "categoryNameHint": "Ej. Mascotas",
+  "categoryNameRequired": "Ingresa un nombre.",
+  "categoryIconLabel": "Ícono",
+  "categoryColorLabel": "Color",
+  "categoryCreate": "Crear categoría",
+  "categorySaveChanges": "Guardar cambios",
+  "categoryDefaultBadge": "Predeterminada",
+  "categoryDeleteTitle": "Eliminar categoría",
+  "categoryDeleteWarning": "Se eliminará \"{name}\" y también sus presupuestos. Sus transacciones quedarán sin categoría.",
+  "@categoryDeleteWarning": {
+    "description": "Confirmation body when deleting a custom category; budgets cascade, transactions keep but lose the category",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categoriesLoadFailed": "No pudimos cargar las categorías",
+  "categoriesOperationFailed": "No pudimos completar la operación. Inténtalo de nuevo.",
+
+  "commonCancel": "Cancelar",
+  "commonDelete": "Eliminar",
+
   "quickEntryWho": "¿Quién?",
   "quickEntryCategory": "Categoría",
   "quickEntryNote": "Nota",
@@ -46,6 +72,7 @@
   "settingsNotifications": "Notificaciones",
   "settingsNotificationsOn": "Activadas",
   "settingsNotificationsOff": "Desactivadas",
+  "settingsCategories": "Categorías",
   "settingsSubscription": "Suscripción",
   "settingsPremium": "Premium",
   "settingsFree": "Gratis",

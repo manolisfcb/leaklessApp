@@ -54,6 +54,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryHealth => 'Health';
 
   @override
+  String get categoryNew => 'New category';
+
+  @override
+  String get categoryEdit => 'Edit category';
+
+  @override
+  String get categoryNameLabel => 'Name';
+
+  @override
+  String get categoryNameHint => 'e.g. Pets';
+
+  @override
+  String get categoryNameRequired => 'Enter a name.';
+
+  @override
+  String get categoryIconLabel => 'Icon';
+
+  @override
+  String get categoryColorLabel => 'Color';
+
+  @override
+  String get categoryCreate => 'Create category';
+
+  @override
+  String get categorySaveChanges => 'Save changes';
+
+  @override
+  String get categoryDefaultBadge => 'Default';
+
+  @override
+  String get categoryDeleteTitle => 'Delete category';
+
+  @override
+  String categoryDeleteWarning(String name) {
+    return '\"$name\" and its budgets will be deleted. Its transactions will remain, without a category.';
+  }
+
+  @override
+  String get categoriesLoadFailed => 'We couldn\'t load the categories';
+
+  @override
+  String get categoriesOperationFailed =>
+      'We couldn\'t complete the operation. Please try again.';
+
+  @override
+  String get commonCancel => 'Cancel';
+
+  @override
+  String get commonDelete => 'Delete';
+
+  @override
   String get quickEntryWho => 'Who?';
 
   @override
@@ -117,6 +168,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsNotificationsOff => 'Off';
+
+  @override
+  String get settingsCategories => 'Categories';
 
   @override
   String get settingsSubscription => 'Subscription';

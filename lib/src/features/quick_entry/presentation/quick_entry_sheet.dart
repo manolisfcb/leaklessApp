@@ -14,6 +14,7 @@ import '../../../domain/models/transaction_category.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../household/application/household_providers.dart';
 import '../../transactions/application/categories_providers.dart';
+import '../../transactions/presentation/category_form_sheet.dart';
 import '../application/quick_entry_controller.dart';
 import '../application/receipt_scan_providers.dart';
 import '../data/receipt_scan_result.dart';
@@ -253,6 +254,12 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
                       ),
                     ),
                   ),
+                CategoryChip(
+                  label: context.l10n.categoryNew,
+                  icon: CupertinoIcons.add,
+                  selected: false,
+                  onTap: () => CategoryFormSheet.show(context),
+                ),
               ],
             ),
           ),
