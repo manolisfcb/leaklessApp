@@ -53,15 +53,17 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
   Future<void> _save() async {
     if (_cents == 0) return;
     final note = _note.text.trim();
-    final ok = await ref.read(quickEntryControllerProvider.notifier).submit(
-      amountMinorUnits: _cents,
-      type: _type,
-      priority: _priority,
-      responsible: _responsible,
-      categoryId: _categoryId,
-      description: note.isEmpty ? null : note,
-      occurredAt: _occurredAt,
-    );
+    final ok = await ref
+        .read(quickEntryControllerProvider.notifier)
+        .submit(
+          amountMinorUnits: _cents,
+          type: _type,
+          priority: _priority,
+          responsible: _responsible,
+          categoryId: _categoryId,
+          description: note.isEmpty ? null : note,
+          occurredAt: _occurredAt,
+        );
     if (ok && mounted) Navigator.of(context).pop();
   }
 
@@ -91,15 +93,18 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     final currency =
         ref.read(currentHouseholdProvider).asData?.value?.currency ?? 'USD';
     final categories =
-        ref.read(categoriesProvider).asData?.value ?? const <TransactionCategory>[];
+        ref.read(categoriesProvider).asData?.value ??
+        const <TransactionCategory>[];
 
     ReceiptScanResult? result;
     try {
-      result = await ref.read(receiptScanControllerProvider.notifier).scan(
-        bytes,
-        currency: currency,
-        categoryNames: [for (final c in categories) c.name],
-      );
+      result = await ref
+          .read(receiptScanControllerProvider.notifier)
+          .scan(
+            bytes,
+            currency: currency,
+            categoryNames: [for (final c in categories) c.name],
+          );
     } catch (e) {
       _showMessage(_scanErrorMessage(e));
       return;
@@ -107,14 +112,19 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     if (!mounted || result == null) return;
 
     if (result.isEmpty) {
-      _showMessage('No pudimos leer el recibo. Prueba con otra foto o escríbelo.');
+      _showMessage(
+        'No pudimos leer el recibo. Prueba con otra foto o escríbelo.',
+      );
       return;
     }
     _applyScan(result, categories);
   }
 
   /// Folds a [ReceiptScanResult] into the form, touching only fields it filled.
-  void _applyScan(ReceiptScanResult result, List<TransactionCategory> categories) {
+  void _applyScan(
+    ReceiptScanResult result,
+    List<TransactionCategory> categories,
+  ) {
     setState(() {
       _type = TransactionType.expense;
       if (result.amount != null) _cents = result.amount!.minorUnits.abs();
@@ -138,26 +148,27 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     return null;
   }
 
-  Future<ImageSource?> _chooseImageSource() => GlassBottomSheet.show<ImageSource>(
-    context,
-    title: 'Escanear recibo',
-    builder: (sheetContext) => Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _SourceTile(
-          icon: CupertinoIcons.camera,
-          label: 'Tomar una foto',
-          onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
+  Future<ImageSource?> _chooseImageSource() =>
+      GlassBottomSheet.show<ImageSource>(
+        context,
+        title: 'Escanear recibo',
+        builder: (sheetContext) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _SourceTile(
+              icon: CupertinoIcons.camera,
+              label: 'Tomar una foto',
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _SourceTile(
+              icon: CupertinoIcons.photo,
+              label: 'Elegir de la galería',
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
+            ),
+          ],
         ),
-        const SizedBox(height: AppSpacing.sm),
-        _SourceTile(
-          icon: CupertinoIcons.photo,
-          label: 'Elegir de la galería',
-          onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
-        ),
-      ],
-    ),
-  );
+      );
 
   void _showMessage(String message) {
     if (!mounted) return;
@@ -213,9 +224,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
           _Segmented<ResponsibleType>(
             value: _responsible,
             onChanged: (v) => setState(() => _responsible = v),
-            options: {
-              for (final r in ResponsibleType.values) r: r.label,
-            },
+            options: {for (final r in ResponsibleType.values) r: r.label},
           ),
           AppSpacing.gapXl,
           const _Label('Categoría'),
@@ -228,7 +237,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
                 for (final c in categories)
                   Padding(
                     padding: const EdgeInsets.only(right: AppSpacing.sm),
-                    child: _CategoryChip(
+                    child: CategoryChip(
                       label: c.name,
                       icon: CategoryIcons.forKey(c.iconName),
                       selected: _categoryId == c.id,
@@ -286,7 +295,9 @@ class _Label extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     text,
-    style: AppTypography.labelLarge.copyWith(color: context.colors.textSecondary),
+    style: AppTypography.labelLarge.copyWith(
+      color: context.colors.textSecondary,
+    ),
   );
 }
 
@@ -344,54 +355,6 @@ class _Segmented<T> extends StatelessWidget {
   }
 }
 
-class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({
-    required this.label,
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        decoration: BoxDecoration(
-          color: selected ? colors.goalSoft : colors.glassFill,
-          borderRadius: AppRadii.pillRadius,
-          border: Border.all(
-            color: selected ? colors.primary : colors.glassBorder,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 16,
-              color: selected ? colors.primary : colors.textSecondary,
-            ),
-            AppSpacing.gapXs,
-            Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(
-                color: selected ? colors.primary : colors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _PriorityPicker extends StatelessWidget {
   const _PriorityPicker({required this.value, required this.onChanged});
   final TransactionPriority value;
@@ -423,7 +386,9 @@ class _PriorityPicker extends StatelessWidget {
                       Icon(
                         CategoryIcons.forPriority(p),
                         size: 18,
-                        color: p == value ? colors.primary : colors.textSecondary,
+                        color: p == value
+                            ? colors.primary
+                            : colors.textSecondary,
                       ),
                       AppSpacing.gapXs,
                       Text(
@@ -539,7 +504,8 @@ String _pickerErrorMessage(PlatformException e) => switch (e.code) {
 String _scanErrorMessage(Object error) {
   if (error is ReceiptScanException) {
     return switch (error.code) {
-      'network' => 'Sin conexión con el servicio de lectura. Revisa tu internet.',
+      'network' =>
+        'Sin conexión con el servicio de lectura. Revisa tu internet.',
       'rate_limited' => 'Servicio ocupado. Espera unos segundos y reintenta.',
       _ => error.message,
     };

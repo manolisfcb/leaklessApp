@@ -11,6 +11,21 @@ import '../../../domain/models/money.dart';
 abstract final class GoalMapper {
   GoalMapper._();
 
+  static Map<String, dynamic> toInsert(Goal goal) => {
+    'household_id': goal.householdId,
+    'name': goal.name,
+    'target_amount': goal.target.major,
+    'currency': goal.target.currency,
+    'deadline': _dateOnly(goal.deadline),
+  };
+
+  static Map<String, dynamic> toUpdate(Goal goal) => {
+    'name': goal.name,
+    'target_amount': goal.target.major,
+    'currency': goal.target.currency,
+    'deadline': _dateOnly(goal.deadline),
+  };
+
   static Goal fromRow(Map<String, dynamic> row) {
     final currency = (row['currency'] as String?) ?? 'USD';
     final target = (row['target_amount'] as num).toDouble();
@@ -28,11 +43,18 @@ abstract final class GoalMapper {
     );
   }
 
-  static T _enumByName<T extends Enum>(List<T> values, Object? raw, T fallback) {
+  static T _enumByName<T extends Enum>(
+    List<T> values,
+    Object? raw,
+    T fallback,
+  ) {
     final name = raw as String?;
     return values.firstWhere((e) => e.name == name, orElse: () => fallback);
   }
 
   static DateTime? _parseDate(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;
+
+  static String? _dateOnly(DateTime? value) =>
+      value?.toIso8601String().split('T').first;
 }

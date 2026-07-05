@@ -12,6 +12,9 @@ import 'goal_mapper.dart';
 abstract interface class GoalsRepository {
   Stream<List<Goal>> watchForHousehold(String householdId);
   Future<List<Goal>> fetchForHousehold(String householdId);
+  Future<Goal> create(Goal goal);
+  Future<Goal> update(Goal goal);
+  Future<void> delete(String goalId);
   Future<void> contribute({
     required String goalId,
     required int amountMinorUnits,
@@ -37,12 +40,43 @@ class MockGoalsRepository implements GoalsRepository {
       List.unmodifiable(_items);
 
   @override
+  Future<Goal> create(Goal goal) async {
+    final now = DateTime.now();
+    final created = goal.copyWith(
+      id: goal.id.isEmpty ? 'mock-goal-${now.microsecondsSinceEpoch}' : goal.id,
+      createdAt: goal.createdAt ?? now,
+      updatedAt: now,
+    );
+    _items.add(created);
+    _emit();
+    return created;
+  }
+
+  @override
+  Future<Goal> update(Goal goal) async {
+    final index = _items.indexWhere((item) => item.id == goal.id);
+    if (index == -1) throw StateError('Goal not found: ${goal.id}');
+    final updated = goal.copyWith(updatedAt: DateTime.now());
+    _items[index] = updated;
+    _emit();
+    return updated;
+  }
+
+  @override
+  Future<void> delete(String goalId) async {
+    final exists = _items.any((goal) => goal.id == goalId);
+    if (!exists) throw StateError('Goal not found: $goalId');
+    _items.removeWhere((goal) => goal.id == goalId);
+    _emit();
+  }
+
+  @override
   Future<void> contribute({
     required String goalId,
     required int amountMinorUnits,
   }) async {
     final index = _items.indexWhere((g) => g.id == goalId);
-    if (index == -1) return;
+    if (index == -1) throw StateError('Goal not found: $goalId');
     final goal = _items[index];
     final newSaved = goal.saved.copyWith(
       minorUnits: goal.saved.minorUnits + amountMinorUnits,
@@ -53,8 +87,10 @@ class MockGoalsRepository implements GoalsRepository {
       status: completed ? GoalStatus.completed : goal.status,
       updatedAt: DateTime.now(),
     );
-    _controller.add(List.unmodifiable(_items));
+    _emit();
   }
+
+  void _emit() => _controller.add(List.unmodifiable(_items));
 
   void dispose() => unawaited(_controller.close());
 }
@@ -91,6 +127,42 @@ class SupabaseGoalsRepository implements GoalsRepository {
     }
   }
 
+  @override
+  Future<Goal> create(Goal goal) async {
+    try {
+      final row = await _table
+          .insert(GoalMapper.toInsert(goal))
+          .select()
+          .single();
+      return GoalMapper.fromRow(row);
+    } catch (e, s) {
+      throw ServerException('Failed to create goal', cause: e, stackTrace: s);
+    }
+  }
+
+  @override
+  Future<Goal> update(Goal goal) async {
+    try {
+      final row = await _table
+          .update(GoalMapper.toUpdate(goal))
+          .eq('id', goal.id)
+          .select()
+          .single();
+      return GoalMapper.fromRow(row);
+    } catch (e, s) {
+      throw ServerException('Failed to update goal', cause: e, stackTrace: s);
+    }
+  }
+
+  @override
+  Future<void> delete(String goalId) async {
+    try {
+      await _table.delete().eq('id', goalId);
+    } catch (e, s) {
+      throw ServerException('Failed to delete goal', cause: e, stackTrace: s);
+    }
+  }
+
   /// Read-modify-write of `saved_amount`: reads the current row, adds the
   /// contribution, and marks the goal completed once it reaches its target. The
   /// realtime stream then emits the new progress to both partners (the DB's
@@ -111,12 +183,18 @@ class SupabaseGoalsRepository implements GoalsRepository {
         minorUnits: goal.saved.minorUnits + amountMinorUnits,
       );
       final completed = newSaved.minorUnits >= goal.target.minorUnits;
-      await _table.update({
-        'saved_amount': newSaved.major,
-        if (completed) 'status': GoalStatus.completed.name,
-      }).eq('id', goalId);
+      await _table
+          .update({
+            'saved_amount': newSaved.major,
+            if (completed) 'status': GoalStatus.completed.name,
+          })
+          .eq('id', goalId);
     } catch (e, s) {
-      throw ServerException('Failed to contribute to goal', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to contribute to goal',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 }

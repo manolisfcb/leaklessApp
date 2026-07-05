@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/core_providers.dart';
 import '../../../core/supabase/supabase_providers.dart';
 import '../../../domain/models/goal.dart';
+import '../../../domain/models/money.dart';
 import '../../household/application/household_providers.dart';
 import '../data/goals_repository.dart';
 
@@ -32,17 +33,60 @@ class GoalsController extends Notifier<AsyncValue<void>> {
   @override
   AsyncValue<void> build() => const AsyncData(null);
 
-  Future<void> contribute({
-    required String goalId,
-    required int amountMinorUnits,
-  }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+  Future<bool> save({
+    Goal? goal,
+    required String name,
+    required int targetAmountMinorUnits,
+    DateTime? deadline,
+  }) => _run(() async {
+    if (goal == null) {
+      final household = await ref.read(currentHouseholdProvider.future);
+      if (household == null) throw StateError('No active household');
       await ref
           .read(goalsRepositoryProvider)
-          .contribute(goalId: goalId, amountMinorUnits: amountMinorUnits);
-      await ref.read(analyticsServiceProvider).goalContribution();
-    });
+          .create(
+            Goal(
+              id: '',
+              householdId: household.id,
+              name: name.trim(),
+              target: Money(
+                minorUnits: targetAmountMinorUnits,
+                currency: household.currency,
+              ),
+              deadline: deadline,
+            ),
+          );
+      return;
+    }
+
+    await ref
+        .read(goalsRepositoryProvider)
+        .update(
+          goal.copyWith(
+            name: name.trim(),
+            target: goal.target.copyWith(minorUnits: targetAmountMinorUnits),
+            deadline: deadline,
+          ),
+        );
+  });
+
+  Future<bool> delete(String goalId) =>
+      _run(() => ref.read(goalsRepositoryProvider).delete(goalId));
+
+  Future<bool> contribute({
+    required String goalId,
+    required int amountMinorUnits,
+  }) => _run(() async {
+    await ref
+        .read(goalsRepositoryProvider)
+        .contribute(goalId: goalId, amountMinorUnits: amountMinorUnits);
+    await ref.read(analyticsServiceProvider).goalContribution();
+  });
+
+  Future<bool> _run(Future<void> Function() action) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(action);
+    return !state.hasError;
   }
 }
 
