@@ -27,6 +27,23 @@ abstract final class BudgetMapper {
     );
   }
 
+  static Map<String, dynamic> toInsert(Budget budget) => {
+    'household_id': budget.householdId,
+    'category_id': budget.categoryId,
+    ...toUpdate(budget),
+  };
+
+  static Map<String, dynamic> toUpdate(Budget budget) => {
+    'category_id': budget.categoryId,
+    'amount_limit': budget.limit.major,
+    'currency': budget.limit.currency,
+    'period_start': _formatMonthStart(budget.periodStart),
+  };
+
+  static String _formatMonthStart(DateTime date) =>
+      '${date.year.toString().padLeft(4, '0')}-'
+      '${date.month.toString().padLeft(2, '0')}-01';
+
   static DateTime? _parseDate(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;
 }

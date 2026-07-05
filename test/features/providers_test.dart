@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leakless/src/domain/enums/transaction_enums.dart';
+import 'package:leakless/src/domain/models/budget.dart';
 import 'package:leakless/src/features/budgets/application/budgets_providers.dart';
 import 'package:leakless/src/features/transactions/application/transactions_providers.dart';
 
@@ -27,7 +30,17 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    final budgets = await container.read(budgetsProvider.future);
+    final firstBudgets = Completer<List<Budget>>();
+    final subscription = container.listen(
+      budgetsProvider,
+      (_, value) => value.whenData((budgets) {
+        if (!firstBudgets.isCompleted) firstBudgets.complete(budgets);
+      }),
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    final budgets = await firstBudgets.future;
     expect(budgets, isNotEmpty);
     // Demo data ships one exceeded budget (transport) → status is derived.
     expect(budgets.any((b) => b.ratio > 1), isTrue);
