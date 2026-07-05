@@ -11,7 +11,7 @@ final categoriesRepositoryProvider = Provider<CategoriesRepository>((ref) {
   if (ref.watch(supabaseEnabledProvider)) {
     return SupabaseCategoriesRepository(ref.watch(supabaseClientProvider));
   }
-  return const MockCategoriesRepository();
+  return MockCategoriesRepository();
 });
 
 /// All categories for the active household.
@@ -24,7 +24,9 @@ final categoriesProvider = FutureProvider<List<TransactionCategory>>((
 });
 
 /// Fast id → category lookup for rendering names/icons in lists.
-final categoriesByIdProvider = Provider<Map<String, TransactionCategory>>((ref) {
+final categoriesByIdProvider = Provider<Map<String, TransactionCategory>>((
+  ref,
+) {
   final categories = ref.watch(categoriesProvider).asData?.value ?? const [];
   return {for (final c in categories) c.id: c};
 });

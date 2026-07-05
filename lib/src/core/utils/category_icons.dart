@@ -11,6 +11,22 @@ abstract final class CategoryIcons {
 
   static const IconData _fallback = CupertinoIcons.square_grid_2x2;
 
+  /// Stable keys available when a user chooses an icon for a custom category.
+  static const List<String> pickableKeys = [
+    'cart',
+    'restaurant',
+    'car',
+    'subscriptions',
+    'home',
+    'movie',
+    'savings',
+    'essentials',
+    'education',
+    'emergency',
+    'health',
+    'gift',
+  ];
+
   static IconData forKey(String? key) => switch (key) {
     'cart' || 'groceries' => CupertinoIcons.cart,
     'restaurant' || 'dining' => CupertinoIcons.house_alt,
@@ -19,16 +35,20 @@ abstract final class CategoryIcons {
     'home' => CupertinoIcons.house,
     'movie' || 'leisure' => CupertinoIcons.film,
     'savings' || 'future' => CupertinoIcons.money_dollar_circle,
+    'essentials' => CupertinoIcons.house,
+    'education' => CupertinoIcons.book,
+    'emergency' => CupertinoIcons.exclamationmark_shield,
     'health' => CupertinoIcons.heart,
     'gift' => CupertinoIcons.gift,
     _ => _fallback,
   };
 
   /// Icon used to represent a [TransactionPriority] in chips/legends.
-  static IconData forPriority(TransactionPriority priority) => switch (priority) {
-    TransactionPriority.necessity => CupertinoIcons.checkmark_shield,
-    TransactionPriority.lifestyle => CupertinoIcons.sparkles,
-    TransactionPriority.future => CupertinoIcons.money_dollar_circle,
-    TransactionPriority.ant => CupertinoIcons.ant,
-  };
+  static IconData forPriority(TransactionPriority priority) =>
+      switch (priority) {
+        TransactionPriority.necessity => CupertinoIcons.checkmark_shield,
+        TransactionPriority.lifestyle => CupertinoIcons.sparkles,
+        TransactionPriority.future => CupertinoIcons.money_dollar_circle,
+        TransactionPriority.ant => CupertinoIcons.ant,
+      };
 }

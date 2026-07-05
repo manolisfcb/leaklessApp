@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/category_names.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/utils/category_icons.dart';
 import '../../../../domain/enums/transaction_enums.dart';
@@ -10,11 +12,7 @@ import '../../../../shared/widgets/widgets.dart';
 /// A single transaction row, reused on the dashboard's recent list and the full
 /// history screen (quality rule #2).
 class TransactionTile extends StatelessWidget {
-  const TransactionTile({
-    required this.transaction,
-    this.category,
-    super.key,
-  });
+  const TransactionTile({required this.transaction, this.category, super.key});
 
   final Transaction transaction;
   final TransactionCategory? category;
@@ -28,7 +26,9 @@ class TransactionTile extends StatelessWidget {
         : (transaction.isIncome ? colors.income : colors.textSecondary);
     final title = transaction.description?.trim().isNotEmpty ?? false
         ? transaction.description!
-        : (category?.name ?? 'Movimiento');
+        : category == null
+        ? 'Movimiento'
+        : categoryDisplayName(category!, context.l10n);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),

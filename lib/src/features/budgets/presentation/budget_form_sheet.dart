@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/category_names.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
 import '../../../core/utils/money_formatter.dart';
@@ -109,7 +111,7 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
                   itemBuilder: (context, index) {
                     final category = categories[index];
                     return CategoryChip(
-                      label: category.name,
+                      label: categoryDisplayName(category, context.l10n),
                       icon: CategoryIcons.forKey(category.iconName),
                       selected: _categoryId == category.id,
                       onTap: () => setState(() => _categoryId = category.id),

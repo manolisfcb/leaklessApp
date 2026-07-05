@@ -12,6 +12,7 @@ abstract class TransactionCategory with _$TransactionCategory {
     required String id,
     required String name,
     required String iconName,
+    String? slug,
     String? householdId,
     String? colorHex,
     @Default(false) bool isDefault,

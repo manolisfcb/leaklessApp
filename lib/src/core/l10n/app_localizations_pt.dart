@@ -24,6 +24,36 @@ class AppLocalizationsPt extends AppLocalizations {
   String get navSettings => 'Ajustes';
 
   @override
+  String get categoryGroceries => 'Supermercado';
+
+  @override
+  String get categoryDining => 'Restaurantes';
+
+  @override
+  String get categoryTransport => 'Transporte';
+
+  @override
+  String get categoryLeisure => 'Lazer';
+
+  @override
+  String get categorySubscriptions => 'Assinaturas';
+
+  @override
+  String get categorySavings => 'Poupança';
+
+  @override
+  String get categoryEssentials => 'Despesas essenciais';
+
+  @override
+  String get categoryEducation => 'Educação';
+
+  @override
+  String get categoryEmergencyFund => 'Reserva de emergência';
+
+  @override
+  String get categoryHealth => 'Saúde';
+
+  @override
   String get quickEntryWho => 'Quem?';
 
   @override

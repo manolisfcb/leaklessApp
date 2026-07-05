@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/app_exception.dart';
+import '../../../core/l10n/category_names.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
 import '../../../domain/enums/finance_enums.dart';
@@ -168,7 +170,9 @@ class _BudgetCard extends StatelessWidget {
                     AppSpacing.gapSm,
                     Expanded(
                       child: Text(
-                        category?.name ?? 'Categoría',
+                        category == null
+                            ? 'Categoría'
+                            : categoryDisplayName(category!, context.l10n),
                         style: AppTypography.titleMedium,
                       ),
                     ),

@@ -24,6 +24,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navSettings => 'Ajustes';
 
   @override
+  String get categoryGroceries => 'Supermercado';
+
+  @override
+  String get categoryDining => 'Restaurantes';
+
+  @override
+  String get categoryTransport => 'Transporte';
+
+  @override
+  String get categoryLeisure => 'Ocio';
+
+  @override
+  String get categorySubscriptions => 'Suscripciones';
+
+  @override
+  String get categorySavings => 'Ahorro';
+
+  @override
+  String get categoryEssentials => 'Gastos esenciales';
+
+  @override
+  String get categoryEducation => 'Estudios';
+
+  @override
+  String get categoryEmergencyFund => 'Reserva de emergencia';
+
+  @override
+  String get categoryHealth => 'Salud';
+
+  @override
   String get quickEntryWho => '¿Quién?';
 
   @override

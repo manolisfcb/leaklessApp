@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/l10n/category_names.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
 import '../../../core/utils/money_formatter.dart';
@@ -103,7 +105,9 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
           .scan(
             bytes,
             currency: currency,
-            categoryNames: [for (final c in categories) c.name],
+            categoryNames: [
+              for (final c in categories) categoryDisplayName(c, context.l10n),
+            ],
           );
     } catch (e) {
       _showMessage(_scanErrorMessage(e));
@@ -143,7 +147,10 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     if (name == null) return null;
     final target = name.trim().toLowerCase();
     for (final c in categories) {
-      if (c.name.trim().toLowerCase() == target) return c;
+      final localized = categoryDisplayName(c, context.l10n).toLowerCase();
+      if (localized == target || c.name.trim().toLowerCase() == target) {
+        return c;
+      }
     }
     return null;
   }
@@ -238,7 +245,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
                   Padding(
                     padding: const EdgeInsets.only(right: AppSpacing.sm),
                     child: CategoryChip(
-                      label: c.name,
+                      label: categoryDisplayName(c, context.l10n),
                       icon: CategoryIcons.forKey(c.iconName),
                       selected: _categoryId == c.id,
                       onTap: () => setState(

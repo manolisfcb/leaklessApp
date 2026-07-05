@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/errors/app_exception.dart';
+import '../../../core/l10n/category_names.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
@@ -232,7 +234,9 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                         prefixIcon: Icon(CupertinoIcons.money_dollar_circle),
                       ),
                       items: [
-                        if (!supportedCurrencies.any((entry) => entry.$1 == _currency))
+                        if (!supportedCurrencies.any(
+                          (entry) => entry.$1 == _currency,
+                        ))
                           DropdownMenuItem(
                             value: _currency,
                             child: Text(_currency),
@@ -418,7 +422,7 @@ class _CategoryReview extends StatelessWidget {
         for (final category in value)
           Chip(
             avatar: Icon(CategoryIcons.forKey(category.iconName), size: 17),
-            label: Text(category.name),
+            label: Text(categoryDisplayName(category, context.l10n)),
           ),
       ],
     ),

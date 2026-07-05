@@ -7,6 +7,17 @@
   "navGoals": "Goals",
   "navSettings": "Settings",
 
+  "categoryGroceries": "Groceries",
+  "categoryDining": "Dining",
+  "categoryTransport": "Transport",
+  "categoryLeisure": "Leisure",
+  "categorySubscriptions": "Subscriptions",
+  "categorySavings": "Savings",
+  "categoryEssentials": "Essentials",
+  "categoryEducation": "Education",
+  "categoryEmergencyFund": "Emergency fund",
+  "categoryHealth": "Health",
+
   "quickEntryWho": "Who?",
   "quickEntryCategory": "Category",
   "quickEntryNote": "Note",

@@ -13,11 +13,27 @@ abstract final class CategoryMapper {
         id: row['id'] as String,
         name: row['name'] as String,
         iconName: (row['icon_name'] as String?) ?? 'cart',
+        slug: row['slug'] as String?,
         householdId: row['household_id'] as String?,
         colorHex: row['color_hex'] as String?,
         isDefault: (row['is_default'] as bool?) ?? false,
         createdAt: _parseDate(row['created_at']),
       );
+
+  static Map<String, dynamic> toInsert(TransactionCategory category) => {
+    'household_id': category.householdId,
+    'name': category.name,
+    'slug': category.slug,
+    'icon_name': category.iconName,
+    'color_hex': category.colorHex,
+    'is_default': category.isDefault,
+  };
+
+  static Map<String, dynamic> toUpdate(TransactionCategory category) => {
+    'name': category.name,
+    'icon_name': category.iconName,
+    'color_hex': category.colorHex,
+  };
 
   static DateTime? _parseDate(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;

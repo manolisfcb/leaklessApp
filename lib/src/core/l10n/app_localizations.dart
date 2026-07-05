@@ -130,6 +130,66 @@ abstract class AppLocalizations {
   /// **'Ajustes'**
   String get navSettings;
 
+  /// No description provided for @categoryGroceries.
+  ///
+  /// In es, this message translates to:
+  /// **'Supermercado'**
+  String get categoryGroceries;
+
+  /// No description provided for @categoryDining.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurantes'**
+  String get categoryDining;
+
+  /// No description provided for @categoryTransport.
+  ///
+  /// In es, this message translates to:
+  /// **'Transporte'**
+  String get categoryTransport;
+
+  /// No description provided for @categoryLeisure.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocio'**
+  String get categoryLeisure;
+
+  /// No description provided for @categorySubscriptions.
+  ///
+  /// In es, this message translates to:
+  /// **'Suscripciones'**
+  String get categorySubscriptions;
+
+  /// No description provided for @categorySavings.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahorro'**
+  String get categorySavings;
+
+  /// No description provided for @categoryEssentials.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos esenciales'**
+  String get categoryEssentials;
+
+  /// No description provided for @categoryEducation.
+  ///
+  /// In es, this message translates to:
+  /// **'Estudios'**
+  String get categoryEducation;
+
+  /// No description provided for @categoryEmergencyFund.
+  ///
+  /// In es, this message translates to:
+  /// **'Reserva de emergencia'**
+  String get categoryEmergencyFund;
+
+  /// No description provided for @categoryHealth.
+  ///
+  /// In es, this message translates to:
+  /// **'Salud'**
+  String get categoryHealth;
+
   /// No description provided for @quickEntryWho.
   ///
   /// In es, this message translates to:

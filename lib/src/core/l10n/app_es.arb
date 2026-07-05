@@ -7,6 +7,17 @@
   "navGoals": "Metas",
   "navSettings": "Ajustes",
 
+  "categoryGroceries": "Supermercado",
+  "categoryDining": "Restaurantes",
+  "categoryTransport": "Transporte",
+  "categoryLeisure": "Ocio",
+  "categorySubscriptions": "Suscripciones",
+  "categorySavings": "Ahorro",
+  "categoryEssentials": "Gastos esenciales",
+  "categoryEducation": "Estudios",
+  "categoryEmergencyFund": "Reserva de emergencia",
+  "categoryHealth": "Salud",
+
   "quickEntryWho": "¿Quién?",
   "quickEntryCategory": "Categoría",
   "quickEntryNote": "Nota",
