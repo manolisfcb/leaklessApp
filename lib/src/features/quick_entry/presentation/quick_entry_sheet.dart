@@ -247,6 +247,8 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
             controller: _note,
             textCapitalization: TextCapitalization.sentences,
             maxLength: 80,
+            // Keep the field clear of the keyboard when it auto-scrolls into view.
+            scrollPadding: const EdgeInsets.only(bottom: 120),
             inputFormatters: [
               FilteringTextInputFormatter.deny(RegExp(r'[\n\r]')),
             ],
