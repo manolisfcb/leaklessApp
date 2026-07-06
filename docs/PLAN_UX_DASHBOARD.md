@@ -22,7 +22,7 @@ y no forma parte de este plan, salvo la mejora opcional de la Tarea D.
 
 ---
 
-## Tarea A — Monto siempre visible en Quick Entry (feedback #4)
+## Tarea A — Monto siempre visible en Quick Entry (feedback #4) ✅ HECHA
 
 **Problema**: en [quick_entry_sheet.dart](../lib/src/features/quick_entry/presentation/quick_entry_sheet.dart)
 el display del monto (`MoneyFormatter.format(_cents, ...)`, ~línea 238) es el primer hijo de un

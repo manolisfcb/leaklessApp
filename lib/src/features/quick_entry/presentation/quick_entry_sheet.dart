@@ -91,9 +91,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
       }
     }
     final l10n = context.l10n;
-    final name = category == null
-        ? null
-        : categoryDisplayName(category, l10n);
+    final name = category == null ? null : categoryDisplayName(category, l10n);
     final message = trigger.isLimitReached
         ? (name == null
               ? l10n.budgetLimitReachedBannerGeneric
@@ -231,113 +229,122 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     final scanEnabled = ref.watch(receiptScanEnabledProvider);
     final scanning = ref.watch(receiptScanControllerProvider).isLoading;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Text(
-              MoneyFormatter.format(_cents, currencyCode: currency),
-              style: AppTypography.displayLarge.copyWith(
-                color: _cents == 0 ? colors.textTertiary : colors.textPrimary,
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Center(
+          child: Text(
+            MoneyFormatter.format(_cents, currencyCode: currency),
+            style: AppTypography.displayLarge.copyWith(
+              color: _cents == 0 ? colors.textTertiary : colors.textPrimary,
             ),
           ),
-          AppSpacing.gapLg,
-          if (scanEnabled) ...[
-            GlassButton(
-              label: scanning ? 'Leyendo recibo…' : 'Escanear recibo',
-              icon: CupertinoIcons.camera_viewfinder,
-              variant: GlassButtonVariant.glass,
-              loading: scanning,
-              onPressed: scanning || saving ? null : _scanReceipt,
-            ),
-            AppSpacing.gapLg,
-          ],
-          _Segmented<TransactionType>(
-            value: _type,
-            onChanged: (v) => setState(() => _type = v),
-            options: const {
-              TransactionType.expense: 'Gasto',
-              TransactionType.income: 'Ingreso',
-            },
-          ),
-          AppSpacing.gapXl,
-          const _Label('¿Quién?'),
-          AppSpacing.gapSm,
-          _Segmented<ResponsibleType>(
-            value: _responsible,
-            onChanged: (v) => setState(() => _responsible = v),
-            options: {
-              for (final r in ResponsibleType.values)
-                r: r.localizedLabel(context.l10n),
-            },
-          ),
-          AppSpacing.gapXl,
-          const _Label('Categoría'),
-          AppSpacing.gapSm,
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+        ),
+        AppSpacing.gapLg,
+        Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                for (final c in categories)
-                  Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.sm),
-                    child: CategoryChip(
-                      label: categoryDisplayName(c, context.l10n),
-                      icon: CategoryIcons.forKey(c.iconName),
-                      selected: _categoryId == c.id,
-                      onTap: () => setState(
-                        () => _categoryId = _categoryId == c.id ? null : c.id,
-                      ),
-                    ),
+                if (scanEnabled) ...[
+                  GlassButton(
+                    label: scanning ? 'Leyendo recibo…' : 'Escanear recibo',
+                    icon: CupertinoIcons.camera_viewfinder,
+                    variant: GlassButtonVariant.glass,
+                    loading: scanning,
+                    onPressed: scanning || saving ? null : _scanReceipt,
                   ),
-                CategoryChip(
-                  label: context.l10n.categoryNew,
-                  icon: CupertinoIcons.add,
-                  selected: false,
-                  onTap: () => CategoryFormSheet.show(context),
+                  AppSpacing.gapLg,
+                ],
+                _Segmented<TransactionType>(
+                  value: _type,
+                  onChanged: (v) => setState(() => _type = v),
+                  options: const {
+                    TransactionType.expense: 'Gasto',
+                    TransactionType.income: 'Ingreso',
+                  },
+                ),
+                AppSpacing.gapXl,
+                const _Label('¿Quién?'),
+                AppSpacing.gapSm,
+                _Segmented<ResponsibleType>(
+                  value: _responsible,
+                  onChanged: (v) => setState(() => _responsible = v),
+                  options: {
+                    for (final r in ResponsibleType.values)
+                      r: r.localizedLabel(context.l10n),
+                  },
+                ),
+                AppSpacing.gapXl,
+                const _Label('Categoría'),
+                AppSpacing.gapSm,
+                SizedBox(
+                  height: 40,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (final c in categories)
+                        Padding(
+                          padding: const EdgeInsets.only(right: AppSpacing.sm),
+                          child: CategoryChip(
+                            label: categoryDisplayName(c, context.l10n),
+                            icon: CategoryIcons.forKey(c.iconName),
+                            selected: _categoryId == c.id,
+                            onTap: () => setState(
+                              () => _categoryId = _categoryId == c.id
+                                  ? null
+                                  : c.id,
+                            ),
+                          ),
+                        ),
+                      CategoryChip(
+                        label: context.l10n.categoryNew,
+                        icon: CupertinoIcons.add,
+                        selected: false,
+                        onTap: () => CategoryFormSheet.show(context),
+                      ),
+                    ],
+                  ),
+                ),
+                AppSpacing.gapLg,
+                const _Label('Nota'),
+                AppSpacing.gapSm,
+                TextField(
+                  controller: _note,
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLength: 80,
+                  // Keep the field clear of the keyboard when it auto-scrolls into view.
+                  scrollPadding: const EdgeInsets.only(bottom: 120),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[\n\r]')),
+                  ],
+                  decoration: const InputDecoration(
+                    hintText: 'Descripción (ej. comercio)',
+                    prefixIcon: Icon(CupertinoIcons.text_alignleft),
+                    counterText: '',
+                  ),
+                ),
+                AppSpacing.gapXl,
+                const _Label('Prioridad'),
+                AppSpacing.gapSm,
+                _PriorityPicker(
+                  value: _priority,
+                  onChanged: (v) => setState(() => _priority = v),
+                ),
+                AppSpacing.gapXl,
+                _Keypad(onDigit: _press, onBackspace: _backspace),
+                AppSpacing.gapLg,
+                GlassButton(
+                  label: 'Guardar',
+                  icon: CupertinoIcons.checkmark_alt,
+                  loading: saving,
+                  onPressed: _cents == 0 || saving ? null : _save,
                 ),
               ],
             ),
           ),
-          AppSpacing.gapLg,
-          const _Label('Nota'),
-          AppSpacing.gapSm,
-          TextField(
-            controller: _note,
-            textCapitalization: TextCapitalization.sentences,
-            maxLength: 80,
-            // Keep the field clear of the keyboard when it auto-scrolls into view.
-            scrollPadding: const EdgeInsets.only(bottom: 120),
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'[\n\r]')),
-            ],
-            decoration: const InputDecoration(
-              hintText: 'Descripción (ej. comercio)',
-              prefixIcon: Icon(CupertinoIcons.text_alignleft),
-              counterText: '',
-            ),
-          ),
-          AppSpacing.gapXl,
-          const _Label('Prioridad'),
-          AppSpacing.gapSm,
-          _PriorityPicker(
-            value: _priority,
-            onChanged: (v) => setState(() => _priority = v),
-          ),
-          AppSpacing.gapXl,
-          _Keypad(onDigit: _press, onBackspace: _backspace),
-          AppSpacing.gapLg,
-          GlassButton(
-            label: 'Guardar',
-            icon: CupertinoIcons.checkmark_alt,
-            loading: saving,
-            onPressed: _cents == 0 || saving ? null : _save,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
