@@ -4,6 +4,7 @@
   "navHome": "Início",
   "navHistory": "Histórico",
   "navBudgets": "Orçamentos",
+  "navDashboard": "Dashboard",
   "navGoals": "Metas",
   "navSettings": "Ajustes",
 
@@ -57,6 +58,7 @@
   "settingsNotificationsOn": "Ativadas",
   "settingsNotificationsOff": "Desativadas",
   "settingsCategories": "Categorias",
+  "settingsBudgets": "Orçamentos",
   "settingsSubscription": "Assinatura",
   "settingsPremium": "Premium",
   "settingsFree": "Grátis",
@@ -398,5 +400,9 @@
   "currencyBRL": "Real brasileiro",
   "currencyGBP": "Libra esterlina",
   "currencyJPY": "Iene japonês",
-  "currencyCHF": "Franco suíço"
+  "currencyCHF": "Franco suíço",
+
+  "insightsTitle": "Dashboard",
+  "insightsComingSoonTitle": "Em breve",
+  "insightsComingSoonMessage": "Estamos preparando suas estatísticas e tendências de gastos."
 }

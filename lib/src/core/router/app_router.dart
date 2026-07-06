@@ -19,6 +19,7 @@ import '../../features/household/application/invitation_links.dart';
 import '../../features/household/presentation/household_invitations_screen.dart';
 import '../../features/household/presentation/household_setup_screen.dart';
 import '../../features/household/presentation/invitation_screen.dart';
+import '../../features/insights/presentation/insights_screen.dart';
 import '../../features/onboarding/application/onboarding_providers.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/profile/presentation/profile_edit_screen.dart';
@@ -166,6 +167,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, _) => const SubscriptionsScreen(),
       ),
+      // Budgets left the tab bar in favor of the insights dashboard, but keeps
+      // its path so push deep links (budget_alert / limit_reached) still work.
+      GoRoute(
+        path: AppRoutes.budgets,
+        name: AppRoutes.budgetsName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, _) => const BudgetsScreen(),
+      ),
       GoRoute(
         path: AppRoutes.invitation,
         name: AppRoutes.invitationName,
@@ -207,9 +216,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.budgets,
-                name: AppRoutes.budgetsName,
-                builder: (_, _) => const BudgetsScreen(),
+                path: AppRoutes.insights,
+                name: AppRoutes.insightsName,
+                builder: (_, _) => const InsightsScreen(),
               ),
             ],
           ),

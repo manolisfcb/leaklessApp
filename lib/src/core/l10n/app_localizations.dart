@@ -118,6 +118,12 @@ abstract class AppLocalizations {
   /// **'Presupuestos'**
   String get navBudgets;
 
+  /// No description provided for @navDashboard.
+  ///
+  /// In es, this message translates to:
+  /// **'Dashboard'**
+  String get navDashboard;
+
   /// No description provided for @navGoals.
   ///
   /// In es, this message translates to:
@@ -405,6 +411,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Categorías'**
   String get settingsCategories;
+
+  /// No description provided for @settingsBudgets.
+  ///
+  /// In es, this message translates to:
+  /// **'Presupuestos'**
+  String get settingsBudgets;
 
   /// No description provided for @settingsSubscription.
   ///
@@ -1995,6 +2007,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Franco suizo'**
   String get currencyCHF;
+
+  /// No description provided for @insightsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Dashboard'**
+  String get insightsTitle;
+
+  /// No description provided for @insightsComingSoonTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximamente'**
+  String get insightsComingSoonTitle;
+
+  /// No description provided for @insightsComingSoonMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos preparando tus estadísticas y tendencias de gasto.'**
+  String get insightsComingSoonMessage;
 }
 
 class _AppLocalizationsDelegate

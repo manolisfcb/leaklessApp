@@ -4,6 +4,7 @@
   "navHome": "Home",
   "navHistory": "History",
   "navBudgets": "Budgets",
+  "navDashboard": "Dashboard",
   "navGoals": "Goals",
   "navSettings": "Settings",
 
@@ -57,6 +58,7 @@
   "settingsNotificationsOn": "On",
   "settingsNotificationsOff": "Off",
   "settingsCategories": "Categories",
+  "settingsBudgets": "Budgets",
   "settingsSubscription": "Subscription",
   "settingsPremium": "Premium",
   "settingsFree": "Free",
@@ -398,5 +400,9 @@
   "currencyBRL": "Brazilian real",
   "currencyGBP": "Pound sterling",
   "currencyJPY": "Japanese yen",
-  "currencyCHF": "Swiss franc"
+  "currencyCHF": "Swiss franc",
+
+  "insightsTitle": "Dashboard",
+  "insightsComingSoonTitle": "Coming soon",
+  "insightsComingSoonMessage": "We’re getting your spending stats and trends ready."
 }

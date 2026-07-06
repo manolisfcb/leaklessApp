@@ -36,7 +36,7 @@ class SummaryCards extends StatelessWidget {
         accent: colors.alert,
         value: '${summary.activeAlerts}',
         label: l10n.dashboardLimitAlerts,
-        onTap: () => context.go(AppRoutes.budgets),
+        onTap: () => context.push(AppRoutes.budgets),
       ),
     ];
 

@@ -116,6 +116,12 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const _RowDivider(),
                 _SettingsRow(
+                  icon: CupertinoIcons.chart_bar_alt_fill,
+                  label: context.l10n.settingsBudgets,
+                  onTap: () => context.push(AppRoutes.budgets),
+                ),
+                const _RowDivider(),
+                _SettingsRow(
                   icon: CupertinoIcons.arrow_2_circlepath,
                   label: context.l10n.subscriptionsTitle,
                   onTap: () => context.push(AppRoutes.subscriptions),

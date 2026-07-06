@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/quick_entry/presentation/quick_entry_sheet.dart';
 import '../../shared/widgets/widgets.dart';
+import '../l10n/l10n.dart';
 import '../theme/theme.dart';
 
 /// The bottom-navigation scaffold that hosts the five main tabs and the central
@@ -69,14 +70,6 @@ class _NavItem {
   final String label;
 }
 
-const _items = <_NavItem>[
-  _NavItem(CupertinoIcons.house_fill, 'Inicio'),
-  _NavItem(CupertinoIcons.list_bullet, 'Historial'),
-  _NavItem(CupertinoIcons.chart_bar_alt_fill, 'Presupuestos'),
-  _NavItem(CupertinoIcons.flag_fill, 'Metas'),
-  _NavItem(CupertinoIcons.gear_alt_fill, 'Ajustes'),
-];
-
 class _GlassNavBar extends StatelessWidget {
   const _GlassNavBar({required this.currentIndex, required this.onTap});
 
@@ -86,6 +79,14 @@ class _GlassNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
+    final items = <_NavItem>[
+      _NavItem(CupertinoIcons.house_fill, l10n.navHome),
+      _NavItem(CupertinoIcons.list_bullet, l10n.navHistory),
+      _NavItem(CupertinoIcons.chart_pie_fill, l10n.navDashboard),
+      _NavItem(CupertinoIcons.flag_fill, l10n.navGoals),
+      _NavItem(CupertinoIcons.gear_alt_fill, l10n.navSettings),
+    ];
     return SafeArea(
       top: false,
       child: Padding(
@@ -110,9 +111,9 @@ class _GlassNavBar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  for (var i = 0; i < _items.length; i++)
+                  for (var i = 0; i < items.length; i++)
                     _NavButton(
-                      item: _items[i],
+                      item: items[i],
                       selected: i == currentIndex,
                       onTap: () => onTap(i),
                     ),

@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navBudgets => 'Budgets';
 
   @override
+  String get navDashboard => 'Dashboard';
+
+  @override
   String get navGoals => 'Goals';
 
   @override
@@ -171,6 +174,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsCategories => 'Categories';
+
+  @override
+  String get settingsBudgets => 'Budgets';
 
   @override
   String get settingsSubscription => 'Subscription';
@@ -1056,4 +1062,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currencyCHF => 'Swiss franc';
+
+  @override
+  String get insightsTitle => 'Dashboard';
+
+  @override
+  String get insightsComingSoonTitle => 'Coming soon';
+
+  @override
+  String get insightsComingSoonMessage =>
+      'We’re getting your spending stats and trends ready.';
 }

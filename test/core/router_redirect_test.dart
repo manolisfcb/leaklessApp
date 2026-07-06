@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,8 +12,10 @@ import 'package:leakless/src/features/auth/application/auth_controller.dart';
 import 'package:leakless/src/features/auth/application/auth_providers.dart';
 import 'package:leakless/src/features/auth/application/password_recovery_controller.dart';
 import 'package:leakless/src/features/auth/data/auth_repository.dart';
+import 'package:leakless/src/features/budgets/presentation/budgets_screen.dart';
 import 'package:leakless/src/features/household/application/household_providers.dart';
 import 'package:leakless/src/features/household/application/invitation_intent_controller.dart';
+import 'package:leakless/src/features/insights/presentation/insights_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Mirrors the real [LeaklessApp]: a ConsumerWidget that *watches* routerProvider.
@@ -74,6 +78,66 @@ void main() {
       AppRoutes.dashboard,
     );
   });
+
+  testWidgets(
+    'insights owns the old budgets tab slot and budgets keeps its path '
+    'as a top-level route with a back stack',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      final prefs = await SharedPreferences.getInstance();
+      final container = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          invitationIntentStoreProvider.overrideWithValue(
+            _MemoryInvitationIntentStore(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _TestApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final router = container.read(routerProvider);
+
+      await container
+          .read(authControllerProvider.notifier)
+          .signIn('demo@leakless.app', 'demo1234');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // The shell tab that used to host budgets now shows the insights
+      // placeholder.
+      router.go(AppRoutes.insights);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(
+        router.routerDelegate.currentConfiguration.uri.path,
+        AppRoutes.insights,
+      );
+      expect(find.byType(InsightsScreen), findsOneWidget);
+
+      // A budget_alert / limit_reached push still deep-links to /budgets,
+      // which now sits above the shell and can pop back. Imperative pushes
+      // don't update currentConfiguration.uri, so assert on the widget tree.
+      unawaited(router.push<void>(AppRoutes.budgets));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.byType(BudgetsScreen), findsOneWidget);
+      expect(router.canPop(), isTrue);
+
+      router.pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.byType(BudgetsScreen), findsNothing);
+      expect(find.byType(InsightsScreen), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'a signed-in owner must configure the household before the dashboard',
