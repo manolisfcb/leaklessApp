@@ -652,6 +652,174 @@ abstract class AppLocalizations {
   /// **'Cancelada'**
   String get subscriptionStatusCanceled;
 
+  /// No description provided for @subscriptionFrequencyWeekly.
+  ///
+  /// In es, this message translates to:
+  /// **'Semanal'**
+  String get subscriptionFrequencyWeekly;
+
+  /// No description provided for @subscriptionFrequencyMonthly.
+  ///
+  /// In es, this message translates to:
+  /// **'Mensual'**
+  String get subscriptionFrequencyMonthly;
+
+  /// No description provided for @subscriptionFrequencyYearly.
+  ///
+  /// In es, this message translates to:
+  /// **'Anual'**
+  String get subscriptionFrequencyYearly;
+
+  /// No description provided for @subscriptionsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos recurrentes'**
+  String get subscriptionsTitle;
+
+  /// No description provided for @subscriptionsEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin gastos recurrentes'**
+  String get subscriptionsEmptyTitle;
+
+  /// No description provided for @subscriptionsEmptyMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega tus suscripciones y cobros fijos para recordarlos a tiempo.'**
+  String get subscriptionsEmptyMessage;
+
+  /// No description provided for @subscriptionsLoadFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar los gastos recurrentes'**
+  String get subscriptionsLoadFailed;
+
+  /// No description provided for @subscriptionsOperationFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar la operación. Inténtalo de nuevo.'**
+  String get subscriptionsOperationFailed;
+
+  /// No description provided for @subscriptionNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo gasto recurrente'**
+  String get subscriptionNew;
+
+  /// No description provided for @subscriptionEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar gasto recurrente'**
+  String get subscriptionEdit;
+
+  /// No description provided for @subscriptionCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar'**
+  String get subscriptionCreate;
+
+  /// No description provided for @subscriptionSaveChanges.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get subscriptionSaveChanges;
+
+  /// No description provided for @subscriptionNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get subscriptionNameLabel;
+
+  /// No description provided for @subscriptionNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Netflix'**
+  String get subscriptionNameHint;
+
+  /// No description provided for @subscriptionNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un nombre.'**
+  String get subscriptionNameRequired;
+
+  /// No description provided for @subscriptionAmountLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Monto'**
+  String get subscriptionAmountLabel;
+
+  /// No description provided for @subscriptionAmountRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un monto mayor que cero.'**
+  String get subscriptionAmountRequired;
+
+  /// No description provided for @subscriptionFrequencyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Frecuencia'**
+  String get subscriptionFrequencyLabel;
+
+  /// No description provided for @subscriptionNextChargeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo cobro'**
+  String get subscriptionNextChargeLabel;
+
+  /// No description provided for @subscriptionNextChargeNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin fecha'**
+  String get subscriptionNextChargeNone;
+
+  /// No description provided for @subscriptionNextChargeClear.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar fecha'**
+  String get subscriptionNextChargeClear;
+
+  /// No description provided for @subscriptionCategoryLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Categoría (opcional)'**
+  String get subscriptionCategoryLabel;
+
+  /// No description provided for @subscriptionReminderTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Recordatorio'**
+  String get subscriptionReminderTitle;
+
+  /// No description provided for @subscriptionReminderSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Te avisamos antes del cobro.'**
+  String get subscriptionReminderSubtitle;
+
+  /// No description provided for @subscriptionReminderDaysLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Avisar antes'**
+  String get subscriptionReminderDaysLabel;
+
+  /// How many days before the charge the local reminder fires
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =0{El mismo día} =1{1 día} other{{count} días}}'**
+  String subscriptionReminderDays(int count);
+
+  /// No description provided for @subscriptionDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar gasto recurrente'**
+  String get subscriptionDeleteTitle;
+
+  /// Confirmation body when deleting a recurring subscription
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará \"{name}\" y su recordatorio.'**
+  String subscriptionDeleteWarning(String name);
+
   /// No description provided for @recurringReminderChannelName.
   ///
   /// In es, this message translates to:

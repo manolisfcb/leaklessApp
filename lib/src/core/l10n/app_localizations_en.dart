@@ -304,6 +304,105 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionStatusCanceled => 'Canceled';
 
   @override
+  String get subscriptionFrequencyWeekly => 'Weekly';
+
+  @override
+  String get subscriptionFrequencyMonthly => 'Monthly';
+
+  @override
+  String get subscriptionFrequencyYearly => 'Yearly';
+
+  @override
+  String get subscriptionsTitle => 'Recurring expenses';
+
+  @override
+  String get subscriptionsEmptyTitle => 'No recurring expenses';
+
+  @override
+  String get subscriptionsEmptyMessage =>
+      'Add your subscriptions and fixed charges to be reminded in time.';
+
+  @override
+  String get subscriptionsLoadFailed =>
+      'We couldn\'t load your recurring expenses';
+
+  @override
+  String get subscriptionsOperationFailed =>
+      'We couldn\'t complete the operation. Please try again.';
+
+  @override
+  String get subscriptionNew => 'New recurring expense';
+
+  @override
+  String get subscriptionEdit => 'Edit recurring expense';
+
+  @override
+  String get subscriptionCreate => 'Add';
+
+  @override
+  String get subscriptionSaveChanges => 'Save changes';
+
+  @override
+  String get subscriptionNameLabel => 'Name';
+
+  @override
+  String get subscriptionNameHint => 'e.g. Netflix';
+
+  @override
+  String get subscriptionNameRequired => 'Enter a name.';
+
+  @override
+  String get subscriptionAmountLabel => 'Amount';
+
+  @override
+  String get subscriptionAmountRequired => 'Enter an amount greater than zero.';
+
+  @override
+  String get subscriptionFrequencyLabel => 'Frequency';
+
+  @override
+  String get subscriptionNextChargeLabel => 'Next charge';
+
+  @override
+  String get subscriptionNextChargeNone => 'No date';
+
+  @override
+  String get subscriptionNextChargeClear => 'Clear date';
+
+  @override
+  String get subscriptionCategoryLabel => 'Category (optional)';
+
+  @override
+  String get subscriptionReminderTitle => 'Reminder';
+
+  @override
+  String get subscriptionReminderSubtitle =>
+      'We\'ll notify you before the charge.';
+
+  @override
+  String get subscriptionReminderDaysLabel => 'Notify before';
+
+  @override
+  String subscriptionReminderDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+      zero: 'Same day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscriptionDeleteTitle => 'Delete recurring expense';
+
+  @override
+  String subscriptionDeleteWarning(String name) {
+    return '\"$name\" and its reminder will be deleted.';
+  }
+
+  @override
   String get recurringReminderChannelName => 'Charge reminders';
 
   @override

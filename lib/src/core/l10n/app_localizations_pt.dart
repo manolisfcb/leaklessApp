@@ -304,6 +304,104 @@ class AppLocalizationsPt extends AppLocalizations {
   String get subscriptionStatusCanceled => 'Cancelada';
 
   @override
+  String get subscriptionFrequencyWeekly => 'Semanal';
+
+  @override
+  String get subscriptionFrequencyMonthly => 'Mensal';
+
+  @override
+  String get subscriptionFrequencyYearly => 'Anual';
+
+  @override
+  String get subscriptionsTitle => 'Despesas recorrentes';
+
+  @override
+  String get subscriptionsEmptyTitle => 'Sem despesas recorrentes';
+
+  @override
+  String get subscriptionsEmptyMessage =>
+      'Adicione suas assinaturas e cobranças fixas para ser lembrado a tempo.';
+
+  @override
+  String get subscriptionsLoadFailed =>
+      'Não foi possível carregar as despesas recorrentes';
+
+  @override
+  String get subscriptionsOperationFailed =>
+      'Não foi possível concluir a operação. Tente novamente.';
+
+  @override
+  String get subscriptionNew => 'Nova despesa recorrente';
+
+  @override
+  String get subscriptionEdit => 'Editar despesa recorrente';
+
+  @override
+  String get subscriptionCreate => 'Adicionar';
+
+  @override
+  String get subscriptionSaveChanges => 'Salvar alterações';
+
+  @override
+  String get subscriptionNameLabel => 'Nome';
+
+  @override
+  String get subscriptionNameHint => 'Ex.: Netflix';
+
+  @override
+  String get subscriptionNameRequired => 'Digite um nome.';
+
+  @override
+  String get subscriptionAmountLabel => 'Valor';
+
+  @override
+  String get subscriptionAmountRequired => 'Digite um valor maior que zero.';
+
+  @override
+  String get subscriptionFrequencyLabel => 'Frequência';
+
+  @override
+  String get subscriptionNextChargeLabel => 'Próxima cobrança';
+
+  @override
+  String get subscriptionNextChargeNone => 'Sem data';
+
+  @override
+  String get subscriptionNextChargeClear => 'Remover data';
+
+  @override
+  String get subscriptionCategoryLabel => 'Categoria (opcional)';
+
+  @override
+  String get subscriptionReminderTitle => 'Lembrete';
+
+  @override
+  String get subscriptionReminderSubtitle => 'Avisamos você antes da cobrança.';
+
+  @override
+  String get subscriptionReminderDaysLabel => 'Avisar antes';
+
+  @override
+  String subscriptionReminderDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias',
+      one: '1 dia',
+      zero: 'No mesmo dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscriptionDeleteTitle => 'Excluir despesa recorrente';
+
+  @override
+  String subscriptionDeleteWarning(String name) {
+    return '\"$name\" e seu lembrete serão excluídos.';
+  }
+
+  @override
   String get recurringReminderChannelName => 'Lembretes de cobrança';
 
   @override

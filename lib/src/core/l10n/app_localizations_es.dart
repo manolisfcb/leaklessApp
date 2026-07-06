@@ -304,6 +304,104 @@ class AppLocalizationsEs extends AppLocalizations {
   String get subscriptionStatusCanceled => 'Cancelada';
 
   @override
+  String get subscriptionFrequencyWeekly => 'Semanal';
+
+  @override
+  String get subscriptionFrequencyMonthly => 'Mensual';
+
+  @override
+  String get subscriptionFrequencyYearly => 'Anual';
+
+  @override
+  String get subscriptionsTitle => 'Gastos recurrentes';
+
+  @override
+  String get subscriptionsEmptyTitle => 'Sin gastos recurrentes';
+
+  @override
+  String get subscriptionsEmptyMessage =>
+      'Agrega tus suscripciones y cobros fijos para recordarlos a tiempo.';
+
+  @override
+  String get subscriptionsLoadFailed =>
+      'No pudimos cargar los gastos recurrentes';
+
+  @override
+  String get subscriptionsOperationFailed =>
+      'No pudimos completar la operación. Inténtalo de nuevo.';
+
+  @override
+  String get subscriptionNew => 'Nuevo gasto recurrente';
+
+  @override
+  String get subscriptionEdit => 'Editar gasto recurrente';
+
+  @override
+  String get subscriptionCreate => 'Agregar';
+
+  @override
+  String get subscriptionSaveChanges => 'Guardar cambios';
+
+  @override
+  String get subscriptionNameLabel => 'Nombre';
+
+  @override
+  String get subscriptionNameHint => 'Ej. Netflix';
+
+  @override
+  String get subscriptionNameRequired => 'Ingresa un nombre.';
+
+  @override
+  String get subscriptionAmountLabel => 'Monto';
+
+  @override
+  String get subscriptionAmountRequired => 'Ingresa un monto mayor que cero.';
+
+  @override
+  String get subscriptionFrequencyLabel => 'Frecuencia';
+
+  @override
+  String get subscriptionNextChargeLabel => 'Próximo cobro';
+
+  @override
+  String get subscriptionNextChargeNone => 'Sin fecha';
+
+  @override
+  String get subscriptionNextChargeClear => 'Quitar fecha';
+
+  @override
+  String get subscriptionCategoryLabel => 'Categoría (opcional)';
+
+  @override
+  String get subscriptionReminderTitle => 'Recordatorio';
+
+  @override
+  String get subscriptionReminderSubtitle => 'Te avisamos antes del cobro.';
+
+  @override
+  String get subscriptionReminderDaysLabel => 'Avisar antes';
+
+  @override
+  String subscriptionReminderDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+      zero: 'El mismo día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscriptionDeleteTitle => 'Eliminar gasto recurrente';
+
+  @override
+  String subscriptionDeleteWarning(String name) {
+    return 'Se eliminará \"$name\" y su recordatorio.';
+  }
+
+  @override
   String get recurringReminderChannelName => 'Recordatorios de cobros';
 
   @override

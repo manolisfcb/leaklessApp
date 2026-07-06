@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../domain/dashboard_summary.dart';
@@ -25,6 +27,7 @@ class SummaryCards extends StatelessWidget {
         accent: colors.goal,
         value: '${summary.activeSubscriptions}',
         label: 'Suscripciones activas',
+        onTap: () => context.push(AppRoutes.subscriptions),
       ),
       _CardData(
         icon: CupertinoIcons.exclamationmark_triangle,
@@ -53,11 +56,13 @@ class _CardData {
     required this.accent,
     required this.value,
     required this.label,
+    this.onTap,
   });
   final IconData icon;
   final Color accent;
   final String value;
   final String label;
+  final VoidCallback? onTap;
 }
 
 class _SummaryCard extends StatelessWidget {
@@ -70,6 +75,7 @@ class _SummaryCard extends StatelessWidget {
     return SizedBox(
       width: 160,
       child: GlassCard(
+        onTap: data.onTap,
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

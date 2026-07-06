@@ -64,3 +64,11 @@ extension SubscriptionStatusLabelX on SubscriptionStatus {
     SubscriptionStatus.canceled => l10n.subscriptionStatusCanceled,
   };
 }
+
+extension SubscriptionFrequencyLabelX on SubscriptionFrequency {
+  String localizedLabel(AppLocalizations l10n) => switch (this) {
+    SubscriptionFrequency.weekly => l10n.subscriptionFrequencyWeekly,
+    SubscriptionFrequency.monthly => l10n.subscriptionFrequencyMonthly,
+    SubscriptionFrequency.yearly => l10n.subscriptionFrequencyYearly,
+  };
+}

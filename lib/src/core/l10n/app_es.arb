@@ -157,6 +157,52 @@
   "subscriptionStatusPaused": "En pausa",
   "subscriptionStatusCanceled": "Cancelada",
 
+  "subscriptionFrequencyWeekly": "Semanal",
+  "subscriptionFrequencyMonthly": "Mensual",
+  "subscriptionFrequencyYearly": "Anual",
+
+  "subscriptionsTitle": "Gastos recurrentes",
+  "subscriptionsEmptyTitle": "Sin gastos recurrentes",
+  "subscriptionsEmptyMessage": "Agrega tus suscripciones y cobros fijos para recordarlos a tiempo.",
+  "subscriptionsLoadFailed": "No pudimos cargar los gastos recurrentes",
+  "subscriptionsOperationFailed": "No pudimos completar la operación. Inténtalo de nuevo.",
+  "subscriptionNew": "Nuevo gasto recurrente",
+  "subscriptionEdit": "Editar gasto recurrente",
+  "subscriptionCreate": "Agregar",
+  "subscriptionSaveChanges": "Guardar cambios",
+  "subscriptionNameLabel": "Nombre",
+  "subscriptionNameHint": "Ej. Netflix",
+  "subscriptionNameRequired": "Ingresa un nombre.",
+  "subscriptionAmountLabel": "Monto",
+  "subscriptionAmountRequired": "Ingresa un monto mayor que cero.",
+  "subscriptionFrequencyLabel": "Frecuencia",
+  "subscriptionNextChargeLabel": "Próximo cobro",
+  "subscriptionNextChargeNone": "Sin fecha",
+  "subscriptionNextChargeClear": "Quitar fecha",
+  "subscriptionCategoryLabel": "Categoría (opcional)",
+  "subscriptionReminderTitle": "Recordatorio",
+  "subscriptionReminderSubtitle": "Te avisamos antes del cobro.",
+  "subscriptionReminderDaysLabel": "Avisar antes",
+  "subscriptionReminderDays": "{count, plural, =0{El mismo día} =1{1 día} other{{count} días}}",
+  "@subscriptionReminderDays": {
+    "description": "How many days before the charge the local reminder fires",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionDeleteTitle": "Eliminar gasto recurrente",
+  "subscriptionDeleteWarning": "Se eliminará \"{name}\" y su recordatorio.",
+  "@subscriptionDeleteWarning": {
+    "description": "Confirmation body when deleting a recurring subscription",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
   "recurringReminderChannelName": "Recordatorios de cobros",
   "recurringReminderChannelDescription": "Avisos antes de un cobro recurrente",
   "recurringReminderTitle": "Cobro próximo",

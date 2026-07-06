@@ -24,6 +24,7 @@ import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/profile/presentation/profile_edit_screen.dart';
 import '../../features/quick_entry/presentation/quick_entry_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/subscriptions/presentation/subscriptions_screen.dart';
 import '../../features/transactions/presentation/categories_screen.dart';
 import '../../features/transactions/presentation/transactions_screen.dart';
 import 'app_routes.dart';
@@ -158,6 +159,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.categoriesName,
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, _) => const CategoriesScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.subscriptions,
+        name: AppRoutes.subscriptionsName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, _) => const SubscriptionsScreen(),
       ),
       GoRoute(
         path: AppRoutes.invitation,
