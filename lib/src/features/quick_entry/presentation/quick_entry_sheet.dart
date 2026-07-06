@@ -12,6 +12,7 @@ import '../../../core/utils/money_formatter.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/transaction_category.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../budgets/application/budget_alert_watcher.dart';
 import '../../household/application/household_providers.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../../transactions/presentation/category_form_sheet.dart';
@@ -67,7 +68,41 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
           description: note.isEmpty ? null : note,
           occurredAt: _occurredAt,
         );
-    if (ok && mounted) Navigator.of(context).pop();
+    if (ok && mounted) {
+      _showBudgetAlertIfAny();
+      Navigator.of(context).pop();
+    }
+  }
+
+  /// Surfaces the in-app half of a budget alert fired by this save. Shown on
+  /// the root [ScaffoldMessenger], so it outlives the sheet being popped.
+  void _showBudgetAlertIfAny() {
+    final trigger = ref.read(budgetAlertNoticeProvider.notifier).consume();
+    if (trigger == null) return;
+    final categories =
+        ref.read(categoriesProvider).asData?.value ??
+        const <TransactionCategory>[];
+    TransactionCategory? category;
+    for (final c in categories) {
+      if (c.id == trigger.budget.categoryId) {
+        category = c;
+        break;
+      }
+    }
+    final l10n = context.l10n;
+    final name = category == null
+        ? null
+        : categoryDisplayName(category, l10n);
+    final message = trigger.isLimitReached
+        ? (name == null
+              ? l10n.budgetLimitReachedBannerGeneric
+              : l10n.budgetLimitReachedBanner(name))
+        : (name == null
+              ? l10n.budgetAlertBannerGeneric(trigger.pctSpent)
+              : l10n.budgetAlertBanner(trigger.pctSpent, name));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   /// Lets the user snap a receipt (or pick an existing photo), runs it through

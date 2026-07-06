@@ -251,6 +251,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get budgetStatusExceeded => 'Límite superado';
 
   @override
+  String get budgetAlertsTitle => 'Alertas de presupuesto';
+
+  @override
+  String get budgetAlertsSubtitle =>
+      'Te avisamos a ti y a tu pareja al cruzar el umbral.';
+
+  @override
+  String get budgetAlertThresholdLabel => 'Avisar cuando quede';
+
+  @override
+  String budgetAlertBanner(int percent, String category) {
+    return 'Ojo: llevas $percent% de $category este mes.';
+  }
+
+  @override
+  String budgetAlertBannerGeneric(int percent) {
+    return 'Ojo: llevas $percent% de un presupuesto este mes.';
+  }
+
+  @override
+  String budgetLimitReachedBanner(String category) {
+    return 'Alcanzaste el límite de $category este mes.';
+  }
+
+  @override
+  String get budgetLimitReachedBannerGeneric =>
+      'Alcanzaste el límite de un presupuesto este mes.';
+
+  @override
   String get goalStatusActive => 'Activa';
 
   @override

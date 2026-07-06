@@ -22,6 +22,8 @@ abstract final class BudgetMapper {
       limit: Money.fromMajor(limit, currency: currency),
       spent: Money.fromMajor(spent, currency: currency),
       periodStart: DateTime.parse(row['period_start'] as String),
+      alertEnabled: (row['alert_enabled'] as bool?) ?? true,
+      alertThresholdPct: (row['alert_threshold_pct'] as num?)?.toInt() ?? 80,
       createdAt: _parseDate(row['created_at']),
       updatedAt: _parseDate(row['updated_at']),
     );
@@ -37,10 +39,14 @@ abstract final class BudgetMapper {
     'category_id': budget.categoryId,
     'amount_limit': budget.limit.major,
     'currency': budget.limit.currency,
-    'period_start': _formatMonthStart(budget.periodStart),
+    'period_start': formatMonthStart(budget.periodStart),
+    'alert_enabled': budget.alertEnabled,
+    'alert_threshold_pct': budget.alertThresholdPct,
   };
 
-  static String _formatMonthStart(DateTime date) =>
+  /// The budget month as its first day (`yyyy-MM-01`), the canonical
+  /// `period_start` value shared with `budget_alert_events`.
+  static String formatMonthStart(DateTime date) =>
       '${date.year.toString().padLeft(4, '0')}-'
       '${date.month.toString().padLeft(2, '0')}-01';
 

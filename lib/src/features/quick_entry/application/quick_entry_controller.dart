@@ -4,6 +4,7 @@ import '../../../core/core_providers.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/transaction.dart';
+import '../../budgets/application/budget_alert_watcher.dart';
 import '../../household/application/household_providers.dart';
 import '../../transactions/application/transactions_providers.dart';
 
@@ -27,6 +28,9 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
     DateTime? occurredAt,
   }) async {
     state = const AsyncLoading();
+    // A scanned receipt carries its own purchase date; manual entries fall
+    // back to now.
+    final when = occurredAt ?? DateTime.now();
     final result = await AsyncValue.guard(() async {
       final household = await ref.read(currentHouseholdProvider.future);
       if (household == null) {
@@ -40,16 +44,50 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
         priority: priority,
         responsible: responsible,
         categoryId: categoryId,
-        // A scanned receipt carries its own purchase date; manual entries fall
-        // back to now.
-        occurredAt: occurredAt ?? DateTime.now(),
+        occurredAt: when,
         description: description,
       );
       await ref.read(transactionsRepositoryProvider).add(transaction);
       await ref.read(analyticsServiceProvider).transactionCreated();
     });
     state = result;
+    if (!result.hasError) {
+      await _maybeAlertBudget(
+        type: type,
+        categoryId: categoryId,
+        occurredAt: when,
+      );
+    }
     return !result.hasError;
+  }
+
+  /// Local half of the budget-alert pipeline: after a saved expense, record
+  /// any threshold its category budget crossed and stash the in-app notice.
+  ///
+  /// Best effort by design — the expense is already persisted, so an alerting
+  /// hiccup must never surface as a submit failure.
+  Future<void> _maybeAlertBudget({
+    required TransactionType type,
+    required String? categoryId,
+    required DateTime occurredAt,
+  }) async {
+    if (type != TransactionType.expense || categoryId == null) return;
+    try {
+      final household = await ref.read(currentHouseholdProvider.future);
+      if (household == null) return;
+      final trigger = await ref
+          .read(budgetAlertWatcherProvider)
+          .onExpenseRecorded(
+            householdId: household.id,
+            categoryId: categoryId,
+            occurredAt: occurredAt,
+          );
+      if (trigger != null) {
+        ref.read(budgetAlertNoticeProvider.notifier).show(trigger);
+      }
+    } catch (_) {
+      // Swallowed on purpose; see doc comment.
+    }
   }
 }
 

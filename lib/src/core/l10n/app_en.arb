@@ -90,6 +90,14 @@
   "budgetStatusWarning": "Near the limit",
   "budgetStatusExceeded": "Over the limit",
 
+  "budgetAlertsTitle": "Budget alerts",
+  "budgetAlertsSubtitle": "You and your partner get a heads-up when the threshold is crossed.",
+  "budgetAlertThresholdLabel": "Alert when remaining",
+  "budgetAlertBanner": "Heads up: you've used {percent}% of {category} this month.",
+  "budgetAlertBannerGeneric": "Heads up: you've used {percent}% of a budget this month.",
+  "budgetLimitReachedBanner": "You've reached the {category} limit this month.",
+  "budgetLimitReachedBannerGeneric": "You've reached a budget limit this month.",
+
   "goalStatusActive": "Active",
   "goalStatusCompleted": "Completed",
   "goalStatusPaused": "Paused",

@@ -90,6 +90,14 @@
   "budgetStatusWarning": "Perto do limite",
   "budgetStatusExceeded": "Limite excedido",
 
+  "budgetAlertsTitle": "Alertas de orçamento",
+  "budgetAlertsSubtitle": "Vocês dois recebem um aviso ao cruzar o limite.",
+  "budgetAlertThresholdLabel": "Avisar quando restar",
+  "budgetAlertBanner": "Atenção: você já usou {percent}% de {category} este mês.",
+  "budgetAlertBannerGeneric": "Atenção: você já usou {percent}% de um orçamento este mês.",
+  "budgetLimitReachedBanner": "Você atingiu o limite de {category} este mês.",
+  "budgetLimitReachedBannerGeneric": "Você atingiu o limite de um orçamento este mês.",
+
   "goalStatusActive": "Ativa",
   "goalStatusCompleted": "Concluída",
   "goalStatusPaused": "Pausada",

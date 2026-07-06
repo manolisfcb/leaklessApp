@@ -10,6 +10,10 @@ part 'budget.g.dart';
 ///
 /// [spent] is denormalized for fast dashboard reads; the source of truth is the
 /// sum of the period's transactions, recomputed server-side.
+///
+/// [alertThresholdPct] is the *spent* percentage that fires an alert
+/// (80 = alert at 80% consumed); the UI presents it as remaining
+/// (100 − threshold).
 @freezed
 abstract class Budget with _$Budget {
   const factory Budget({
@@ -19,6 +23,8 @@ abstract class Budget with _$Budget {
     required Money limit,
     @Default(Money.zero) Money spent,
     required DateTime periodStart,
+    @Default(true) bool alertEnabled,
+    @Default(80) int alertThresholdPct,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _Budget;

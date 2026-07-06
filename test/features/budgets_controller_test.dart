@@ -20,6 +20,8 @@ void main() {
           categoryId: 'cat-new',
           amountMinorUnits: 34567,
           periodStart: DateTime(2026, 7, 20),
+          alertEnabled: false,
+          alertThresholdPct: 90,
         );
 
     expect(saved, isTrue);
@@ -27,6 +29,8 @@ void main() {
     expect(repository.created!.categoryId, 'cat-new');
     expect(repository.created!.limit.minorUnits, 34567);
     expect(repository.created!.periodStart, DateTime(2026, 7));
+    expect(repository.created!.alertEnabled, isFalse);
+    expect(repository.created!.alertThresholdPct, 90);
     expect(container.read(budgetsControllerProvider).hasError, isFalse);
   });
 

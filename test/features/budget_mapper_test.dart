@@ -21,6 +21,8 @@ void main() {
       'amount_limit': 125.5,
       'currency': 'CAD',
       'period_start': '2026-07-01',
+      'alert_enabled': true,
+      'alert_threshold_pct': 80,
     });
   });
 
@@ -37,5 +39,45 @@ void main() {
 
     expect(values['category_id'], 'cat-2');
     expect(values['period_start'], '2027-01-01');
+  });
+
+  test('toUpdate writes the alert configuration', () {
+    final values = BudgetMapper.toUpdate(
+      Budget(
+        id: 'budget-1',
+        householdId: 'hh-1',
+        categoryId: 'cat-2',
+        limit: Money.fromMajor(80, currency: 'USD'),
+        periodStart: DateTime(2027, 1, 15),
+        alertEnabled: false,
+        alertThresholdPct: 90,
+      ),
+    );
+
+    expect(values['alert_enabled'], false);
+    expect(values['alert_threshold_pct'], 90);
+  });
+
+  test('fromRow reads alert columns and defaults when they are missing', () {
+    final row = {
+      'id': 'budget-1',
+      'household_id': 'hh-1',
+      'category_id': 'cat-1',
+      'amount_limit': 100,
+      'currency': 'USD',
+      'period_start': '2026-07-01',
+    };
+
+    final withDefaults = BudgetMapper.fromRow(row);
+    expect(withDefaults.alertEnabled, isTrue);
+    expect(withDefaults.alertThresholdPct, 80);
+
+    final configured = BudgetMapper.fromRow({
+      ...row,
+      'alert_enabled': false,
+      'alert_threshold_pct': 50,
+    });
+    expect(configured.alertEnabled, isFalse);
+    expect(configured.alertThresholdPct, 50);
   });
 }

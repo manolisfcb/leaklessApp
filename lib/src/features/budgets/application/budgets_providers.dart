@@ -4,6 +4,7 @@ import '../../../core/supabase/supabase_providers.dart';
 import '../../../domain/models/budget.dart';
 import '../../../domain/models/money.dart';
 import '../../household/application/household_providers.dart';
+import '../data/budget_alerts_repository.dart';
 import '../data/budgets_repository.dart';
 
 /// Real (Supabase) or mock repository, chosen by config — same pattern as
@@ -15,6 +16,14 @@ final budgetsRepositoryProvider = Provider<BudgetsRepository>((ref) {
   final repo = MockBudgetsRepository();
   ref.onDispose(repo.dispose);
   return repo;
+});
+
+/// Dedupe ledger for fired budget alerts, real or in-memory by config.
+final budgetAlertsRepositoryProvider = Provider<BudgetAlertsRepository>((ref) {
+  if (ref.watch(supabaseEnabledProvider)) {
+    return SupabaseBudgetAlertsRepository(ref.watch(supabaseClientProvider));
+  }
+  return MockBudgetAlertsRepository();
 });
 
 /// Live category budgets for the active household.
@@ -37,6 +46,8 @@ class BudgetsController extends Notifier<AsyncValue<void>> {
     required String categoryId,
     required int amountMinorUnits,
     DateTime? periodStart,
+    bool alertEnabled = true,
+    int alertThresholdPct = 80,
   }) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
@@ -54,6 +65,8 @@ class BudgetsController extends Notifier<AsyncValue<void>> {
           currency: household.currency,
         ),
         periodStart: DateTime(date.year, date.month),
+        alertEnabled: alertEnabled,
+        alertThresholdPct: alertThresholdPct,
       );
       final repository = ref.read(budgetsRepositoryProvider);
       if (budget.id.isEmpty) {

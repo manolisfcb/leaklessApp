@@ -112,6 +112,41 @@
   "budgetStatusWarning": "Cerca del límite",
   "budgetStatusExceeded": "Límite superado",
 
+  "budgetAlertsTitle": "Alertas de presupuesto",
+  "budgetAlertsSubtitle": "Te avisamos a ti y a tu pareja al cruzar el umbral.",
+  "budgetAlertThresholdLabel": "Avisar cuando quede",
+  "budgetAlertBanner": "Ojo: llevas {percent}% de {category} este mes.",
+  "@budgetAlertBanner": {
+    "description": "In-app banner after an expense crosses the budget alert threshold",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetAlertBannerGeneric": "Ojo: llevas {percent}% de un presupuesto este mes.",
+  "@budgetAlertBannerGeneric": {
+    "description": "Threshold banner fallback when the category cannot be resolved",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "budgetLimitReachedBanner": "Alcanzaste el límite de {category} este mes.",
+  "@budgetLimitReachedBanner": {
+    "description": "In-app banner when a budget reaches 100%",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetLimitReachedBannerGeneric": "Alcanzaste el límite de un presupuesto este mes.",
+
   "goalStatusActive": "Activa",
   "goalStatusCompleted": "Completada",
   "goalStatusPaused": "En pausa",

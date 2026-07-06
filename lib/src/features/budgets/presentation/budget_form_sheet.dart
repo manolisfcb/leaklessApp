@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/category_names.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/notifications/notification_providers.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
 import '../../../core/utils/money_formatter.dart';
@@ -27,10 +30,15 @@ class BudgetFormSheet extends ConsumerStatefulWidget {
   ConsumerState<BudgetFormSheet> createState() => _BudgetFormSheetState();
 }
 
+/// Spent-percentage thresholds offered in the form (shown as remaining %).
+const _alertThresholdOptions = [50, 75, 80, 90];
+
 class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _amount;
   late String? _categoryId;
+  late bool _alertEnabled;
+  late int _alertThresholdPct;
 
   DateTime get _period => widget.budget?.periodStart ?? DateTime.now();
 
@@ -39,6 +47,20 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
     super.initState();
     _categoryId = widget.budget?.categoryId;
     _amount = TextEditingController(text: _initialAmount(widget.budget?.limit));
+    _alertEnabled = widget.budget?.alertEnabled ?? true;
+    _alertThresholdPct = widget.budget?.alertThresholdPct ?? 80;
+  }
+
+  void _setAlertEnabled(bool value) {
+    setState(() => _alertEnabled = value);
+    // Contextual permission ask: the first alert the user turns on is the
+    // moment notifications become relevant. Fire-and-forget — a denied
+    // permission still leaves the in-app banner path working.
+    if (value) {
+      unawaited(
+        ref.read(notificationPermissionHandlerProvider).ensurePermission(),
+      );
+    }
   }
 
   @override
@@ -64,6 +86,8 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
           categoryId: _categoryId!,
           amountMinorUnits: amount!.minorUnits,
           periodStart: _period,
+          alertEnabled: _alertEnabled,
+          alertThresholdPct: _alertThresholdPct,
         );
     if (saved && mounted) Navigator.of(context).pop();
   }
@@ -168,28 +192,73 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
             AppSpacing.gapXl,
             GlassCard(
               padding: const EdgeInsets.all(AppSpacing.md),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(CupertinoIcons.bell, color: context.colors.textTertiary),
-                  AppSpacing.gapMd,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.bell,
+                        color: context.colors.textTertiary,
+                      ),
+                      AppSpacing.gapMd,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.budgetAlertsTitle,
+                              style: AppTypography.labelLarge,
+                            ),
+                            Text(
+                              context.l10n.budgetAlertsSubtitle,
+                              style: AppTypography.bodySmall.copyWith(
+                                color: context.colors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Switch(
+                        key: const Key('budget-alert-toggle'),
+                        value: _alertEnabled,
+                        onChanged: saving ? null : _setAlertEnabled,
+                      ),
+                    ],
+                  ),
+                  if (_alertEnabled) ...[
+                    AppSpacing.gapMd,
+                    Text(
+                      context.l10n.budgetAlertThresholdLabel,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
+                    ),
+                    AppSpacing.gapSm,
+                    Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.sm,
                       children: [
-                        Text(
-                          'Alertas de presupuesto',
-                          style: AppTypography.labelLarge,
-                        ),
-                        Text(
-                          'Disponible próximamente',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: context.colors.textSecondary,
+                        // A legacy/custom threshold stays selectable when
+                        // editing, even if it is not one of the presets.
+                        for (final threshold
+                            in {
+                              ..._alertThresholdOptions,
+                              _alertThresholdPct,
+                            }.toList()..sort())
+                          _ThresholdChip(
+                            key: Key('budget-alert-threshold-$threshold'),
+                            label: '${100 - threshold}%',
+                            selected: _alertThresholdPct == threshold,
+                            onTap: saving
+                                ? null
+                                : () => setState(
+                                    () => _alertThresholdPct = threshold,
+                                  ),
                           ),
-                        ),
                       ],
                     ),
-                  ),
-                  const Switch(value: false, onChanged: null),
+                  ],
                 ],
               ),
             ),
@@ -230,6 +299,48 @@ List<TransactionCategory> availableBudgetCategories({
   return categories
       .where((category) => !usedCategoryIds.contains(category.id))
       .toList(growable: false);
+}
+
+/// Pill chip for one alert threshold, labeled with the *remaining* percentage
+/// (threshold 80 → "20%"), matching how the plan presents alerts to users.
+class _ThresholdChip extends StatelessWidget {
+  const _ThresholdChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: selected ? colors.goalSoft : colors.glassFill,
+          borderRadius: AppRadii.pillRadius,
+          border: Border.all(
+            color: selected ? colors.primary : colors.glassBorder,
+          ),
+        ),
+        child: Text(
+          label,
+          style: AppTypography.labelSmall.copyWith(
+            color: selected ? colors.primary : colors.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 String _initialAmount(Money? money) {

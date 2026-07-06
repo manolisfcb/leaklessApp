@@ -562,6 +562,48 @@ abstract class AppLocalizations {
   /// **'Límite superado'**
   String get budgetStatusExceeded;
 
+  /// No description provided for @budgetAlertsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Alertas de presupuesto'**
+  String get budgetAlertsTitle;
+
+  /// No description provided for @budgetAlertsSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Te avisamos a ti y a tu pareja al cruzar el umbral.'**
+  String get budgetAlertsSubtitle;
+
+  /// No description provided for @budgetAlertThresholdLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Avisar cuando quede'**
+  String get budgetAlertThresholdLabel;
+
+  /// In-app banner after an expense crosses the budget alert threshold
+  ///
+  /// In es, this message translates to:
+  /// **'Ojo: llevas {percent}% de {category} este mes.'**
+  String budgetAlertBanner(int percent, String category);
+
+  /// Threshold banner fallback when the category cannot be resolved
+  ///
+  /// In es, this message translates to:
+  /// **'Ojo: llevas {percent}% de un presupuesto este mes.'**
+  String budgetAlertBannerGeneric(int percent);
+
+  /// In-app banner when a budget reaches 100%
+  ///
+  /// In es, this message translates to:
+  /// **'Alcanzaste el límite de {category} este mes.'**
+  String budgetLimitReachedBanner(String category);
+
+  /// No description provided for @budgetLimitReachedBannerGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'Alcanzaste el límite de un presupuesto este mes.'**
+  String get budgetLimitReachedBannerGeneric;
+
   /// No description provided for @goalStatusActive.
   ///
   /// In es, this message translates to:
