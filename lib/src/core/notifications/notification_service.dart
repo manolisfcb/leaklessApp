@@ -41,6 +41,13 @@ abstract interface class NotificationService {
   /// The device push token, if available.
   Future<String?> getToken();
 
+  /// Invalidates the current device token (e.g. on sign out) so no further
+  /// pushes reach this device until a new token is issued.
+  Future<void> deleteToken();
+
+  /// Emits whenever the push provider issues a new device token.
+  Stream<String> get onTokenRefreshed;
+
   /// Emits when the user taps a notification that opened/foregrounded the app.
   Stream<NotificationMessage> get onMessageOpened;
 }

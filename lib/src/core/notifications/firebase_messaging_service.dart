@@ -61,8 +61,29 @@ class FirebaseMessagingService implements NotificationService {
   @override
   Future<String?> getToken() async {
     if (!_enabled) return null;
-    return _messaging.getToken();
+    // Throws on iOS while the APNS token is not yet available; callers treat
+    // "no token" and "not ready" the same, so degrade to null.
+    try {
+      return await _messaging.getToken();
+    } catch (error) {
+      _log.fine('getToken failed: $error');
+      return null;
+    }
   }
+
+  @override
+  Future<void> deleteToken() async {
+    if (!_enabled) return;
+    try {
+      await _messaging.deleteToken();
+    } catch (error) {
+      _log.fine('deleteToken failed: $error');
+    }
+  }
+
+  @override
+  Stream<String> get onTokenRefreshed =>
+      _enabled ? _messaging.onTokenRefresh : const Stream.empty();
 
   @override
   Stream<NotificationMessage> get onMessageOpened => _openedController.stream;
