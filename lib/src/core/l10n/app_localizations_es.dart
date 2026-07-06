@@ -930,6 +930,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Ajusta los filtros o registra tu primer gasto.';
 
   @override
+  String get transactionsFilterUncategorized => 'Sin categorizar';
+
+  @override
   String get transactionFallbackTitle => 'Movimiento';
 
   @override
@@ -1175,6 +1178,151 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get insightsCategoryUnnamed => 'Categoría';
+
+  @override
+  String get insightsRunawayTitle => 'Categorías fuera de control';
+
+  @override
+  String insightsRunawayBadge(int percent) {
+    return '+$percent%';
+  }
+
+  @override
+  String insightsRunawayCompare(String average) {
+    return 'Promedio de 3 meses: $average';
+  }
+
+  @override
+  String get insightsTrendTitle => 'Comparativo histórico';
+
+  @override
+  String get insightsTrendVsPreviousLabel => 'Mes anterior';
+
+  @override
+  String get insightsTrendVsAverageLabel => 'Promedio 3 meses';
+
+  @override
+  String insightsTrendChangeUp(int percent) {
+    return '$percent% más';
+  }
+
+  @override
+  String insightsTrendChangeDown(int percent) {
+    return '$percent% menos';
+  }
+
+  @override
+  String get insightsTrendChangeStable => 'Similar';
+
+  @override
+  String get insightsTrendNoPreviousMonth =>
+      'Aún no hay datos del mes anterior.';
+
+  @override
+  String get insightsProjectionTitle => 'Proyección de cierre';
+
+  @override
+  String get insightsProjectionInsufficientData =>
+      'Necesitamos unos días más de este mes para poder proyectar tu cierre.';
+
+  @override
+  String get insightsProjectionLabel => 'Estimado a fin de mes';
+
+  @override
+  String insightsProjectionOverBudget(String amount) {
+    return 'Superarías tu presupuesto por $amount.';
+  }
+
+  @override
+  String get insightsProjectionWithinBudget =>
+      'Cerrarías el mes dentro de tu presupuesto.';
+
+  @override
+  String get insightsDailyTitle => 'Gasto diario';
+
+  @override
+  String get insightsDailyAverageLabel => 'Promedio diario';
+
+  @override
+  String get insightsDailyMostExpensiveLabel => 'Día más caro';
+
+  @override
+  String get insightsDailyNoSpendLabel => 'Días sin gasto';
+
+  @override
+  String insightsDailyNoSpendValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+      zero: '0 días',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get insightsWeekdayTitle => 'Patrón semanal';
+
+  @override
+  String get insightsWeekdayMostExpensiveLabel => 'Día con más gasto';
+
+  @override
+  String get insightsWeekdayLeastExpensiveLabel => 'Día con menos gasto';
+
+  @override
+  String get insightsLastActivityTitle => 'Última actividad por categoría';
+
+  @override
+  String get insightsLastActivityToday => 'Hoy';
+
+  @override
+  String get insightsLastActivityYesterday => 'Ayer';
+
+  @override
+  String insightsLastActivityDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hace $count días',
+      one: 'Hace 1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get insightsUncategorizedTitle => 'Sin categorizar';
+
+  @override
+  String insightsUncategorizedMessage(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gastos',
+      one: '1 gasto',
+    );
+    return '$_temp0 sin categoría este mes, por $amount.';
+  }
+
+  @override
+  String get insightsUncategorizedAction => 'Categorizar ahora';
+
+  @override
+  String get insightsRecommendationsTitle => 'Recomendaciones';
+
+  @override
+  String insightsRecommendationReduceCategory(String amount, String category) {
+    return 'Para cerrar el mes dentro de presupuesto, reduce unos $amount en $category.';
+  }
+
+  @override
+  String insightsRecommendationRunaway(String category) {
+    return '$category está gastando bastante más de lo habitual este mes. Vale la pena revisarlo.';
+  }
+
+  @override
+  String get insightsRecommendationAllOnTrack =>
+      '¡Vas muy bien este mes! Sigue así.';
 
   @override
   String get quickEntryTitle => 'Registro rápido';

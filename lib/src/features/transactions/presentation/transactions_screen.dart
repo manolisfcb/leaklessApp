@@ -96,6 +96,12 @@ class _Filters extends ConsumerWidget {
               selected: filter.priority == p,
               onTap: () => controller.togglePriority(p),
             ),
+          const _Divider(),
+          _Chip(
+            label: l10n.transactionsFilterUncategorized,
+            selected: filter.uncategorizedOnly,
+            onTap: controller.toggleUncategorized,
+          ),
         ],
       ),
     );

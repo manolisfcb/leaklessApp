@@ -357,6 +357,7 @@
   "transactionsLoadError": "Não foi possível carregar o histórico",
   "transactionsEmptyTitle": "Sem movimentos",
   "transactionsEmptyMessage": "Ajuste os filtros ou registre sua primeira despesa.",
+  "transactionsFilterUncategorized": "Sem categoria",
   "transactionFallbackTitle": "Movimento",
 
   "errorAuthSession": "Não foi possível verificar sua sessão.",
@@ -499,6 +500,134 @@
     }
   },
   "insightsCategoryUnnamed": "Categoria",
+
+  "insightsRunawayTitle": "Categorias fora de controle",
+  "insightsRunawayBadge": "+{percent}%",
+  "@insightsRunawayBadge": {
+    "description": "Badge showing how far a category is over its recent average",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsRunawayCompare": "Média de 3 meses: {average}",
+  "@insightsRunawayCompare": {
+    "description": "The category's recent average spend shown for comparison",
+    "placeholders": {
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+
+  "insightsTrendTitle": "Comparativo histórico",
+  "insightsTrendVsPreviousLabel": "Mês anterior",
+  "insightsTrendVsAverageLabel": "Média de 3 meses",
+  "insightsTrendChangeUp": "{percent}% a mais",
+  "@insightsTrendChangeUp": {
+    "description": "Spend increased by this percentage vs the comparison point",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsTrendChangeDown": "{percent}% a menos",
+  "@insightsTrendChangeDown": {
+    "description": "Spend decreased by this percentage vs the comparison point",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsTrendChangeStable": "Parecido",
+  "insightsTrendNoPreviousMonth": "Ainda não há dados do mês anterior.",
+
+  "insightsProjectionTitle": "Projeção de fechamento",
+  "insightsProjectionInsufficientData": "Precisamos de mais alguns dias deste mês para projetar seu fechamento.",
+  "insightsProjectionLabel": "Estimativa para o fim do mês",
+  "insightsProjectionOverBudget": "Você ultrapassaria seu orçamento em {amount}.",
+  "@insightsProjectionOverBudget": {
+    "description": "Projected amount over the total monthly budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsProjectionWithinBudget": "Você fecharia o mês dentro do orçamento.",
+
+  "insightsDailyTitle": "Gasto diário",
+  "insightsDailyAverageLabel": "Média diária",
+  "insightsDailyMostExpensiveLabel": "Dia mais caro",
+  "insightsDailyNoSpendLabel": "Dias sem gasto",
+  "insightsDailyNoSpendValue": "{count, plural, =0{0 dias} =1{1 dia} other{{count} dias}}",
+  "@insightsDailyNoSpendValue": {
+    "description": "Number of days this month with no spending",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "insightsWeekdayTitle": "Padrão semanal",
+  "insightsWeekdayMostExpensiveLabel": "Dia de maior gasto",
+  "insightsWeekdayLeastExpensiveLabel": "Dia de menor gasto",
+
+  "insightsLastActivityTitle": "Última atividade por categoria",
+  "insightsLastActivityToday": "Hoje",
+  "insightsLastActivityYesterday": "Ontem",
+  "insightsLastActivityDaysAgo": "{count, plural, =1{Há 1 dia} other{Há {count} dias}}",
+  "@insightsLastActivityDaysAgo": {
+    "description": "How many days ago a category's last transaction happened",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "insightsUncategorizedTitle": "Sem categoria",
+  "insightsUncategorizedMessage": "{count, plural, =1{1 despesa} other{{count} despesas}} sem categoria este mês, totalizando {amount}.",
+  "@insightsUncategorizedMessage": {
+    "description": "Count and total amount of this month's expenses with no category",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsUncategorizedAction": "Categorizar agora",
+
+  "insightsRecommendationsTitle": "Recomendações",
+  "insightsRecommendationReduceCategory": "Para fechar o mês dentro do orçamento, reduza cerca de {amount} em {category}.",
+  "@insightsRecommendationReduceCategory": {
+    "description": "Suggests trimming spend in the top category to avoid overshooting the total budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsRecommendationRunaway": "{category} está gastando bem mais que o habitual este mês. Vale a pena revisar.",
+  "@insightsRecommendationRunaway": {
+    "description": "Flags a category spending well above its recent average",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsRecommendationAllOnTrack": "Você está indo muito bem este mês! Continue assim.",
 
   "quickEntryTitle": "Registro rápido"
 }

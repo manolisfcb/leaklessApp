@@ -13,8 +13,16 @@ import '../../transactions/application/transactions_providers.dart';
 import '../application/insights_providers.dart';
 import '../domain/month_insights.dart';
 import 'widgets/category_breakdown_card.dart';
+import 'widgets/category_last_activity_card.dart';
+import 'widgets/daily_spend_card.dart';
 import 'widgets/month_summary_card.dart';
+import 'widgets/projection_card.dart';
+import 'widgets/recommendations_card.dart';
+import 'widgets/runaway_category_card.dart';
 import 'widgets/spending_pace_card.dart';
+import 'widgets/trend_card.dart';
+import 'widgets/uncategorized_card.dart';
+import 'widgets/weekday_pattern_card.dart';
 
 /// Financial insights ("Dashboard") for the current month. Renders the
 /// [MonthInsights] read-model as a scroll of glass cards and handles every
@@ -74,6 +82,10 @@ class _InsightsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoriesByIdProvider);
     void createBudget() => context.push(AppRoutes.budgets);
+    void categorizeUncategorized() {
+      ref.read(transactionFilterProvider.notifier).showUncategorizedOnly();
+      context.go(AppRoutes.transactions);
+    }
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
@@ -96,6 +108,33 @@ class _InsightsBody extends ConsumerWidget {
             onCreateBudget: createBudget,
           ),
         ],
+        if (insights.runawayCategories.isNotEmpty) ...[
+          AppSpacing.gapLg,
+          RunawayCategoryCard(insights: insights, categories: categories),
+        ],
+        AppSpacing.gapLg,
+        TrendCard(insights: insights),
+        AppSpacing.gapLg,
+        ProjectionCard(insights: insights),
+        AppSpacing.gapLg,
+        DailySpendCard(insights: insights),
+        if (insights.weekday.mostExpensiveWeekday != null) ...[
+          AppSpacing.gapLg,
+          WeekdayPatternCard(insights: insights),
+        ],
+        if (insights.categories.isNotEmpty) ...[
+          AppSpacing.gapLg,
+          CategoryLastActivityCard(insights: insights, categories: categories),
+        ],
+        if (!insights.uncategorized.isEmpty) ...[
+          AppSpacing.gapLg,
+          UncategorizedCard(
+            insights: insights,
+            onCategorize: categorizeUncategorized,
+          ),
+        ],
+        AppSpacing.gapLg,
+        RecommendationsCard(insights: insights, categories: categories),
       ],
     );
   }

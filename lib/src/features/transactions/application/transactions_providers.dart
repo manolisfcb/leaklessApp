@@ -29,18 +29,34 @@ final transactionsStreamProvider =
 
 /// Filters applied on the history screen.
 class TransactionFilter {
-  const TransactionFilter({this.responsible, this.categoryId, this.priority});
+  const TransactionFilter({
+    this.responsible,
+    this.categoryId,
+    this.priority,
+    this.uncategorizedOnly = false,
+  });
 
   final ResponsibleType? responsible;
   final String? categoryId;
   final TransactionPriority? priority;
 
+  /// When true, matches expenses with no category and ignores [categoryId]
+  /// (the two are mutually exclusive).
+  final bool uncategorizedOnly;
+
   bool get isActive =>
-      responsible != null || categoryId != null || priority != null;
+      responsible != null ||
+      categoryId != null ||
+      priority != null ||
+      uncategorizedOnly;
 
   bool matches(Transaction tx) {
     if (responsible != null && tx.responsible != responsible) return false;
-    if (categoryId != null && tx.categoryId != categoryId) return false;
+    if (uncategorizedOnly) {
+      if (tx.categoryId != null) return false;
+    } else if (categoryId != null && tx.categoryId != categoryId) {
+      return false;
+    }
     if (priority != null && tx.priority != priority) return false;
     return true;
   }
@@ -49,6 +65,7 @@ class TransactionFilter {
     ResponsibleType? responsible,
     String? categoryId,
     TransactionPriority? priority,
+    bool? uncategorizedOnly,
     bool clearResponsible = false,
     bool clearCategory = false,
     bool clearPriority = false,
@@ -56,6 +73,7 @@ class TransactionFilter {
     responsible: clearResponsible ? null : (responsible ?? this.responsible),
     categoryId: clearCategory ? null : (categoryId ?? this.categoryId),
     priority: clearPriority ? null : (priority ?? this.priority),
+    uncategorizedOnly: uncategorizedOnly ?? this.uncategorizedOnly,
   );
 }
 
@@ -77,6 +95,23 @@ class TransactionFilterController extends Notifier<TransactionFilter> {
   void toggleCategory(String value) => state = state.copyWith(
     categoryId: state.categoryId == value ? null : value,
     clearCategory: state.categoryId == value,
+    uncategorizedOnly: false,
+  );
+
+  void toggleUncategorized() => state = state.uncategorizedOnly
+      ? state.copyWith(uncategorizedOnly: false)
+      : TransactionFilter(
+          responsible: state.responsible,
+          priority: state.priority,
+          uncategorizedOnly: true,
+        );
+
+  /// Sets the uncategorized-only filter regardless of its current state, for
+  /// entry points (e.g. the insights CTA) that always want it enabled.
+  void showUncategorizedOnly() => state = TransactionFilter(
+    responsible: state.responsible,
+    priority: state.priority,
+    uncategorizedOnly: true,
   );
 
   void clear() => state = const TransactionFilter();

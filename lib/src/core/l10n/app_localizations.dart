@@ -1768,6 +1768,12 @@ abstract class AppLocalizations {
   /// **'Ajusta los filtros o registra tu primer gasto.'**
   String get transactionsEmptyMessage;
 
+  /// No description provided for @transactionsFilterUncategorized.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin categorizar'**
+  String get transactionsFilterUncategorized;
+
   /// No description provided for @transactionFallbackTitle.
   ///
   /// In es, this message translates to:
@@ -2187,6 +2193,210 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Categoría'**
   String get insightsCategoryUnnamed;
+
+  /// No description provided for @insightsRunawayTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Categorías fuera de control'**
+  String get insightsRunawayTitle;
+
+  /// Badge showing how far a category is over its recent average
+  ///
+  /// In es, this message translates to:
+  /// **'+{percent}%'**
+  String insightsRunawayBadge(int percent);
+
+  /// The category's recent average spend shown for comparison
+  ///
+  /// In es, this message translates to:
+  /// **'Promedio de 3 meses: {average}'**
+  String insightsRunawayCompare(String average);
+
+  /// No description provided for @insightsTrendTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparativo histórico'**
+  String get insightsTrendTitle;
+
+  /// No description provided for @insightsTrendVsPreviousLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Mes anterior'**
+  String get insightsTrendVsPreviousLabel;
+
+  /// No description provided for @insightsTrendVsAverageLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Promedio 3 meses'**
+  String get insightsTrendVsAverageLabel;
+
+  /// Spend increased by this percentage vs the comparison point
+  ///
+  /// In es, this message translates to:
+  /// **'{percent}% más'**
+  String insightsTrendChangeUp(int percent);
+
+  /// Spend decreased by this percentage vs the comparison point
+  ///
+  /// In es, this message translates to:
+  /// **'{percent}% menos'**
+  String insightsTrendChangeDown(int percent);
+
+  /// No description provided for @insightsTrendChangeStable.
+  ///
+  /// In es, this message translates to:
+  /// **'Similar'**
+  String get insightsTrendChangeStable;
+
+  /// No description provided for @insightsTrendNoPreviousMonth.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay datos del mes anterior.'**
+  String get insightsTrendNoPreviousMonth;
+
+  /// No description provided for @insightsProjectionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyección de cierre'**
+  String get insightsProjectionTitle;
+
+  /// No description provided for @insightsProjectionInsufficientData.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos unos días más de este mes para poder proyectar tu cierre.'**
+  String get insightsProjectionInsufficientData;
+
+  /// No description provided for @insightsProjectionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Estimado a fin de mes'**
+  String get insightsProjectionLabel;
+
+  /// Projected amount over the total monthly budget
+  ///
+  /// In es, this message translates to:
+  /// **'Superarías tu presupuesto por {amount}.'**
+  String insightsProjectionOverBudget(String amount);
+
+  /// No description provided for @insightsProjectionWithinBudget.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrarías el mes dentro de tu presupuesto.'**
+  String get insightsProjectionWithinBudget;
+
+  /// No description provided for @insightsDailyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Gasto diario'**
+  String get insightsDailyTitle;
+
+  /// No description provided for @insightsDailyAverageLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Promedio diario'**
+  String get insightsDailyAverageLabel;
+
+  /// No description provided for @insightsDailyMostExpensiveLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Día más caro'**
+  String get insightsDailyMostExpensiveLabel;
+
+  /// No description provided for @insightsDailyNoSpendLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Días sin gasto'**
+  String get insightsDailyNoSpendLabel;
+
+  /// Number of days this month with no spending
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =0{0 días} =1{1 día} other{{count} días}}'**
+  String insightsDailyNoSpendValue(int count);
+
+  /// No description provided for @insightsWeekdayTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Patrón semanal'**
+  String get insightsWeekdayTitle;
+
+  /// No description provided for @insightsWeekdayMostExpensiveLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Día con más gasto'**
+  String get insightsWeekdayMostExpensiveLabel;
+
+  /// No description provided for @insightsWeekdayLeastExpensiveLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Día con menos gasto'**
+  String get insightsWeekdayLeastExpensiveLabel;
+
+  /// No description provided for @insightsLastActivityTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Última actividad por categoría'**
+  String get insightsLastActivityTitle;
+
+  /// No description provided for @insightsLastActivityToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy'**
+  String get insightsLastActivityToday;
+
+  /// No description provided for @insightsLastActivityYesterday.
+  ///
+  /// In es, this message translates to:
+  /// **'Ayer'**
+  String get insightsLastActivityYesterday;
+
+  /// How many days ago a category's last transaction happened
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{Hace 1 día} other{Hace {count} días}}'**
+  String insightsLastActivityDaysAgo(int count);
+
+  /// No description provided for @insightsUncategorizedTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin categorizar'**
+  String get insightsUncategorizedTitle;
+
+  /// Count and total amount of this month's expenses with no category
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 gasto} other{{count} gastos}} sin categoría este mes, por {amount}.'**
+  String insightsUncategorizedMessage(int count, String amount);
+
+  /// No description provided for @insightsUncategorizedAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Categorizar ahora'**
+  String get insightsUncategorizedAction;
+
+  /// No description provided for @insightsRecommendationsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Recomendaciones'**
+  String get insightsRecommendationsTitle;
+
+  /// Suggests trimming spend in the top category to avoid overshooting the total budget
+  ///
+  /// In es, this message translates to:
+  /// **'Para cerrar el mes dentro de presupuesto, reduce unos {amount} en {category}.'**
+  String insightsRecommendationReduceCategory(String amount, String category);
+
+  /// Flags a category spending well above its recent average
+  ///
+  /// In es, this message translates to:
+  /// **'{category} está gastando bastante más de lo habitual este mes. Vale la pena revisarlo.'**
+  String insightsRecommendationRunaway(String category);
+
+  /// No description provided for @insightsRecommendationAllOnTrack.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Vas muy bien este mes! Sigue así.'**
+  String get insightsRecommendationAllOnTrack;
 
   /// No description provided for @quickEntryTitle.
   ///

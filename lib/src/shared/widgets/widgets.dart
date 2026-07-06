@@ -15,5 +15,6 @@ export 'glass_icon_button.dart';
 export 'glass_scaffold.dart';
 export 'liquid_progress_bar.dart';
 export 'liquid_tube_indicator.dart';
+export 'mini_bar_chart.dart';
 export 'profile_bubble.dart';
 export 'section_header.dart';

@@ -928,6 +928,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Adjust the filters or record your first expense.';
 
   @override
+  String get transactionsFilterUncategorized => 'Uncategorized';
+
+  @override
   String get transactionFallbackTitle => 'Transaction';
 
   @override
@@ -1170,6 +1173,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insightsCategoryUnnamed => 'Category';
+
+  @override
+  String get insightsRunawayTitle => 'Categories out of control';
+
+  @override
+  String insightsRunawayBadge(int percent) {
+    return '+$percent%';
+  }
+
+  @override
+  String insightsRunawayCompare(String average) {
+    return '3-month average: $average';
+  }
+
+  @override
+  String get insightsTrendTitle => 'Historical comparison';
+
+  @override
+  String get insightsTrendVsPreviousLabel => 'Previous month';
+
+  @override
+  String get insightsTrendVsAverageLabel => '3-month average';
+
+  @override
+  String insightsTrendChangeUp(int percent) {
+    return '$percent% more';
+  }
+
+  @override
+  String insightsTrendChangeDown(int percent) {
+    return '$percent% less';
+  }
+
+  @override
+  String get insightsTrendChangeStable => 'Similar';
+
+  @override
+  String get insightsTrendNoPreviousMonth =>
+      'No data for the previous month yet.';
+
+  @override
+  String get insightsProjectionTitle => 'End-of-month projection';
+
+  @override
+  String get insightsProjectionInsufficientData =>
+      'We need a few more days of this month to project your close.';
+
+  @override
+  String get insightsProjectionLabel => 'Estimated by month end';
+
+  @override
+  String insightsProjectionOverBudget(String amount) {
+    return 'You\'d go over budget by $amount.';
+  }
+
+  @override
+  String get insightsProjectionWithinBudget =>
+      'You\'d close the month within budget.';
+
+  @override
+  String get insightsDailyTitle => 'Daily spending';
+
+  @override
+  String get insightsDailyAverageLabel => 'Daily average';
+
+  @override
+  String get insightsDailyMostExpensiveLabel => 'Priciest day';
+
+  @override
+  String get insightsDailyNoSpendLabel => 'Days without spending';
+
+  @override
+  String insightsDailyNoSpendValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+      zero: '0 days',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get insightsWeekdayTitle => 'Weekly pattern';
+
+  @override
+  String get insightsWeekdayMostExpensiveLabel => 'Highest-spend day';
+
+  @override
+  String get insightsWeekdayLeastExpensiveLabel => 'Lowest-spend day';
+
+  @override
+  String get insightsLastActivityTitle => 'Last activity by category';
+
+  @override
+  String get insightsLastActivityToday => 'Today';
+
+  @override
+  String get insightsLastActivityYesterday => 'Yesterday';
+
+  @override
+  String insightsLastActivityDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get insightsUncategorizedTitle => 'Uncategorized';
+
+  @override
+  String insightsUncategorizedMessage(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count expenses',
+      one: '1 expense',
+    );
+    return '$_temp0 with no category this month, totaling $amount.';
+  }
+
+  @override
+  String get insightsUncategorizedAction => 'Categorize now';
+
+  @override
+  String get insightsRecommendationsTitle => 'Recommendations';
+
+  @override
+  String insightsRecommendationReduceCategory(String amount, String category) {
+    return 'To close the month on budget, trim about $amount from $category.';
+  }
+
+  @override
+  String insightsRecommendationRunaway(String category) {
+    return '$category is spending well above usual this month. Worth a look.';
+  }
+
+  @override
+  String get insightsRecommendationAllOnTrack =>
+      'You\'re doing great this month! Keep it up.';
 
   @override
   String get quickEntryTitle => 'Quick entry';
