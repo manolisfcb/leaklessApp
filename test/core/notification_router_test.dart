@@ -14,6 +14,13 @@ void main() {
     expect(router.routeFor(message('limit_reached')), AppRoutes.budgets);
   });
 
+  test('routes recurring reminder taps to subscriptions', () {
+    expect(
+      router.routeFor(message('recurring_reminder')),
+      AppRoutes.subscriptions,
+    );
+  });
+
   test('unknown or missing type falls back to the dashboard', () {
     expect(router.routeFor(message('something_else')), AppRoutes.dashboard);
     expect(router.routeFor(message(null)), AppRoutes.dashboard);
