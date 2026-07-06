@@ -106,5 +106,18 @@
   "subscriptionStatusActive": "Ativa",
   "subscriptionStatusTrial": "Teste",
   "subscriptionStatusPaused": "Pausada",
-  "subscriptionStatusCanceled": "Cancelada"
+  "subscriptionStatusCanceled": "Cancelada",
+
+  "recurringReminderChannelName": "Lembretes de cobrança",
+  "recurringReminderChannelDescription": "Aviso antes de uma cobrança recorrente",
+  "recurringReminderTitle": "Cobrança próxima",
+  "recurringReminderBody": "{name} será cobrado em breve",
+  "@recurringReminderBody": {
+    "description": "Local notification body reminding of an upcoming recurring charge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

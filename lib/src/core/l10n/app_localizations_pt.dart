@@ -302,4 +302,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get subscriptionStatusCanceled => 'Cancelada';
+
+  @override
+  String get recurringReminderChannelName => 'Lembretes de cobrança';
+
+  @override
+  String get recurringReminderChannelDescription =>
+      'Aviso antes de uma cobrança recorrente';
+
+  @override
+  String get recurringReminderTitle => 'Cobrança próxima';
+
+  @override
+  String recurringReminderBody(String name) {
+    return '$name será cobrado em breve';
+  }
 }

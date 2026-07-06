@@ -651,6 +651,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cancelada'**
   String get subscriptionStatusCanceled;
+
+  /// No description provided for @recurringReminderChannelName.
+  ///
+  /// In es, this message translates to:
+  /// **'Recordatorios de cobros'**
+  String get recurringReminderChannelName;
+
+  /// No description provided for @recurringReminderChannelDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Avisos antes de un cobro recurrente'**
+  String get recurringReminderChannelDescription;
+
+  /// No description provided for @recurringReminderTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobro próximo'**
+  String get recurringReminderTitle;
+
+  /// Local notification body reminding of an upcoming recurring charge
+  ///
+  /// In es, this message translates to:
+  /// **'{name} se cobra pronto'**
+  String recurringReminderBody(String name);
 }
 
 class _AppLocalizationsDelegate

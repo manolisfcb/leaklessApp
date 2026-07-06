@@ -106,5 +106,18 @@
   "subscriptionStatusActive": "Active",
   "subscriptionStatusTrial": "Trial",
   "subscriptionStatusPaused": "Paused",
-  "subscriptionStatusCanceled": "Canceled"
+  "subscriptionStatusCanceled": "Canceled",
+
+  "recurringReminderChannelName": "Charge reminders",
+  "recurringReminderChannelDescription": "Heads-up before a recurring charge",
+  "recurringReminderTitle": "Upcoming charge",
+  "recurringReminderBody": "{name} will be charged soon",
+  "@recurringReminderBody": {
+    "description": "Local notification body reminding of an upcoming recurring charge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

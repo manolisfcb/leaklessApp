@@ -17,6 +17,7 @@ class NotificationRouter {
       'budget_alert' => AppRoutes.budgets,
       'goal_contribution' => AppRoutes.goals,
       'limit_reached' => AppRoutes.budgets,
+      'recurring_reminder' => AppRoutes.subscriptions,
       _ => AppRoutes.dashboard,
     };
   }

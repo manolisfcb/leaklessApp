@@ -302,4 +302,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionStatusCanceled => 'Canceled';
+
+  @override
+  String get recurringReminderChannelName => 'Charge reminders';
+
+  @override
+  String get recurringReminderChannelDescription =>
+      'Heads-up before a recurring charge';
+
+  @override
+  String get recurringReminderTitle => 'Upcoming charge';
+
+  @override
+  String recurringReminderBody(String name) {
+    return '$name will be charged soon';
+  }
 }

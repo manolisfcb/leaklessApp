@@ -155,5 +155,18 @@
   "subscriptionStatusActive": "Activa",
   "subscriptionStatusTrial": "Prueba",
   "subscriptionStatusPaused": "En pausa",
-  "subscriptionStatusCanceled": "Cancelada"
+  "subscriptionStatusCanceled": "Cancelada",
+
+  "recurringReminderChannelName": "Recordatorios de cobros",
+  "recurringReminderChannelDescription": "Avisos antes de un cobro recurrente",
+  "recurringReminderTitle": "Cobro próximo",
+  "recurringReminderBody": "{name} se cobra pronto",
+  "@recurringReminderBody": {
+    "description": "Local notification body reminding of an upcoming recurring charge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }
