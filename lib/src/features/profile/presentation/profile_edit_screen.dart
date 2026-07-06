@@ -242,15 +242,15 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     prefixIcon: const Icon(CupertinoIcons.money_dollar_circle),
                   ),
                   items: [
-                    if (!supportedCurrencies.any((e) => e.$1 == _currency))
+                    if (!supportedCurrencyCodes.contains(_currency))
                       DropdownMenuItem(
                         value: _currency,
                         child: Text(_currency),
                       ),
-                    for (final entry in supportedCurrencies)
+                    for (final code in supportedCurrencyCodes)
                       DropdownMenuItem(
-                        value: entry.$1,
-                        child: Text('${entry.$1} · ${entry.$2}'),
+                        value: code,
+                        child: Text('$code · ${currencyName(code, l10n)}'),
                       ),
                   ],
                   onChanged: _savingProfile

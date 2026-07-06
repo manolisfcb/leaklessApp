@@ -1,27 +1,25 @@
 import '../../../core/errors/app_exception.dart';
+import '../../../core/l10n/app_localizations.dart';
 
-String invitationErrorMessage(Object error) {
+String invitationErrorMessage(Object error, AppLocalizations l10n) {
   final code = error is ServerException ? error.code : null;
   return switch (code) {
-    'invalid_invitation_email' => 'Escribe un correo válido.',
-    'invalid_invitation_expiry' => 'La duración de la invitación no es válida.',
-    'cannot_invite_self' => 'No puedes invitar tu propio correo.',
-    'not_household_owner' => 'Sólo quien creó este hogar puede invitar.',
-    'user_already_household_member' => 'Esa persona ya pertenece a este hogar.',
-    'invalid_invitation_token' =>
-      'El enlace o código de invitación no es válido.',
-    'invitation_email_mismatch' =>
-      'Esta invitación fue enviada a otro correo. Usa esa cuenta para continuar.',
-    'invitation_already_used' => 'Esta invitación ya fue utilizada.',
-    'invitation_cancelled' => 'La invitación fue revocada.',
-    'invitation_expired' => 'La invitación ha vencido.',
-    'invitation_not_found' => 'No encontramos esta invitación.',
+    'invalid_invitation_email' => l10n.invitationErrorInvalidEmail,
+    'invalid_invitation_expiry' => l10n.invitationErrorInvalidExpiry,
+    'cannot_invite_self' => l10n.invitationErrorCannotInviteSelf,
+    'not_household_owner' => l10n.invitationErrorNotOwner,
+    'user_already_household_member' => l10n.invitationErrorAlreadyMember,
+    'invalid_invitation_token' => l10n.invitationErrorInvalidToken,
+    'invitation_email_mismatch' => l10n.invitationErrorEmailMismatch,
+    'invitation_already_used' => l10n.invitationAlreadyUsedMessage,
+    'invitation_cancelled' => l10n.invitationCancelledMessage,
+    'invitation_expired' => l10n.invitationExpiredMessage,
+    'invitation_not_found' => l10n.invitationErrorNotFound,
     'accepted_invitation_cannot_be_cancelled' =>
-      'Una invitación aceptada ya no se puede revocar.',
-    'current_household_not_empty' =>
-      'Tu hogar actual contiene datos. No podemos moverlos automáticamente.',
-    'profile_not_found' => 'No encontramos tu perfil. Inténtalo de nuevo.',
-    'authentication_required' => 'Inicia sesión para continuar.',
-    _ => 'No pudimos completar la invitación. Inténtalo de nuevo.',
+      l10n.invitationErrorAcceptedCannotCancel,
+    'current_household_not_empty' => l10n.invitationErrorHouseholdNotEmpty,
+    'profile_not_found' => l10n.invitationErrorProfileNotFound,
+    'authentication_required' => l10n.commonSignInToContinue,
+    _ => l10n.invitationErrorGeneric,
   };
 }

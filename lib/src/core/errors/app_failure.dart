@@ -1,3 +1,4 @@
+import '../l10n/app_localizations.dart';
 import 'app_exception.dart';
 
 /// A user-facing, localizable description of something that went wrong.
@@ -9,21 +10,21 @@ class AppFailure {
 
   final String message;
 
-  /// Maps a thrown [error] to a friendly message.
-  factory AppFailure.from(Object error) {
+  /// Maps a thrown [error] to a friendly, localized message.
+  factory AppFailure.from(Object error, AppLocalizations l10n) {
     if (error is AuthFailureException) {
-      return const AppFailure('No pudimos verificar tu sesión.');
+      return AppFailure(l10n.errorAuthSession);
     }
     if (error is NetworkException) {
-      return const AppFailure('Revisa tu conexión a internet.');
+      return AppFailure(l10n.errorNetwork);
     }
     if (error is NotFoundException) {
-      return const AppFailure('No encontramos lo que buscabas.');
+      return AppFailure(l10n.errorNotFound);
     }
     if (error is ServerException) {
-      return const AppFailure('Algo falló en el servidor. Inténtalo de nuevo.');
+      return AppFailure(l10n.errorServer);
     }
-    return const AppFailure('Ocurrió un error inesperado.');
+    return AppFailure(l10n.errorUnexpected);
   }
 
   @override

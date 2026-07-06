@@ -64,7 +64,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     final l10n = context.l10n;
     final state = ref.watch(resetPasswordControllerProvider);
     final loading = state.isLoading;
-    final errorMessage = state.hasError ? authErrorMessage(state.error!) : null;
+    final errorMessage = state.hasError
+        ? authErrorMessage(state.error!, l10n)
+        : null;
 
     return GlassScaffold(
       body: Center(

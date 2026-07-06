@@ -1671,6 +1671,330 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos abrir el selector de imágenes. Inténtalo de nuevo.'**
   String get pickerErrorGeneric;
+
+  /// No description provided for @dashboardLoading.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando tu panel…'**
+  String get dashboardLoading;
+
+  /// No description provided for @dashboardLoadErrorTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar el panel'**
+  String get dashboardLoadErrorTitle;
+
+  /// No description provided for @dashboardLoadErrorMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Inténtalo de nuevo en un momento.'**
+  String get dashboardLoadErrorMessage;
+
+  /// No description provided for @dashboardAvailableBalance.
+  ///
+  /// In es, this message translates to:
+  /// **'Balance disponible'**
+  String get dashboardAvailableBalance;
+
+  /// No description provided for @dashboardRecentActivity.
+  ///
+  /// In es, this message translates to:
+  /// **'Actividad reciente'**
+  String get dashboardRecentActivity;
+
+  /// No description provided for @dashboardSeeAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todo'**
+  String get dashboardSeeAll;
+
+  /// No description provided for @dashboardSavingsRate.
+  ///
+  /// In es, this message translates to:
+  /// **'Tasa de ahorro real'**
+  String get dashboardSavingsRate;
+
+  /// No description provided for @dashboardRecurringExpenses.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos recurrentes'**
+  String get dashboardRecurringExpenses;
+
+  /// No description provided for @dashboardLimitAlerts.
+  ///
+  /// In es, this message translates to:
+  /// **'Alertas de límites'**
+  String get dashboardLimitAlerts;
+
+  /// No description provided for @dashboardSavingsRateShort.
+  ///
+  /// In es, this message translates to:
+  /// **'tasa de ahorro'**
+  String get dashboardSavingsRateShort;
+
+  /// Amber chip over the hydrometer showing the month's leak amount
+  ///
+  /// In es, this message translates to:
+  /// **'Fuga {amount}'**
+  String dashboardLeak(String amount);
+
+  /// No description provided for @transactionsLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar el historial'**
+  String get transactionsLoadError;
+
+  /// No description provided for @transactionsEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin movimientos'**
+  String get transactionsEmptyTitle;
+
+  /// No description provided for @transactionsEmptyMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajusta los filtros o registra tu primer gasto.'**
+  String get transactionsEmptyMessage;
+
+  /// No description provided for @transactionFallbackTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Movimiento'**
+  String get transactionFallbackTitle;
+
+  /// No description provided for @errorAuthSession.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos verificar tu sesión.'**
+  String get errorAuthSession;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu conexión a internet.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos lo que buscabas.'**
+  String get errorNotFound;
+
+  /// No description provided for @errorServer.
+  ///
+  /// In es, this message translates to:
+  /// **'Algo falló en el servidor. Inténtalo de nuevo.'**
+  String get errorServer;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocurrió un error inesperado.'**
+  String get errorUnexpected;
+
+  /// No description provided for @authErrorInvalidCredentials.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo o contraseña incorrectos.'**
+  String get authErrorInvalidCredentials;
+
+  /// No description provided for @authErrorEmailNotConfirmed.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.'**
+  String get authErrorEmailNotConfirmed;
+
+  /// No description provided for @authErrorEmailExists.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya existe una cuenta con este correo. Inicia sesión.'**
+  String get authErrorEmailExists;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'La contraseña es muy débil. Usa al menos 6 caracteres.'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorSamePassword.
+  ///
+  /// In es, this message translates to:
+  /// **'La nueva contraseña debe ser distinta a la anterior.'**
+  String get authErrorSamePassword;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'El correo no es válido.'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorSignupDisabled.
+  ///
+  /// In es, this message translates to:
+  /// **'El registro está deshabilitado por ahora.'**
+  String get authErrorSignupDisabled;
+
+  /// No description provided for @authErrorRateLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Demasiados intentos. Espera un momento e inténtalo de nuevo.'**
+  String get authErrorRateLimit;
+
+  /// No description provided for @authErrorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar la operación. Inténtalo de nuevo.'**
+  String get authErrorGeneric;
+
+  /// No description provided for @authErrorUnexpected.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocurrió un error inesperado. Inténtalo de nuevo.'**
+  String get authErrorUnexpected;
+
+  /// No description provided for @invitationErrorInvalidEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un correo válido.'**
+  String get invitationErrorInvalidEmail;
+
+  /// No description provided for @invitationErrorInvalidExpiry.
+  ///
+  /// In es, this message translates to:
+  /// **'La duración de la invitación no es válida.'**
+  String get invitationErrorInvalidExpiry;
+
+  /// No description provided for @invitationErrorCannotInviteSelf.
+  ///
+  /// In es, this message translates to:
+  /// **'No puedes invitar tu propio correo.'**
+  String get invitationErrorCannotInviteSelf;
+
+  /// No description provided for @invitationErrorNotOwner.
+  ///
+  /// In es, this message translates to:
+  /// **'Sólo quien creó este hogar puede invitar.'**
+  String get invitationErrorNotOwner;
+
+  /// No description provided for @invitationErrorAlreadyMember.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa persona ya pertenece a este hogar.'**
+  String get invitationErrorAlreadyMember;
+
+  /// No description provided for @invitationErrorInvalidToken.
+  ///
+  /// In es, this message translates to:
+  /// **'El enlace o código de invitación no es válido.'**
+  String get invitationErrorInvalidToken;
+
+  /// No description provided for @invitationErrorEmailMismatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta invitación fue enviada a otro correo. Usa esa cuenta para continuar.'**
+  String get invitationErrorEmailMismatch;
+
+  /// No description provided for @invitationErrorNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos esta invitación.'**
+  String get invitationErrorNotFound;
+
+  /// No description provided for @invitationErrorAcceptedCannotCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Una invitación aceptada ya no se puede revocar.'**
+  String get invitationErrorAcceptedCannotCancel;
+
+  /// No description provided for @invitationErrorHouseholdNotEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu hogar actual contiene datos. No podemos moverlos automáticamente.'**
+  String get invitationErrorHouseholdNotEmpty;
+
+  /// No description provided for @invitationErrorProfileNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos tu perfil. Inténtalo de nuevo.'**
+  String get invitationErrorProfileNotFound;
+
+  /// No description provided for @invitationErrorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar la invitación. Inténtalo de nuevo.'**
+  String get invitationErrorGeneric;
+
+  /// No description provided for @currencyCAD.
+  ///
+  /// In es, this message translates to:
+  /// **'Dólar canadiense'**
+  String get currencyCAD;
+
+  /// No description provided for @currencyUSD.
+  ///
+  /// In es, this message translates to:
+  /// **'Dólar estadounidense'**
+  String get currencyUSD;
+
+  /// No description provided for @currencyEUR.
+  ///
+  /// In es, this message translates to:
+  /// **'Euro'**
+  String get currencyEUR;
+
+  /// No description provided for @currencyMXN.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso mexicano'**
+  String get currencyMXN;
+
+  /// No description provided for @currencyCOP.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso colombiano'**
+  String get currencyCOP;
+
+  /// No description provided for @currencyARS.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso argentino'**
+  String get currencyARS;
+
+  /// No description provided for @currencyCLP.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso chileno'**
+  String get currencyCLP;
+
+  /// No description provided for @currencyPEN.
+  ///
+  /// In es, this message translates to:
+  /// **'Sol peruano'**
+  String get currencyPEN;
+
+  /// No description provided for @currencyBRL.
+  ///
+  /// In es, this message translates to:
+  /// **'Real brasileño'**
+  String get currencyBRL;
+
+  /// No description provided for @currencyGBP.
+  ///
+  /// In es, this message translates to:
+  /// **'Libra esterlina'**
+  String get currencyGBP;
+
+  /// No description provided for @currencyJPY.
+  ///
+  /// In es, this message translates to:
+  /// **'Yen japonés'**
+  String get currencyJPY;
+
+  /// No description provided for @currencyCHF.
+  ///
+  /// In es, this message translates to:
+  /// **'Franco suizo'**
+  String get currencyCHF;
 }
 
 class _AppLocalizationsDelegate

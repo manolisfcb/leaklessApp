@@ -105,6 +105,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
           _error = context.l10n.householdSetupInvitationFailed(
             invitationErrorMessage(
               invitationState.error ?? StateError('Invitation failed'),
+              context.l10n,
             ),
           );
         });
@@ -238,17 +239,15 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                         ),
                       ),
                       items: [
-                        if (!supportedCurrencies.any(
-                          (entry) => entry.$1 == _currency,
-                        ))
+                        if (!supportedCurrencyCodes.contains(_currency))
                           DropdownMenuItem(
                             value: _currency,
                             child: Text(_currency),
                           ),
-                        for (final entry in supportedCurrencies)
+                        for (final code in supportedCurrencyCodes)
                           DropdownMenuItem(
-                            value: entry.$1,
-                            child: Text('${entry.$1} · ${entry.$2}'),
+                            value: code,
+                            child: Text('$code · ${currencyName(code, l10n)}'),
                           ),
                       ],
                       onChanged: _submitting

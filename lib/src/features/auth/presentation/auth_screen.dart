@@ -107,7 +107,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final hasPendingInvitation =
         ref.watch(invitationIntentControllerProvider).token != null;
     final loading = state.isLoading;
-    final errorMessage = state.hasError ? authErrorMessage(state.error!) : null;
+    final errorMessage = state.hasError
+        ? authErrorMessage(state.error!, l10n)
+        : null;
 
     return GlassScaffold(
       body: Center(
@@ -347,9 +349,10 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
       if (mounted) Navigator.of(context).pop(true);
     } catch (error) {
       if (mounted) {
+        final message = authErrorMessage(error, context.l10n);
         setState(() {
           _loading = false;
-          _error = authErrorMessage(error);
+          _error = message;
         });
       }
     }

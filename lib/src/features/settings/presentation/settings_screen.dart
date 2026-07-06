@@ -25,13 +25,16 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final l10n = context.l10n;
     final profile = ref.watch(currentProfileProvider).asData?.value;
     final household = ref.watch(currentHouseholdProvider).asData?.value;
     final isPremium = ref.watch(isPremiumProvider);
     final notifications = ref.watch(notificationPermissionProvider);
+    final memberCount =
+        ref.watch(householdMembersProvider).asData?.value.length ?? 0;
 
     return GlassScaffold(
-      appBar: AppBar(title: const Text('Ajustes')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.lg,
@@ -55,12 +58,12 @@ class SettingsScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profile?.displayName ?? 'Tu perfil',
+                        profile?.displayName ?? l10n.settingsProfileFallback,
                         style: AppTypography.titleLarge,
                       ),
                       AppSpacing.gapXs,
                       Text(
-                        household?.name ?? 'Sin household',
+                        household?.name ?? l10n.settingsNoHousehold,
                         style: AppTypography.bodySmall.copyWith(
                           color: colors.textSecondary,
                         ),
@@ -79,9 +82,9 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 _SettingsRow(
                   icon: CupertinoIcons.house,
-                  label: 'Nombre y moneda',
+                  label: l10n.settingsHouseholdNameCurrency,
                   value: household == null
-                      ? 'Sin hogar'
+                      ? l10n.settingsNoHousehold
                       : '${household.name} · ${household.currency}',
                   onTap: household == null
                       ? null
@@ -90,19 +93,19 @@ class SettingsScreen extends ConsumerWidget {
                 const _RowDivider(),
                 _SettingsRow(
                   icon: CupertinoIcons.person_2,
-                  label: 'Pareja',
-                  value:
-                      '${ref.watch(householdMembersProvider).asData?.value.length ?? 0} miembros',
+                  label: l10n.settingsPartner,
+                  value: l10n.settingsMembersCount(memberCount),
                   onTap: () => context.push(AppRoutes.householdInvitations),
                 ),
                 const _RowDivider(),
                 _SettingsRow(
                   icon: CupertinoIcons.bell,
-                  label: 'Notificaciones',
+                  label: l10n.settingsNotifications,
                   value: switch (notifications.asData?.value) {
                     null => '…',
-                    final status when status.isGranted => 'Activadas',
-                    _ => 'Desactivadas',
+                    final status when status.isGranted =>
+                      l10n.settingsNotificationsOn,
+                    _ => l10n.settingsNotificationsOff,
                   },
                 ),
                 const _RowDivider(),
@@ -130,8 +133,8 @@ class SettingsScreen extends ConsumerWidget {
                 const _RowDivider(),
                 _SettingsRow(
                   icon: CupertinoIcons.star,
-                  label: 'Suscripción',
-                  value: isPremium ? 'Premium' : 'Gratis',
+                  label: l10n.settingsSubscription,
+                  value: isPremium ? l10n.settingsPremium : l10n.settingsFree,
                   valueColor: isPremium ? colors.income : null,
                 ),
               ],
@@ -139,7 +142,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           AppSpacing.gapXl,
           GlassButton(
-            label: 'Cerrar sesión',
+            label: l10n.settingsSignOut,
             icon: CupertinoIcons.square_arrow_right,
             variant: GlassButtonVariant.glass,
             accent: colors.expense,
@@ -150,7 +153,7 @@ class SettingsScreen extends ConsumerWidget {
           TextButton(
             onPressed: () => _confirmDeleteAccount(context, ref),
             child: Text(
-              'Eliminar cuenta',
+              l10n.settingsDeleteAccount,
               style: AppTypography.labelLarge.copyWith(color: colors.expense),
             ),
           ),

@@ -77,6 +77,7 @@ class _HouseholdInvitationsScreenState
       } else {
         _error = invitationErrorMessage(
           actionState.error ?? StateError('Missing invitation token'),
+          context.l10n,
         );
       }
     });
@@ -105,6 +106,7 @@ class _HouseholdInvitationsScreenState
       } else {
         _error = invitationErrorMessage(
           actionState.error ?? StateError('Unable to revoke invitation'),
+          context.l10n,
         );
       }
     });

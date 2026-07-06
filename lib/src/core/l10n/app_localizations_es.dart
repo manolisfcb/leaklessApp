@@ -877,4 +877,187 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get pickerErrorGeneric =>
       'No pudimos abrir el selector de imágenes. Inténtalo de nuevo.';
+
+  @override
+  String get dashboardLoading => 'Cargando tu panel…';
+
+  @override
+  String get dashboardLoadErrorTitle => 'No pudimos cargar el panel';
+
+  @override
+  String get dashboardLoadErrorMessage => 'Inténtalo de nuevo en un momento.';
+
+  @override
+  String get dashboardAvailableBalance => 'Balance disponible';
+
+  @override
+  String get dashboardRecentActivity => 'Actividad reciente';
+
+  @override
+  String get dashboardSeeAll => 'Ver todo';
+
+  @override
+  String get dashboardSavingsRate => 'Tasa de ahorro real';
+
+  @override
+  String get dashboardRecurringExpenses => 'Gastos recurrentes';
+
+  @override
+  String get dashboardLimitAlerts => 'Alertas de límites';
+
+  @override
+  String get dashboardSavingsRateShort => 'tasa de ahorro';
+
+  @override
+  String dashboardLeak(String amount) {
+    return 'Fuga $amount';
+  }
+
+  @override
+  String get transactionsLoadError => 'No pudimos cargar el historial';
+
+  @override
+  String get transactionsEmptyTitle => 'Sin movimientos';
+
+  @override
+  String get transactionsEmptyMessage =>
+      'Ajusta los filtros o registra tu primer gasto.';
+
+  @override
+  String get transactionFallbackTitle => 'Movimiento';
+
+  @override
+  String get errorAuthSession => 'No pudimos verificar tu sesión.';
+
+  @override
+  String get errorNetwork => 'Revisa tu conexión a internet.';
+
+  @override
+  String get errorNotFound => 'No encontramos lo que buscabas.';
+
+  @override
+  String get errorServer => 'Algo falló en el servidor. Inténtalo de nuevo.';
+
+  @override
+  String get errorUnexpected => 'Ocurrió un error inesperado.';
+
+  @override
+  String get authErrorInvalidCredentials => 'Correo o contraseña incorrectos.';
+
+  @override
+  String get authErrorEmailNotConfirmed =>
+      'Confirma tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.';
+
+  @override
+  String get authErrorEmailExists =>
+      'Ya existe una cuenta con este correo. Inicia sesión.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'La contraseña es muy débil. Usa al menos 6 caracteres.';
+
+  @override
+  String get authErrorSamePassword =>
+      'La nueva contraseña debe ser distinta a la anterior.';
+
+  @override
+  String get authErrorInvalidEmail => 'El correo no es válido.';
+
+  @override
+  String get authErrorSignupDisabled =>
+      'El registro está deshabilitado por ahora.';
+
+  @override
+  String get authErrorRateLimit =>
+      'Demasiados intentos. Espera un momento e inténtalo de nuevo.';
+
+  @override
+  String get authErrorGeneric =>
+      'No pudimos completar la operación. Inténtalo de nuevo.';
+
+  @override
+  String get authErrorUnexpected =>
+      'Ocurrió un error inesperado. Inténtalo de nuevo.';
+
+  @override
+  String get invitationErrorInvalidEmail => 'Escribe un correo válido.';
+
+  @override
+  String get invitationErrorInvalidExpiry =>
+      'La duración de la invitación no es válida.';
+
+  @override
+  String get invitationErrorCannotInviteSelf =>
+      'No puedes invitar tu propio correo.';
+
+  @override
+  String get invitationErrorNotOwner =>
+      'Sólo quien creó este hogar puede invitar.';
+
+  @override
+  String get invitationErrorAlreadyMember =>
+      'Esa persona ya pertenece a este hogar.';
+
+  @override
+  String get invitationErrorInvalidToken =>
+      'El enlace o código de invitación no es válido.';
+
+  @override
+  String get invitationErrorEmailMismatch =>
+      'Esta invitación fue enviada a otro correo. Usa esa cuenta para continuar.';
+
+  @override
+  String get invitationErrorNotFound => 'No encontramos esta invitación.';
+
+  @override
+  String get invitationErrorAcceptedCannotCancel =>
+      'Una invitación aceptada ya no se puede revocar.';
+
+  @override
+  String get invitationErrorHouseholdNotEmpty =>
+      'Tu hogar actual contiene datos. No podemos moverlos automáticamente.';
+
+  @override
+  String get invitationErrorProfileNotFound =>
+      'No encontramos tu perfil. Inténtalo de nuevo.';
+
+  @override
+  String get invitationErrorGeneric =>
+      'No pudimos completar la invitación. Inténtalo de nuevo.';
+
+  @override
+  String get currencyCAD => 'Dólar canadiense';
+
+  @override
+  String get currencyUSD => 'Dólar estadounidense';
+
+  @override
+  String get currencyEUR => 'Euro';
+
+  @override
+  String get currencyMXN => 'Peso mexicano';
+
+  @override
+  String get currencyCOP => 'Peso colombiano';
+
+  @override
+  String get currencyARS => 'Peso argentino';
+
+  @override
+  String get currencyCLP => 'Peso chileno';
+
+  @override
+  String get currencyPEN => 'Sol peruano';
+
+  @override
+  String get currencyBRL => 'Real brasileño';
+
+  @override
+  String get currencyGBP => 'Libra esterlina';
+
+  @override
+  String get currencyJPY => 'Yen japonés';
+
+  @override
+  String get currencyCHF => 'Franco suizo';
 }

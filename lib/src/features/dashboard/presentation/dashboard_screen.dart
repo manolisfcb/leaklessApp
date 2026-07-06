@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
@@ -21,14 +22,15 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final summary = ref.watch(dashboardSummaryProvider);
     return GlassScaffold(
       body: summary.when(
-        loading: () => const AppLoader(message: 'Cargando tu panel…'),
-        error: (_, _) => const AppEmptyState(
+        loading: () => AppLoader(message: l10n.dashboardLoading),
+        error: (_, _) => AppEmptyState(
           icon: CupertinoIcons.exclamationmark_circle,
-          title: 'No pudimos cargar el panel',
-          message: 'Inténtalo de nuevo en un momento.',
+          title: l10n.dashboardLoadErrorTitle,
+          message: l10n.dashboardLoadErrorMessage,
         ),
         data: (data) => _DashboardBody(summary: data),
       ),
@@ -43,6 +45,7 @@ class _DashboardBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final l10n = context.l10n;
     final recent = ref.watch(transactionsStreamProvider).asData?.value ?? const [];
     final categories = ref.watch(categoriesByIdProvider);
 
@@ -58,7 +61,7 @@ class _DashboardBody extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                'Balance disponible',
+                l10n.dashboardAvailableBalance,
                 style: AppTypography.bodyMedium.copyWith(
                   color: colors.textSecondary,
                 ),
@@ -87,8 +90,8 @@ class _DashboardBody extends ConsumerWidget {
         Padding(
           padding: AppSpacing.screen,
           child: SectionHeader(
-            title: 'Actividad reciente',
-            actionLabel: 'Ver todo',
+            title: l10n.dashboardRecentActivity,
+            actionLabel: l10n.dashboardSeeAll,
             onAction: () => context.go(AppRoutes.transactions),
           ),
         ),

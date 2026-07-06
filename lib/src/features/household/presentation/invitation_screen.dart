@@ -88,7 +88,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
           actionState.error ?? StateError('Unable to inspect invitation');
       setState(() {
         _view = _InvitationView.error;
-        _error = invitationErrorMessage(error);
+        _error = invitationErrorMessage(error, context.l10n);
         _errorCode = error is ServerException ? error.code : null;
       });
       return;
@@ -129,7 +129,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
           actionState.error ?? StateError('Unable to accept invitation');
       setState(() {
         _view = _InvitationView.error;
-        _error = invitationErrorMessage(error);
+        _error = invitationErrorMessage(error, context.l10n);
         _errorCode = error is ServerException ? error.code : null;
       });
       return;
