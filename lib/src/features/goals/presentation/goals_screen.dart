@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../domain/models/goal.dart';
 import '../../../domain/models/money.dart';
@@ -28,6 +31,7 @@ class GoalsScreen extends ConsumerWidget {
           ),
         );
     });
+    final l10n = context.l10n;
     final goals = ref.watch(goalsStreamProvider);
     return GlassScaffold(
       appBar: AppBar(
@@ -37,6 +41,11 @@ class GoalsScreen extends ConsumerWidget {
             tooltip: 'Nueva meta',
             onPressed: () => GoalFormSheet.show(context),
             icon: const Icon(CupertinoIcons.add),
+          ),
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            onPressed: () => context.push(AppRoutes.settings),
+            icon: const Icon(CupertinoIcons.gear_alt_fill),
           ),
         ],
       ),

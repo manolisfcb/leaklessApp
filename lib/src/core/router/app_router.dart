@@ -175,6 +175,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, _) => const BudgetsScreen(),
       ),
+      // Settings left the tab bar to make room for the centered quick-entry
+      // action; it's now reached via a gear icon on each tab's app bar.
+      GoRoute(
+        path: AppRoutes.settings,
+        name: AppRoutes.settingsName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, _) => const SettingsScreen(),
+      ),
       GoRoute(
         path: AppRoutes.invitation,
         name: AppRoutes.invitationName,
@@ -228,15 +236,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.goals,
                 name: AppRoutes.goalsName,
                 builder: (_, _) => const GoalsScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.settings,
-                name: AppRoutes.settingsName,
-                builder: (_, _) => const SettingsScreen(),
               ),
             ],
           ),

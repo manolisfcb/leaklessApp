@@ -23,18 +23,16 @@ class AppShell extends StatelessWidget {
       backgroundColor: Colors.transparent,
       extendBody: true,
       body: navigationShell,
-      floatingActionButton: _QuickEntryButton(
-        onPressed: () => GlassBottomSheet.show<void>(
-          context,
-          title: 'Registro rápido',
-          builder: (_) => const QuickEntrySheet(),
-        ),
-      ),
       bottomNavigationBar: _GlassNavBar(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) => navigationShell.goBranch(
           index,
           initialLocation: index == navigationShell.currentIndex,
+        ),
+        onQuickEntry: () => GlassBottomSheet.show<void>(
+          context,
+          title: 'Registro rápido',
+          builder: (_) => const QuickEntrySheet(),
         ),
       ),
     );
@@ -71,10 +69,15 @@ class _NavItem {
 }
 
 class _GlassNavBar extends StatelessWidget {
-  const _GlassNavBar({required this.currentIndex, required this.onTap});
+  const _GlassNavBar({
+    required this.currentIndex,
+    required this.onTap,
+    required this.onQuickEntry,
+  });
 
   final int currentIndex;
   final ValueChanged<int> onTap;
+  final VoidCallback onQuickEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +88,12 @@ class _GlassNavBar extends StatelessWidget {
       _NavItem(CupertinoIcons.list_bullet, l10n.navHistory),
       _NavItem(CupertinoIcons.chart_pie_fill, l10n.navDashboard),
       _NavItem(CupertinoIcons.flag_fill, l10n.navGoals),
-      _NavItem(CupertinoIcons.gear_alt_fill, l10n.navSettings),
     ];
+    Widget navButton(int i) => _NavButton(
+      item: items[i],
+      selected: i == currentIndex,
+      onTap: () => onTap(i),
+    );
     return SafeArea(
       top: false,
       child: Padding(
@@ -96,31 +103,38 @@ class _GlassNavBar extends StatelessWidget {
           AppSpacing.lg,
           AppSpacing.md,
         ),
-        child: ClipRRect(
-          borderRadius: AppRadii.pillRadius,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-            child: Container(
-              height: 64,
-              decoration: BoxDecoration(
-                color: colors.glassFillStrong,
-                borderRadius: AppRadii.pillRadius,
-                border: Border.all(color: colors.glassBorder),
-                boxShadow: AppShadows.card(colors),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  for (var i = 0; i < items.length; i++)
-                    _NavButton(
-                      item: items[i],
-                      selected: i == currentIndex,
-                      onTap: () => onTap(i),
-                    ),
-                ],
+        // The quick-entry button sits above the pill (not clipped inside it)
+        // so its glow isn't cut off, but stays anchored in the nav bar's own
+        // reserved space instead of floating over the scrollable body.
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: AppRadii.pillRadius,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                child: Container(
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: colors.glassFillStrong,
+                    borderRadius: AppRadii.pillRadius,
+                    border: Border.all(color: colors.glassBorder),
+                    boxShadow: AppShadows.card(colors),
+                  ),
+                  child: Row(
+                    children: [
+                      navButton(0),
+                      navButton(1),
+                      const SizedBox(width: 60),
+                      navButton(2),
+                      navButton(3),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
+            _QuickEntryButton(onPressed: onQuickEntry),
+          ],
         ),
       ),
     );

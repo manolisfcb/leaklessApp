@@ -36,7 +36,16 @@ class InsightsScreen extends ConsumerWidget {
     final insights = ref.watch(monthInsightsProvider);
 
     return GlassScaffold(
-      appBar: AppBar(title: Text(l10n.insightsTitle)),
+      appBar: AppBar(
+        title: Text(l10n.insightsTitle),
+        actions: [
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            onPressed: () => context.push(AppRoutes.settings),
+            icon: const Icon(CupertinoIcons.gear_alt_fill),
+          ),
+        ],
+      ),
       body: insights.when(
         loading: () => AppLoader(message: l10n.insightsLoading),
         error: (_, _) => AppEmptyState(

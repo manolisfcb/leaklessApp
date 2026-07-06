@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,15 @@ class DashboardScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final summary = ref.watch(dashboardSummaryProvider);
     return GlassScaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            onPressed: () => context.push(AppRoutes.settings),
+            icon: const Icon(CupertinoIcons.gear_alt_fill),
+          ),
+        ],
+      ),
       body: summary.when(
         loading: () => AppLoader(message: l10n.dashboardLoading),
         error: (_, _) => AppEmptyState(

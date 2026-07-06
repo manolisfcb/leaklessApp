@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/enum_labels.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../shared/widgets/widgets.dart';
@@ -23,7 +25,16 @@ class TransactionsScreen extends ConsumerWidget {
     final categories = ref.watch(categoriesByIdProvider);
 
     return GlassScaffold(
-      appBar: AppBar(title: Text(l10n.navHistory)),
+      appBar: AppBar(
+        title: Text(l10n.navHistory),
+        actions: [
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            onPressed: () => context.push(AppRoutes.settings),
+            icon: const Icon(CupertinoIcons.gear_alt_fill),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           const _Filters(),
