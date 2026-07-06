@@ -214,5 +214,262 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "commonRetry": "Reintentar",
+  "commonSaveChanges": "Guardar cambios",
+  "commonSignInToContinue": "Inicia sesión para continuar.",
+  "commonCheckConnection": "Revisa tu conexión e inténtalo de nuevo.",
+  "commonInvalidNameMax80": "Escribe un nombre válido de hasta 80 caracteres.",
+  "commonInvalidCurrency": "Selecciona una moneda válida.",
+  "commonInvalidEmail": "Correo no válido.",
+
+  "authResetPasswordTitle": "Restablecer contraseña",
+  "authSignUpConfirmEmailInfo": "Te enviamos un correo para confirmar tu cuenta. Ábrelo y vuelve para iniciar sesión.",
+  "authResetLinkSentInfo": "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.",
+  "authCreateAccountTitle": "Crea tu cuenta",
+  "authReviewInvitationTitle": "Entra para revisar tu invitación",
+  "authWelcomeBackTitle": "Bienvenido de vuelta",
+  "authPendingInvitationHint": "Usa el correo al que enviaron la invitación. Continuaremos automáticamente al entrar.",
+  "authNameHint": "Tu nombre",
+  "authEmailHint": "Correo electrónico",
+  "authPasswordHint": "Contraseña",
+  "authConfirmPasswordHint": "Confirmar contraseña",
+  "authForgotPassword": "¿Olvidaste tu contraseña?",
+  "authCreateAccountCta": "Crear cuenta",
+  "authSignInCta": "Iniciar sesión",
+  "authToggleToSignIn": "¿Ya tienes cuenta? Inicia sesión",
+  "authToggleToSignUp": "¿Sin cuenta? Regístrate",
+  "authNameRequired": "Escribe tu nombre.",
+  "authEmailRequired": "Escribe tu correo.",
+  "authPasswordRequired": "Escribe tu contraseña.",
+  "authPasswordTooShort": "Mínimo 6 caracteres.",
+  "authPasswordsDontMatch": "Las contraseñas no coinciden.",
+  "authForgotPasswordBody": "Escribe tu correo y te enviaremos un enlace para crear una nueva contraseña.",
+  "authSendLink": "Enviar enlace",
+
+  "resetPasswordUpdated": "Contraseña actualizada.",
+  "resetPasswordTitle": "Crea una nueva contraseña",
+  "resetPasswordBody": "Elige una contraseña nueva para tu cuenta. Al guardarla entrarás automáticamente.",
+  "resetPasswordNewLabel": "Nueva contraseña",
+  "resetPasswordNewRequired": "Escribe tu nueva contraseña.",
+  "resetPasswordSave": "Guardar contraseña",
+
+  "onboardingSlide1Title": "Detecta las fugas de dinero",
+  "onboardingSlide1Body": "Esos pequeños gastos hormiga que se escapan sin darte cuenta. leakless los hace visibles para que recuperes el control.",
+  "onboardingSlide2Title": "Controlen los gastos en pareja",
+  "onboardingSlide2Body": "Un libro de cuentas compartido y en tiempo real. Si uno gasta, ambos lo saben al instante.",
+  "onboardingSlide3Title": "Ahorren juntos con metas claras",
+  "onboardingSlide3Body": "Definan metas, vean el progreso líquido llenarse y celebren cada aporte hacia el futuro que quieren.",
+  "onboardingSkip": "Saltar",
+  "onboardingStart": "Comenzar",
+  "onboardingNext": "Siguiente",
+
+  "householdSetupPartnerEmailInvalid": "Escribe un correo válido para tu pareja.",
+  "householdSetupInvitationFailed": "Guardamos el hogar, pero no pudimos crear la invitación. {error}",
+  "@householdSetupInvitationFailed": {
+    "description": "Shown when the household saved but the partner invitation could not be created",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "householdSetupTitle": "Configurar hogar",
+  "householdSetupPreparing": "Preparando tu hogar…",
+  "householdSetupLoadErrorTitle": "No pudimos cargar tu hogar",
+  "householdSetupNoHouseholdTitle": "Tu cuenta aún no tiene hogar",
+  "householdSetupNoHouseholdMessage": "No mostraremos datos financieros hasta recuperar un hogar válido.",
+  "householdSetupWaitingOwnerTitle": "Esperando al owner",
+  "householdSetupWaitingOwnerMessage": "Quien creó este hogar debe completar el nombre y la moneda. Actualizaremos este estado cuando termine.",
+  "householdSetupHeroTitle": "Hagamos suyo este hogar",
+  "householdSetupHeroSubtitle": "Configura la base compartida. Podrás ajustarla más tarde.",
+  "householdNameLabel": "Nombre del hogar",
+  "householdNameHint": "Nuestra casa",
+  "householdNameRequired": "Escribe un nombre para el hogar.",
+  "householdCurrencyLabel": "Moneda principal",
+  "householdCurrencyNote": "La moneda sólo puede cambiar mientras el hogar no tenga importes guardados.",
+  "householdSetupStep2Title": "Categorías iniciales",
+  "householdSetupStep2Subtitle": "Estas categorías ya están listas para registrar gastos.",
+  "householdSetupStep3Title": "Tu pareja",
+  "householdSetupStep3Subtitle": "La invitación es opcional. Podrás retomarla desde Ajustes.",
+  "householdPartnerEmailLabel": "Correo de tu pareja",
+  "householdPartnerEmailHint": "pareja@correo.com",
+  "householdSetupSaveAndInvite": "Guardar e invitar",
+  "householdSetupContinueWithoutInvite": "Continuar sin invitar",
+  "categoriesReviewLoadError": "No pudimos cargar las categorías. Reintenta antes de continuar.",
+  "categoriesReviewEmpty": "No encontramos categorías iniciales.",
+  "householdSetupErrorNotOwner": "Sólo quien creó este hogar puede configurarlo.",
+  "householdSetupErrorCurrencyLocked": "Este hogar ya tiene importes. Cambiar la moneda podría reinterpretarlos, así que conservamos la moneda actual.",
+  "householdSetupErrorGeneric": "No pudimos guardar el hogar. Inténtalo de nuevo.",
+
+  "invitationShareSubject": "Invitación a nuestro hogar en leakless",
+  "invitationShareText": "Únete a nuestro hogar en leakless.\n\n{link}\n\nSi el enlace no abre, pega este código:\n{code}",
+  "@invitationShareText": {
+    "description": "Share-sheet body when inviting a partner",
+    "placeholders": {
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationShareFailed": "No pudimos abrir el menú para compartir.",
+  "invitationsTitle": "Invitar a tu pareja",
+  "invitationsNoHousehold": "No encontramos un hogar activo para invitar.",
+  "invitationsNotOwner": "Sólo quien creó este hogar puede enviar invitaciones.",
+  "invitationEmailRequired": "Escribe su correo.",
+  "invitationCreate": "Crear invitación",
+  "invitationLinkCopied": "Enlace copiado.",
+  "invitationCodeCopied": "Código copiado.",
+  "invitationHaveCode": "Tengo un código de invitación",
+  "invitationsIntroTitleFallback": "Compartir el hogar",
+  "invitationsIntroSubtitle": "Genera un enlace de un solo uso. Sólo funcionará con el correo que indiques.",
+  "invitationExpiresOn": "Vence el {date}",
+  "@invitationExpiresOn": {
+    "description": "When a shared invitation expires",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationTitle": "Invitación",
+  "invitationShare": "Compartir invitación",
+  "invitationCopyLink": "Copiar enlace",
+  "invitationCopyCode": "Copiar código",
+  "invitationRevoke": "Revocar invitación",
+  "invitationNoLongerShareable": "Este código ya no se puede compartir.",
+  "invitationStatusPending": "Pendiente",
+  "invitationStatusAccepted": "Aceptada",
+  "invitationStatusCancelled": "Revocada",
+  "invitationStatusExpired": "Vencida",
+
+  "invitationCodeInvalidFormat": "El código debe tener 64 caracteres hexadecimales.",
+  "invitationExpiredMessage": "La invitación ha vencido.",
+  "invitationCancelledMessage": "La invitación fue revocada.",
+  "invitationAlreadyUsedMessage": "Esta invitación ya fue utilizada.",
+  "invitationPersistenceFailed": "Mantén la app abierta: no pudimos guardar el intento de forma segura.",
+  "invitationOpenFailed": "No pudimos abrir esta invitación.",
+  "invitationSuccessHeroTitle": "Ya están conectados",
+  "invitationHeroTitle": "Un hogar, entre dos",
+  "invitationPasteCodeTitle": "Pega tu código",
+  "invitationPasteCodeSubtitle": "Puedes abrir el enlace o pegar aquí el código que te compartieron.",
+  "invitationCodeFieldHint": "Código de 64 caracteres",
+  "invitationReview": "Revisar invitación",
+  "invitationHouseholdFallback": "Hogar compartido",
+  "invitationInviterInvited": "{inviter} te invitó a compartir este hogar.",
+  "@invitationInviterInvited": {
+    "description": "Preview subtitle naming who sent the invitation",
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationInviterFallback": "Tu pareja",
+  "invitationValidUntil": "Válida hasta {date}",
+  "@invitationValidUntil": {
+    "description": "Invitation validity deadline in the recipient preview",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationAcceptJoin": "Aceptar y unirme",
+  "invitationNotNow": "Ahora no",
+  "invitationUseAnotherAccount": "Usar otra cuenta",
+  "invitationDiscard": "Descartar invitación",
+  "invitationAlreadyMember": "Ya pertenecías a este hogar.",
+  "invitationAcceptedSuccess": "La invitación fue aceptada. Ya pueden ver sus finanzas compartidas.",
+  "invitationGoHome": "Ir al inicio",
+
+  "profileImageTooLarge": "La imagen es demasiado grande. Prueba con otra.",
+  "profileUpdated": "Perfil actualizado.",
+  "profileChangeAvatarTitle": "Cambiar avatar",
+  "profileEditTitle": "Editar perfil",
+  "profileLoading": "Cargando tu perfil…",
+  "profileLoadErrorTitle": "No pudimos cargar tu perfil",
+  "profileNoProfileTitle": "Sin perfil",
+  "profileNoProfileMessage": "Inicia sesión de nuevo para editar tu perfil.",
+  "profileNameLabel": "Nombre visible",
+  "profileNameHint": "Cómo te ve tu pareja",
+  "profileNameRequired": "Escribe un nombre visible.",
+  "profileCurrencyLabel": "Moneda",
+  "profileAvatarFailed": "No pudimos usar esa imagen. Inténtalo de nuevo.",
+  "profileErrorGeneric": "No pudimos guardar los cambios. Inténtalo de nuevo.",
+  "pickerErrorPhotoAccessDenied": "Permite el acceso a tus fotos desde Ajustes para elegir un avatar.",
+  "pickerErrorCameraAccessDenied": "Permite el acceso a la cámara desde Ajustes para tomar una foto.",
+  "pickerErrorGeneric": "No pudimos abrir el selector de imágenes. Inténtalo de nuevo.",
+
+  "dashboardLoading": "Cargando tu panel…",
+  "dashboardLoadErrorTitle": "No pudimos cargar el panel",
+  "dashboardLoadErrorMessage": "Inténtalo de nuevo en un momento.",
+  "dashboardAvailableBalance": "Balance disponible",
+  "dashboardRecentActivity": "Actividad reciente",
+  "dashboardSeeAll": "Ver todo",
+  "dashboardSavingsRate": "Tasa de ahorro real",
+  "dashboardRecurringExpenses": "Gastos recurrentes",
+  "dashboardLimitAlerts": "Alertas de límites",
+  "dashboardSavingsRateShort": "tasa de ahorro",
+  "dashboardLeak": "Fuga {amount}",
+  "@dashboardLeak": {
+    "description": "Amber chip over the hydrometer showing the month's leak amount",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "transactionsLoadError": "No pudimos cargar el historial",
+  "transactionsEmptyTitle": "Sin movimientos",
+  "transactionsEmptyMessage": "Ajusta los filtros o registra tu primer gasto.",
+  "transactionFallbackTitle": "Movimiento",
+
+  "errorAuthSession": "No pudimos verificar tu sesión.",
+  "errorNetwork": "Revisa tu conexión a internet.",
+  "errorNotFound": "No encontramos lo que buscabas.",
+  "errorServer": "Algo falló en el servidor. Inténtalo de nuevo.",
+  "errorUnexpected": "Ocurrió un error inesperado.",
+
+  "authErrorInvalidCredentials": "Correo o contraseña incorrectos.",
+  "authErrorEmailNotConfirmed": "Confirma tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.",
+  "authErrorEmailExists": "Ya existe una cuenta con este correo. Inicia sesión.",
+  "authErrorWeakPassword": "La contraseña es muy débil. Usa al menos 6 caracteres.",
+  "authErrorSamePassword": "La nueva contraseña debe ser distinta a la anterior.",
+  "authErrorInvalidEmail": "El correo no es válido.",
+  "authErrorSignupDisabled": "El registro está deshabilitado por ahora.",
+  "authErrorRateLimit": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+  "authErrorGeneric": "No pudimos completar la operación. Inténtalo de nuevo.",
+  "authErrorUnexpected": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+
+  "invitationErrorInvalidEmail": "Escribe un correo válido.",
+  "invitationErrorInvalidExpiry": "La duración de la invitación no es válida.",
+  "invitationErrorCannotInviteSelf": "No puedes invitar tu propio correo.",
+  "invitationErrorNotOwner": "Sólo quien creó este hogar puede invitar.",
+  "invitationErrorAlreadyMember": "Esa persona ya pertenece a este hogar.",
+  "invitationErrorInvalidToken": "El enlace o código de invitación no es válido.",
+  "invitationErrorEmailMismatch": "Esta invitación fue enviada a otro correo. Usa esa cuenta para continuar.",
+  "invitationErrorNotFound": "No encontramos esta invitación.",
+  "invitationErrorAcceptedCannotCancel": "Una invitación aceptada ya no se puede revocar.",
+  "invitationErrorHouseholdNotEmpty": "Tu hogar actual contiene datos. No podemos moverlos automáticamente.",
+  "invitationErrorProfileNotFound": "No encontramos tu perfil. Inténtalo de nuevo.",
+  "invitationErrorGeneric": "No pudimos completar la invitación. Inténtalo de nuevo.",
+
+  "currencyCAD": "Dólar canadiense",
+  "currencyUSD": "Dólar estadounidense",
+  "currencyEUR": "Euro",
+  "currencyMXN": "Peso mexicano",
+  "currencyCOP": "Peso colombiano",
+  "currencyARS": "Peso argentino",
+  "currencyCLP": "Peso chileno",
+  "currencyPEN": "Sol peruano",
+  "currencyBRL": "Real brasileño",
+  "currencyGBP": "Libra esterlina",
+  "currencyJPY": "Yen japonés",
+  "currencyCHF": "Franco suizo"
 }

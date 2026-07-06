@@ -26,7 +26,7 @@ class SummaryCards extends StatelessWidget {
         icon: CupertinoIcons.creditcard,
         accent: colors.goal,
         value: '${summary.activeSubscriptions}',
-        label: 'Suscripciones activas',
+        label: 'Gastos recurrentes',
         onTap: () => context.push(AppRoutes.subscriptions),
       ),
       _CardData(
@@ -34,6 +34,7 @@ class SummaryCards extends StatelessWidget {
         accent: colors.alert,
         value: '${summary.activeAlerts}',
         label: 'Alertas de límites',
+        onTap: () => context.go(AppRoutes.budgets),
       ),
     ];
 

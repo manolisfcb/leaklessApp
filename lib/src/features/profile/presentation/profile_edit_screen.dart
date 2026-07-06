@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/errors/app_exception.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/currencies.dart';
 import '../../../domain/models/user_profile.dart';
@@ -68,19 +69,20 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       final error = ref.read(profileControllerProvider).error;
       setState(() {
         _savingProfile = false;
-        _formError = _profileErrorMessage(error);
+        _formError = _profileErrorMessage(context.l10n, error);
       });
       return;
     }
 
     setState(() => _savingProfile = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Perfil actualizado.')),
+      SnackBar(content: Text(context.l10n.profileUpdated)),
     );
     if (context.canPop()) context.pop();
   }
 
   Future<void> _pickAvatar(ImageSource source) async {
+    final l10n = context.l10n;
     setState(() => _uploadingAvatar = true);
     try {
       // The picker downscales and re-encodes, keeping uploads small and the
@@ -98,7 +100,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
       final bytes = await picked.readAsBytes();
       if (bytes.lengthInBytes > _maxAvatarBytes) {
-        _failAvatar('La imagen es demasiado grande. Prueba con otra.');
+        _failAvatar(l10n.profileImageTooLarge);
         return;
       }
 
@@ -109,15 +111,15 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
       if (uploaded == null) {
         _failAvatar(
-          _profileErrorMessage(ref.read(profileControllerProvider).error),
+          _profileErrorMessage(l10n, ref.read(profileControllerProvider).error),
         );
         return;
       }
       setState(() => _uploadingAvatar = false);
     } on PlatformException catch (e) {
-      _failAvatar(_pickerErrorMessage(e));
+      _failAvatar(_pickerErrorMessage(l10n, e));
     } catch (_) {
-      _failAvatar('No pudimos usar esa imagen. Inténtalo de nuevo.');
+      _failAvatar(l10n.profileAvatarFailed);
     }
   }
 
@@ -130,21 +132,22 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   }
 
   Future<void> _chooseAvatarSource() async {
+    final l10n = context.l10n;
     final source = await GlassBottomSheet.show<ImageSource>(
       context,
-      title: 'Cambiar avatar',
+      title: l10n.profileChangeAvatarTitle,
       builder: (sheetContext) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _AvatarSourceTile(
             icon: CupertinoIcons.photo,
-            label: 'Elegir de la galería',
+            label: l10n.quickEntryPickFromGallery,
             onTap: () => sheetContext.pop(ImageSource.gallery),
           ),
           const SizedBox(height: AppSpacing.sm),
           _AvatarSourceTile(
             icon: CupertinoIcons.camera,
-            label: 'Tomar una foto',
+            label: l10n.quickEntryTakePhoto,
             onTap: () => sheetContext.pop(ImageSource.camera),
           ),
         ],
@@ -155,6 +158,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final profileAsync = ref.watch(currentProfileProvider);
 
     return GlassScaffold(
@@ -163,21 +167,21 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           onPressed: context.pop,
           icon: const Icon(CupertinoIcons.back),
         ),
-        title: const Text('Editar perfil'),
+        title: Text(l10n.profileEditTitle),
       ),
       body: switch (profileAsync) {
-        AsyncLoading() => const AppLoader(message: 'Cargando tu perfil…'),
+        AsyncLoading() => AppLoader(message: l10n.profileLoading),
         AsyncError() => AppEmptyState(
           icon: CupertinoIcons.person_crop_circle_badge_exclam,
-          title: 'No pudimos cargar tu perfil',
-          message: 'Revisa tu conexión e inténtalo de nuevo.',
-          actionLabel: 'Reintentar',
+          title: l10n.profileLoadErrorTitle,
+          message: l10n.commonCheckConnection,
+          actionLabel: l10n.commonRetry,
           onAction: () => ref.invalidate(currentProfileProvider),
         ),
-        AsyncData(:final value) when value == null => const AppEmptyState(
+        AsyncData(:final value) when value == null => AppEmptyState(
           icon: CupertinoIcons.person_crop_circle_badge_exclam,
-          title: 'Sin perfil',
-          message: 'Inicia sesión de nuevo para editar tu perfil.',
+          title: l10n.profileNoProfileTitle,
+          message: l10n.profileNoProfileMessage,
         ),
         AsyncData(:final value) => _buildForm(context, value!),
       },
@@ -187,6 +191,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   Widget _buildForm(BuildContext context, UserProfile profile) {
     _initialize(profile);
     final colors = context.colors;
+    final l10n = context.l10n;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
@@ -219,22 +224,22 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'[\n\r]')),
                   ],
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre visible',
-                    hintText: 'Cómo te ve tu pareja',
-                    prefixIcon: Icon(CupertinoIcons.person),
+                  decoration: InputDecoration(
+                    labelText: l10n.profileNameLabel,
+                    hintText: l10n.profileNameHint,
+                    prefixIcon: const Icon(CupertinoIcons.person),
                   ),
                   validator: (value) => (value ?? '').trim().isEmpty
-                      ? 'Escribe un nombre visible.'
+                      ? l10n.profileNameRequired
                       : null,
                   onFieldSubmitted: (_) => _save(),
                 ),
                 AppSpacing.gapMd,
                 DropdownButtonFormField<String>(
                   initialValue: _currency,
-                  decoration: const InputDecoration(
-                    labelText: 'Moneda',
-                    prefixIcon: Icon(CupertinoIcons.money_dollar_circle),
+                  decoration: InputDecoration(
+                    labelText: l10n.profileCurrencyLabel,
+                    prefixIcon: const Icon(CupertinoIcons.money_dollar_circle),
                   ),
                   items: [
                     if (!supportedCurrencies.any((e) => e.$1 == _currency))
@@ -277,7 +282,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         ],
         AppSpacing.gapXl,
         GlassButton(
-          label: 'Guardar cambios',
+          label: l10n.commonSaveChanges,
           icon: CupertinoIcons.checkmark_alt,
           loading: _savingProfile,
           onPressed: _savingProfile ? null : _save,
@@ -394,21 +399,20 @@ String _extensionFor(XFile file) {
   };
 }
 
-String _profileErrorMessage(Object? error) {
-  if (error is AuthFailureException) return 'Inicia sesión para continuar.';
+String _profileErrorMessage(AppLocalizations l10n, Object? error) {
+  if (error is AuthFailureException) return l10n.commonSignInToContinue;
   final code = error is ServerException ? error.code : null;
   return switch (code) {
-    'invalid_display_name' => 'Escribe un nombre válido de hasta 80 caracteres.',
-    'invalid_currency' => 'Selecciona una moneda válida.',
-    'authentication_required' => 'Inicia sesión para continuar.',
-    _ => 'No pudimos guardar los cambios. Inténtalo de nuevo.',
+    'invalid_display_name' => l10n.commonInvalidNameMax80,
+    'invalid_currency' => l10n.commonInvalidCurrency,
+    'authentication_required' => l10n.commonSignInToContinue,
+    _ => l10n.profileErrorGeneric,
   };
 }
 
-String _pickerErrorMessage(PlatformException e) => switch (e.code) {
-  'photo_access_denied' =>
-    'Permite el acceso a tus fotos desde Ajustes para elegir un avatar.',
-  'camera_access_denied' =>
-    'Permite el acceso a la cámara desde Ajustes para tomar una foto.',
-  _ => 'No pudimos abrir el selector de imágenes. Inténtalo de nuevo.',
-};
+String _pickerErrorMessage(AppLocalizations l10n, PlatformException e) =>
+    switch (e.code) {
+      'photo_access_denied' => l10n.pickerErrorPhotoAccessDenied,
+      'camera_access_denied' => l10n.pickerErrorCameraAccessDenied,
+      _ => l10n.pickerErrorGeneric,
+    };

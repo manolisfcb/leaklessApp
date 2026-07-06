@@ -149,5 +149,254 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "commonRetry": "Tentar novamente",
+  "commonSaveChanges": "Salvar alterações",
+  "commonSignInToContinue": "Faça login para continuar.",
+  "commonCheckConnection": "Verifique sua conexão e tente novamente.",
+  "commonInvalidNameMax80": "Digite um nome válido de até 80 caracteres.",
+  "commonInvalidCurrency": "Selecione uma moeda válida.",
+  "commonInvalidEmail": "E-mail inválido.",
+
+  "authResetPasswordTitle": "Redefinir senha",
+  "authSignUpConfirmEmailInfo": "Enviamos um e-mail para confirmar sua conta. Abra-o e volte para entrar.",
+  "authResetLinkSentInfo": "Se o e-mail estiver cadastrado, enviamos um link para redefinir sua senha.",
+  "authCreateAccountTitle": "Crie sua conta",
+  "authReviewInvitationTitle": "Entre para ver seu convite",
+  "authWelcomeBackTitle": "Bem-vindo de volta",
+  "authPendingInvitationHint": "Use o e-mail para o qual o convite foi enviado. Continuaremos automaticamente ao entrar.",
+  "authNameHint": "Seu nome",
+  "authEmailHint": "E-mail",
+  "authPasswordHint": "Senha",
+  "authConfirmPasswordHint": "Confirmar senha",
+  "authForgotPassword": "Esqueceu sua senha?",
+  "authCreateAccountCta": "Criar conta",
+  "authSignInCta": "Entrar",
+  "authToggleToSignIn": "Já tem conta? Entre",
+  "authToggleToSignUp": "Sem conta? Cadastre-se",
+  "authNameRequired": "Digite seu nome.",
+  "authEmailRequired": "Digite seu e-mail.",
+  "authPasswordRequired": "Digite sua senha.",
+  "authPasswordTooShort": "Mínimo de 6 caracteres.",
+  "authPasswordsDontMatch": "As senhas não coincidem.",
+  "authForgotPasswordBody": "Digite seu e-mail e enviaremos um link para criar uma nova senha.",
+  "authSendLink": "Enviar link",
+
+  "resetPasswordUpdated": "Senha atualizada.",
+  "resetPasswordTitle": "Crie uma nova senha",
+  "resetPasswordBody": "Escolha uma nova senha para sua conta. Ao salvá-la, você entrará automaticamente.",
+  "resetPasswordNewLabel": "Nova senha",
+  "resetPasswordNewRequired": "Digite sua nova senha.",
+  "resetPasswordSave": "Salvar senha",
+
+  "onboardingSlide1Title": "Detecte os vazamentos de dinheiro",
+  "onboardingSlide1Body": "Aqueles pequenos gastos formiga que escapam sem você perceber. O leakless os torna visíveis para você retomar o controle.",
+  "onboardingSlide2Title": "Controlem os gastos em casal",
+  "onboardingSlide2Body": "Um livro de contas compartilhado e em tempo real. Se um gasta, ambos sabem na hora.",
+  "onboardingSlide3Title": "Poupem juntos com metas claras",
+  "onboardingSlide3Body": "Definam metas, vejam o progresso líquido se encher e celebrem cada aporte rumo ao futuro que desejam.",
+  "onboardingSkip": "Pular",
+  "onboardingStart": "Começar",
+  "onboardingNext": "Próximo",
+
+  "householdSetupPartnerEmailInvalid": "Digite um e-mail válido para seu parceiro.",
+  "householdSetupInvitationFailed": "Salvamos o lar, mas não conseguimos criar o convite. {error}",
+  "@householdSetupInvitationFailed": {
+    "description": "Shown when the household saved but the partner invitation could not be created",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "householdSetupTitle": "Configurar lar",
+  "householdSetupPreparing": "Preparando seu lar…",
+  "householdSetupLoadErrorTitle": "Não conseguimos carregar seu lar",
+  "householdSetupNoHouseholdTitle": "Sua conta ainda não tem um lar",
+  "householdSetupNoHouseholdMessage": "Não mostraremos dados financeiros até recuperar um lar válido.",
+  "householdSetupWaitingOwnerTitle": "Aguardando o dono",
+  "householdSetupWaitingOwnerMessage": "Quem criou este lar deve preencher o nome e a moeda. Atualizaremos este estado quando terminar.",
+  "householdSetupHeroTitle": "Vamos tornar este lar seu",
+  "householdSetupHeroSubtitle": "Configure a base compartilhada. Você poderá ajustá-la depois.",
+  "householdNameLabel": "Nome do lar",
+  "householdNameHint": "Nossa casa",
+  "householdNameRequired": "Digite um nome para o lar.",
+  "householdCurrencyLabel": "Moeda principal",
+  "householdCurrencyNote": "A moeda só pode mudar enquanto o lar não tiver valores salvos.",
+  "householdSetupStep2Title": "Categorias iniciais",
+  "householdSetupStep2Subtitle": "Estas categorias já estão prontas para registrar gastos.",
+  "householdSetupStep3Title": "Seu parceiro",
+  "householdSetupStep3Subtitle": "O convite é opcional. Você poderá retomá-lo em Ajustes.",
+  "householdPartnerEmailLabel": "E-mail do seu parceiro",
+  "householdPartnerEmailHint": "parceiro@email.com",
+  "householdSetupSaveAndInvite": "Salvar e convidar",
+  "householdSetupContinueWithoutInvite": "Continuar sem convidar",
+  "categoriesReviewLoadError": "Não conseguimos carregar as categorias. Tente novamente antes de continuar.",
+  "categoriesReviewEmpty": "Não encontramos categorias iniciais.",
+  "householdSetupErrorNotOwner": "Apenas quem criou este lar pode configurá-lo.",
+  "householdSetupErrorCurrencyLocked": "Este lar já tem valores. Mudar a moeda poderia reinterpretá-los, então mantemos a moeda atual.",
+  "householdSetupErrorGeneric": "Não conseguimos salvar o lar. Tente novamente.",
+
+  "invitationShareSubject": "Convite para o nosso lar no leakless",
+  "invitationShareText": "Junte-se ao nosso lar no leakless.\n\n{link}\n\nSe o link não abrir, cole este código:\n{code}",
+  "@invitationShareText": {
+    "description": "Share-sheet body when inviting a partner",
+    "placeholders": {
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationShareFailed": "Não conseguimos abrir o menu de compartilhamento.",
+  "invitationsTitle": "Convidar seu parceiro",
+  "invitationsNoHousehold": "Não encontramos um lar ativo para convidar.",
+  "invitationsNotOwner": "Apenas quem criou este lar pode enviar convites.",
+  "invitationEmailRequired": "Digite o e-mail dele(a).",
+  "invitationCreate": "Criar convite",
+  "invitationLinkCopied": "Link copiado.",
+  "invitationCodeCopied": "Código copiado.",
+  "invitationHaveCode": "Tenho um código de convite",
+  "invitationsIntroTitleFallback": "Compartilhar o lar",
+  "invitationsIntroSubtitle": "Gere um link de uso único. Ele só funciona com o e-mail que você indicar.",
+  "invitationExpiresOn": "Vence em {date}",
+  "@invitationExpiresOn": {
+    "description": "When a shared invitation expires",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationTitle": "Convite",
+  "invitationShare": "Compartilhar convite",
+  "invitationCopyLink": "Copiar link",
+  "invitationCopyCode": "Copiar código",
+  "invitationRevoke": "Revogar convite",
+  "invitationNoLongerShareable": "Este código não pode mais ser compartilhado.",
+  "invitationStatusPending": "Pendente",
+  "invitationStatusAccepted": "Aceito",
+  "invitationStatusCancelled": "Revogado",
+  "invitationStatusExpired": "Expirado",
+
+  "invitationCodeInvalidFormat": "O código deve ter 64 caracteres hexadecimais.",
+  "invitationExpiredMessage": "O convite expirou.",
+  "invitationCancelledMessage": "O convite foi revogado.",
+  "invitationAlreadyUsedMessage": "Este convite já foi usado.",
+  "invitationPersistenceFailed": "Mantenha o app aberto: não conseguimos salvar a tentativa com segurança.",
+  "invitationOpenFailed": "Não conseguimos abrir este convite.",
+  "invitationSuccessHeroTitle": "Vocês estão conectados",
+  "invitationHeroTitle": "Um lar, para dois",
+  "invitationPasteCodeTitle": "Cole seu código",
+  "invitationPasteCodeSubtitle": "Você pode abrir o link ou colar aqui o código que compartilharam com você.",
+  "invitationCodeFieldHint": "Código de 64 caracteres",
+  "invitationReview": "Revisar convite",
+  "invitationHouseholdFallback": "Lar compartilhado",
+  "invitationInviterInvited": "{inviter} convidou você para compartilhar este lar.",
+  "@invitationInviterInvited": {
+    "description": "Preview subtitle naming who sent the invitation",
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationInviterFallback": "Seu parceiro",
+  "invitationValidUntil": "Válido até {date}",
+  "@invitationValidUntil": {
+    "description": "Invitation validity deadline in the recipient preview",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationAcceptJoin": "Aceitar e entrar",
+  "invitationNotNow": "Agora não",
+  "invitationUseAnotherAccount": "Usar outra conta",
+  "invitationDiscard": "Descartar convite",
+  "invitationAlreadyMember": "Você já pertencia a este lar.",
+  "invitationAcceptedSuccess": "O convite foi aceito. Agora vocês podem ver suas finanças compartilhadas.",
+  "invitationGoHome": "Ir para o início",
+
+  "profileImageTooLarge": "A imagem é muito grande. Tente outra.",
+  "profileUpdated": "Perfil atualizado.",
+  "profileChangeAvatarTitle": "Alterar avatar",
+  "profileEditTitle": "Editar perfil",
+  "profileLoading": "Carregando seu perfil…",
+  "profileLoadErrorTitle": "Não conseguimos carregar seu perfil",
+  "profileNoProfileTitle": "Sem perfil",
+  "profileNoProfileMessage": "Entre novamente para editar seu perfil.",
+  "profileNameLabel": "Nome visível",
+  "profileNameHint": "Como seu parceiro vê você",
+  "profileNameRequired": "Digite um nome visível.",
+  "profileCurrencyLabel": "Moeda",
+  "profileAvatarFailed": "Não conseguimos usar essa imagem. Tente novamente.",
+  "profileErrorGeneric": "Não conseguimos salvar as alterações. Tente novamente.",
+  "pickerErrorPhotoAccessDenied": "Permita o acesso às suas fotos em Ajustes para escolher um avatar.",
+  "pickerErrorCameraAccessDenied": "Permita o acesso à câmera em Ajustes para tirar uma foto.",
+  "pickerErrorGeneric": "Não conseguimos abrir o seletor de imagens. Tente novamente.",
+
+  "dashboardLoading": "Carregando seu painel…",
+  "dashboardLoadErrorTitle": "Não foi possível carregar o painel",
+  "dashboardLoadErrorMessage": "Tente novamente em instantes.",
+  "dashboardAvailableBalance": "Saldo disponível",
+  "dashboardRecentActivity": "Atividade recente",
+  "dashboardSeeAll": "Ver tudo",
+  "dashboardSavingsRate": "Taxa de poupança real",
+  "dashboardRecurringExpenses": "Despesas recorrentes",
+  "dashboardLimitAlerts": "Alertas de limites",
+  "dashboardSavingsRateShort": "taxa de poupança",
+  "dashboardLeak": "Vazamento {amount}",
+
+  "transactionsLoadError": "Não foi possível carregar o histórico",
+  "transactionsEmptyTitle": "Sem movimentos",
+  "transactionsEmptyMessage": "Ajuste os filtros ou registre sua primeira despesa.",
+  "transactionFallbackTitle": "Movimento",
+
+  "errorAuthSession": "Não foi possível verificar sua sessão.",
+  "errorNetwork": "Verifique sua conexão com a internet.",
+  "errorNotFound": "Não encontramos o que você procurava.",
+  "errorServer": "Algo falhou no servidor. Tente novamente.",
+  "errorUnexpected": "Ocorreu um erro inesperado.",
+
+  "authErrorInvalidCredentials": "E-mail ou senha incorretos.",
+  "authErrorEmailNotConfirmed": "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.",
+  "authErrorEmailExists": "Já existe uma conta com este e-mail. Entre.",
+  "authErrorWeakPassword": "A senha é muito fraca. Use ao menos 6 caracteres.",
+  "authErrorSamePassword": "A nova senha deve ser diferente da anterior.",
+  "authErrorInvalidEmail": "O e-mail não é válido.",
+  "authErrorSignupDisabled": "O cadastro está desativado por enquanto.",
+  "authErrorRateLimit": "Muitas tentativas. Aguarde um momento e tente novamente.",
+  "authErrorGeneric": "Não foi possível concluir a operação. Tente novamente.",
+  "authErrorUnexpected": "Ocorreu um erro inesperado. Tente novamente.",
+
+  "invitationErrorInvalidEmail": "Digite um e-mail válido.",
+  "invitationErrorInvalidExpiry": "A duração do convite não é válida.",
+  "invitationErrorCannotInviteSelf": "Você não pode convidar seu próprio e-mail.",
+  "invitationErrorNotOwner": "Somente quem criou este lar pode convidar.",
+  "invitationErrorAlreadyMember": "Essa pessoa já pertence a este lar.",
+  "invitationErrorInvalidToken": "O link ou código do convite não é válido.",
+  "invitationErrorEmailMismatch": "Este convite foi enviado a outro e-mail. Use essa conta para continuar.",
+  "invitationErrorNotFound": "Não encontramos este convite.",
+  "invitationErrorAcceptedCannotCancel": "Um convite aceito não pode mais ser revogado.",
+  "invitationErrorHouseholdNotEmpty": "Seu lar atual contém dados. Não podemos movê-los automaticamente.",
+  "invitationErrorProfileNotFound": "Não encontramos seu perfil. Tente novamente.",
+  "invitationErrorGeneric": "Não foi possível concluir o convite. Tente novamente.",
+
+  "currencyCAD": "Dólar canadense",
+  "currencyUSD": "Dólar americano",
+  "currencyEUR": "Euro",
+  "currencyMXN": "Peso mexicano",
+  "currencyCOP": "Peso colombiano",
+  "currencyARS": "Peso argentino",
+  "currencyCLP": "Peso chileno",
+  "currencyPEN": "Sol peruano",
+  "currencyBRL": "Real brasileiro",
+  "currencyGBP": "Libra esterlina",
+  "currencyJPY": "Iene japonês",
+  "currencyCHF": "Franco suíço"
 }

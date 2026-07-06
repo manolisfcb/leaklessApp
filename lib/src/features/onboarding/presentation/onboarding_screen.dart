@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
@@ -21,30 +22,27 @@ class _Slide {
   final String body;
 }
 
-const _slides = <_Slide>[
+/// Number of onboarding slides, kept in sync with [_slidesFor].
+const _slideCount = 3;
+
+List<_Slide> _slidesFor(AppLocalizations l10n) => <_Slide>[
   _Slide(
     icon: CupertinoIcons.drop_fill,
     color: _expense,
-    title: 'Detecta las fugas de dinero',
-    body:
-        'Esos pequeños gastos hormiga que se escapan sin darte cuenta. leakless '
-        'los hace visibles para que recuperes el control.',
+    title: l10n.onboardingSlide1Title,
+    body: l10n.onboardingSlide1Body,
   ),
   _Slide(
     icon: CupertinoIcons.person_2_fill,
     color: _goal,
-    title: 'Controlen los gastos en pareja',
-    body:
-        'Un libro de cuentas compartido y en tiempo real. Si uno gasta, ambos '
-        'lo saben al instante.',
+    title: l10n.onboardingSlide2Title,
+    body: l10n.onboardingSlide2Body,
   ),
   _Slide(
     icon: CupertinoIcons.flag_fill,
     color: _income,
-    title: 'Ahorren juntos con metas claras',
-    body:
-        'Definan metas, vean el progreso líquido llenarse y celebren cada '
-        'aporte hacia el futuro que quieren.',
+    title: l10n.onboardingSlide3Title,
+    body: l10n.onboardingSlide3Body,
   ),
 ];
 
@@ -70,7 +68,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     super.dispose();
   }
 
-  bool get _isLast => _page == _slides.length - 1;
+  bool get _isLast => _page == _slideCount - 1;
 
   Future<void> _next() async {
     if (_isLast) {
@@ -87,6 +85,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
+    final slides = _slidesFor(l10n);
     return GlassScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
@@ -102,7 +102,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   if (context.mounted) context.go(AppRoutes.auth);
                 },
                 child: Text(
-                  'Saltar',
+                  l10n.onboardingSkip,
                   style: AppTypography.labelLarge.copyWith(
                     color: colors.textSecondary,
                   ),
@@ -113,14 +113,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: PageView.builder(
                 controller: _controller,
                 onPageChanged: (i) => setState(() => _page = i),
-                itemCount: _slides.length,
-                itemBuilder: (context, i) => _SlideView(slide: _slides[i]),
+                itemCount: slides.length,
+                itemBuilder: (context, i) => _SlideView(slide: slides[i]),
               ),
             ),
-            _PageDots(count: _slides.length, active: _page),
+            _PageDots(count: slides.length, active: _page),
             AppSpacing.gapXl,
             GlassButton(
-              label: _isLast ? 'Comenzar' : 'Siguiente',
+              label: _isLast ? l10n.onboardingStart : l10n.onboardingNext,
               icon: _isLast ? CupertinoIcons.checkmark_alt : null,
               onPressed: _next,
             ),

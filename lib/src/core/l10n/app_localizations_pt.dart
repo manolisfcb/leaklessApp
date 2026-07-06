@@ -415,4 +415,464 @@ class AppLocalizationsPt extends AppLocalizations {
   String recurringReminderBody(String name) {
     return '$name será cobrado em breve';
   }
+
+  @override
+  String get commonRetry => 'Tentar novamente';
+
+  @override
+  String get commonSaveChanges => 'Salvar alterações';
+
+  @override
+  String get commonSignInToContinue => 'Faça login para continuar.';
+
+  @override
+  String get commonCheckConnection =>
+      'Verifique sua conexão e tente novamente.';
+
+  @override
+  String get commonInvalidNameMax80 =>
+      'Digite um nome válido de até 80 caracteres.';
+
+  @override
+  String get commonInvalidCurrency => 'Selecione uma moeda válida.';
+
+  @override
+  String get commonInvalidEmail => 'E-mail inválido.';
+
+  @override
+  String get authResetPasswordTitle => 'Redefinir senha';
+
+  @override
+  String get authSignUpConfirmEmailInfo =>
+      'Enviamos um e-mail para confirmar sua conta. Abra-o e volte para entrar.';
+
+  @override
+  String get authResetLinkSentInfo =>
+      'Se o e-mail estiver cadastrado, enviamos um link para redefinir sua senha.';
+
+  @override
+  String get authCreateAccountTitle => 'Crie sua conta';
+
+  @override
+  String get authReviewInvitationTitle => 'Entre para ver seu convite';
+
+  @override
+  String get authWelcomeBackTitle => 'Bem-vindo de volta';
+
+  @override
+  String get authPendingInvitationHint =>
+      'Use o e-mail para o qual o convite foi enviado. Continuaremos automaticamente ao entrar.';
+
+  @override
+  String get authNameHint => 'Seu nome';
+
+  @override
+  String get authEmailHint => 'E-mail';
+
+  @override
+  String get authPasswordHint => 'Senha';
+
+  @override
+  String get authConfirmPasswordHint => 'Confirmar senha';
+
+  @override
+  String get authForgotPassword => 'Esqueceu sua senha?';
+
+  @override
+  String get authCreateAccountCta => 'Criar conta';
+
+  @override
+  String get authSignInCta => 'Entrar';
+
+  @override
+  String get authToggleToSignIn => 'Já tem conta? Entre';
+
+  @override
+  String get authToggleToSignUp => 'Sem conta? Cadastre-se';
+
+  @override
+  String get authNameRequired => 'Digite seu nome.';
+
+  @override
+  String get authEmailRequired => 'Digite seu e-mail.';
+
+  @override
+  String get authPasswordRequired => 'Digite sua senha.';
+
+  @override
+  String get authPasswordTooShort => 'Mínimo de 6 caracteres.';
+
+  @override
+  String get authPasswordsDontMatch => 'As senhas não coincidem.';
+
+  @override
+  String get authForgotPasswordBody =>
+      'Digite seu e-mail e enviaremos um link para criar uma nova senha.';
+
+  @override
+  String get authSendLink => 'Enviar link';
+
+  @override
+  String get resetPasswordUpdated => 'Senha atualizada.';
+
+  @override
+  String get resetPasswordTitle => 'Crie uma nova senha';
+
+  @override
+  String get resetPasswordBody =>
+      'Escolha uma nova senha para sua conta. Ao salvá-la, você entrará automaticamente.';
+
+  @override
+  String get resetPasswordNewLabel => 'Nova senha';
+
+  @override
+  String get resetPasswordNewRequired => 'Digite sua nova senha.';
+
+  @override
+  String get resetPasswordSave => 'Salvar senha';
+
+  @override
+  String get onboardingSlide1Title => 'Detecte os vazamentos de dinheiro';
+
+  @override
+  String get onboardingSlide1Body =>
+      'Aqueles pequenos gastos formiga que escapam sem você perceber. O leakless os torna visíveis para você retomar o controle.';
+
+  @override
+  String get onboardingSlide2Title => 'Controlem os gastos em casal';
+
+  @override
+  String get onboardingSlide2Body =>
+      'Um livro de contas compartilhado e em tempo real. Se um gasta, ambos sabem na hora.';
+
+  @override
+  String get onboardingSlide3Title => 'Poupem juntos com metas claras';
+
+  @override
+  String get onboardingSlide3Body =>
+      'Definam metas, vejam o progresso líquido se encher e celebrem cada aporte rumo ao futuro que desejam.';
+
+  @override
+  String get onboardingSkip => 'Pular';
+
+  @override
+  String get onboardingStart => 'Começar';
+
+  @override
+  String get onboardingNext => 'Próximo';
+
+  @override
+  String get householdSetupPartnerEmailInvalid =>
+      'Digite um e-mail válido para seu parceiro.';
+
+  @override
+  String householdSetupInvitationFailed(String error) {
+    return 'Salvamos o lar, mas não conseguimos criar o convite. $error';
+  }
+
+  @override
+  String get householdSetupTitle => 'Configurar lar';
+
+  @override
+  String get householdSetupPreparing => 'Preparando seu lar…';
+
+  @override
+  String get householdSetupLoadErrorTitle => 'Não conseguimos carregar seu lar';
+
+  @override
+  String get householdSetupNoHouseholdTitle => 'Sua conta ainda não tem um lar';
+
+  @override
+  String get householdSetupNoHouseholdMessage =>
+      'Não mostraremos dados financeiros até recuperar um lar válido.';
+
+  @override
+  String get householdSetupWaitingOwnerTitle => 'Aguardando o dono';
+
+  @override
+  String get householdSetupWaitingOwnerMessage =>
+      'Quem criou este lar deve preencher o nome e a moeda. Atualizaremos este estado quando terminar.';
+
+  @override
+  String get householdSetupHeroTitle => 'Vamos tornar este lar seu';
+
+  @override
+  String get householdSetupHeroSubtitle =>
+      'Configure a base compartilhada. Você poderá ajustá-la depois.';
+
+  @override
+  String get householdNameLabel => 'Nome do lar';
+
+  @override
+  String get householdNameHint => 'Nossa casa';
+
+  @override
+  String get householdNameRequired => 'Digite um nome para o lar.';
+
+  @override
+  String get householdCurrencyLabel => 'Moeda principal';
+
+  @override
+  String get householdCurrencyNote =>
+      'A moeda só pode mudar enquanto o lar não tiver valores salvos.';
+
+  @override
+  String get householdSetupStep2Title => 'Categorias iniciais';
+
+  @override
+  String get householdSetupStep2Subtitle =>
+      'Estas categorias já estão prontas para registrar gastos.';
+
+  @override
+  String get householdSetupStep3Title => 'Seu parceiro';
+
+  @override
+  String get householdSetupStep3Subtitle =>
+      'O convite é opcional. Você poderá retomá-lo em Ajustes.';
+
+  @override
+  String get householdPartnerEmailLabel => 'E-mail do seu parceiro';
+
+  @override
+  String get householdPartnerEmailHint => 'parceiro@email.com';
+
+  @override
+  String get householdSetupSaveAndInvite => 'Salvar e convidar';
+
+  @override
+  String get householdSetupContinueWithoutInvite => 'Continuar sem convidar';
+
+  @override
+  String get categoriesReviewLoadError =>
+      'Não conseguimos carregar as categorias. Tente novamente antes de continuar.';
+
+  @override
+  String get categoriesReviewEmpty => 'Não encontramos categorias iniciais.';
+
+  @override
+  String get householdSetupErrorNotOwner =>
+      'Apenas quem criou este lar pode configurá-lo.';
+
+  @override
+  String get householdSetupErrorCurrencyLocked =>
+      'Este lar já tem valores. Mudar a moeda poderia reinterpretá-los, então mantemos a moeda atual.';
+
+  @override
+  String get householdSetupErrorGeneric =>
+      'Não conseguimos salvar o lar. Tente novamente.';
+
+  @override
+  String get invitationShareSubject => 'Convite para o nosso lar no leakless';
+
+  @override
+  String invitationShareText(String link, String code) {
+    return 'Junte-se ao nosso lar no leakless.\n\n$link\n\nSe o link não abrir, cole este código:\n$code';
+  }
+
+  @override
+  String get invitationShareFailed =>
+      'Não conseguimos abrir o menu de compartilhamento.';
+
+  @override
+  String get invitationsTitle => 'Convidar seu parceiro';
+
+  @override
+  String get invitationsNoHousehold =>
+      'Não encontramos um lar ativo para convidar.';
+
+  @override
+  String get invitationsNotOwner =>
+      'Apenas quem criou este lar pode enviar convites.';
+
+  @override
+  String get invitationEmailRequired => 'Digite o e-mail dele(a).';
+
+  @override
+  String get invitationCreate => 'Criar convite';
+
+  @override
+  String get invitationLinkCopied => 'Link copiado.';
+
+  @override
+  String get invitationCodeCopied => 'Código copiado.';
+
+  @override
+  String get invitationHaveCode => 'Tenho um código de convite';
+
+  @override
+  String get invitationsIntroTitleFallback => 'Compartilhar o lar';
+
+  @override
+  String get invitationsIntroSubtitle =>
+      'Gere um link de uso único. Ele só funciona com o e-mail que você indicar.';
+
+  @override
+  String invitationExpiresOn(String date) {
+    return 'Vence em $date';
+  }
+
+  @override
+  String get invitationTitle => 'Convite';
+
+  @override
+  String get invitationShare => 'Compartilhar convite';
+
+  @override
+  String get invitationCopyLink => 'Copiar link';
+
+  @override
+  String get invitationCopyCode => 'Copiar código';
+
+  @override
+  String get invitationRevoke => 'Revogar convite';
+
+  @override
+  String get invitationNoLongerShareable =>
+      'Este código não pode mais ser compartilhado.';
+
+  @override
+  String get invitationStatusPending => 'Pendente';
+
+  @override
+  String get invitationStatusAccepted => 'Aceito';
+
+  @override
+  String get invitationStatusCancelled => 'Revogado';
+
+  @override
+  String get invitationStatusExpired => 'Expirado';
+
+  @override
+  String get invitationCodeInvalidFormat =>
+      'O código deve ter 64 caracteres hexadecimais.';
+
+  @override
+  String get invitationExpiredMessage => 'O convite expirou.';
+
+  @override
+  String get invitationCancelledMessage => 'O convite foi revogado.';
+
+  @override
+  String get invitationAlreadyUsedMessage => 'Este convite já foi usado.';
+
+  @override
+  String get invitationPersistenceFailed =>
+      'Mantenha o app aberto: não conseguimos salvar a tentativa com segurança.';
+
+  @override
+  String get invitationOpenFailed => 'Não conseguimos abrir este convite.';
+
+  @override
+  String get invitationSuccessHeroTitle => 'Vocês estão conectados';
+
+  @override
+  String get invitationHeroTitle => 'Um lar, para dois';
+
+  @override
+  String get invitationPasteCodeTitle => 'Cole seu código';
+
+  @override
+  String get invitationPasteCodeSubtitle =>
+      'Você pode abrir o link ou colar aqui o código que compartilharam com você.';
+
+  @override
+  String get invitationCodeFieldHint => 'Código de 64 caracteres';
+
+  @override
+  String get invitationReview => 'Revisar convite';
+
+  @override
+  String get invitationHouseholdFallback => 'Lar compartilhado';
+
+  @override
+  String invitationInviterInvited(String inviter) {
+    return '$inviter convidou você para compartilhar este lar.';
+  }
+
+  @override
+  String get invitationInviterFallback => 'Seu parceiro';
+
+  @override
+  String invitationValidUntil(String date) {
+    return 'Válido até $date';
+  }
+
+  @override
+  String get invitationAcceptJoin => 'Aceitar e entrar';
+
+  @override
+  String get invitationNotNow => 'Agora não';
+
+  @override
+  String get invitationUseAnotherAccount => 'Usar outra conta';
+
+  @override
+  String get invitationDiscard => 'Descartar convite';
+
+  @override
+  String get invitationAlreadyMember => 'Você já pertencia a este lar.';
+
+  @override
+  String get invitationAcceptedSuccess =>
+      'O convite foi aceito. Agora vocês podem ver suas finanças compartilhadas.';
+
+  @override
+  String get invitationGoHome => 'Ir para o início';
+
+  @override
+  String get profileImageTooLarge => 'A imagem é muito grande. Tente outra.';
+
+  @override
+  String get profileUpdated => 'Perfil atualizado.';
+
+  @override
+  String get profileChangeAvatarTitle => 'Alterar avatar';
+
+  @override
+  String get profileEditTitle => 'Editar perfil';
+
+  @override
+  String get profileLoading => 'Carregando seu perfil…';
+
+  @override
+  String get profileLoadErrorTitle => 'Não conseguimos carregar seu perfil';
+
+  @override
+  String get profileNoProfileTitle => 'Sem perfil';
+
+  @override
+  String get profileNoProfileMessage =>
+      'Entre novamente para editar seu perfil.';
+
+  @override
+  String get profileNameLabel => 'Nome visível';
+
+  @override
+  String get profileNameHint => 'Como seu parceiro vê você';
+
+  @override
+  String get profileNameRequired => 'Digite um nome visível.';
+
+  @override
+  String get profileCurrencyLabel => 'Moeda';
+
+  @override
+  String get profileAvatarFailed =>
+      'Não conseguimos usar essa imagem. Tente novamente.';
+
+  @override
+  String get profileErrorGeneric =>
+      'Não conseguimos salvar as alterações. Tente novamente.';
+
+  @override
+  String get pickerErrorPhotoAccessDenied =>
+      'Permita o acesso às suas fotos em Ajustes para escolher um avatar.';
+
+  @override
+  String get pickerErrorCameraAccessDenied =>
+      'Permita o acesso à câmera em Ajustes para tirar uma foto.';
+
+  @override
+  String get pickerErrorGeneric =>
+      'Não conseguimos abrir o seletor de imagens. Tente novamente.';
 }

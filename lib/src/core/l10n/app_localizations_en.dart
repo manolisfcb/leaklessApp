@@ -416,4 +416,463 @@ class AppLocalizationsEn extends AppLocalizations {
   String recurringReminderBody(String name) {
     return '$name will be charged soon';
   }
+
+  @override
+  String get commonRetry => 'Retry';
+
+  @override
+  String get commonSaveChanges => 'Save changes';
+
+  @override
+  String get commonSignInToContinue => 'Sign in to continue.';
+
+  @override
+  String get commonCheckConnection => 'Check your connection and try again.';
+
+  @override
+  String get commonInvalidNameMax80 =>
+      'Enter a valid name up to 80 characters.';
+
+  @override
+  String get commonInvalidCurrency => 'Select a valid currency.';
+
+  @override
+  String get commonInvalidEmail => 'Invalid email.';
+
+  @override
+  String get authResetPasswordTitle => 'Reset password';
+
+  @override
+  String get authSignUpConfirmEmailInfo =>
+      'We sent you an email to confirm your account. Open it and come back to sign in.';
+
+  @override
+  String get authResetLinkSentInfo =>
+      'If the email is registered, we sent a link to reset your password.';
+
+  @override
+  String get authCreateAccountTitle => 'Create your account';
+
+  @override
+  String get authReviewInvitationTitle => 'Sign in to review your invitation';
+
+  @override
+  String get authWelcomeBackTitle => 'Welcome back';
+
+  @override
+  String get authPendingInvitationHint =>
+      'Use the email the invitation was sent to. We\'ll continue automatically once you sign in.';
+
+  @override
+  String get authNameHint => 'Your name';
+
+  @override
+  String get authEmailHint => 'Email';
+
+  @override
+  String get authPasswordHint => 'Password';
+
+  @override
+  String get authConfirmPasswordHint => 'Confirm password';
+
+  @override
+  String get authForgotPassword => 'Forgot your password?';
+
+  @override
+  String get authCreateAccountCta => 'Create account';
+
+  @override
+  String get authSignInCta => 'Sign in';
+
+  @override
+  String get authToggleToSignIn => 'Already have an account? Sign in';
+
+  @override
+  String get authToggleToSignUp => 'No account? Sign up';
+
+  @override
+  String get authNameRequired => 'Enter your name.';
+
+  @override
+  String get authEmailRequired => 'Enter your email.';
+
+  @override
+  String get authPasswordRequired => 'Enter your password.';
+
+  @override
+  String get authPasswordTooShort => 'At least 6 characters.';
+
+  @override
+  String get authPasswordsDontMatch => 'Passwords don\'t match.';
+
+  @override
+  String get authForgotPasswordBody =>
+      'Enter your email and we\'ll send you a link to create a new password.';
+
+  @override
+  String get authSendLink => 'Send link';
+
+  @override
+  String get resetPasswordUpdated => 'Password updated.';
+
+  @override
+  String get resetPasswordTitle => 'Create a new password';
+
+  @override
+  String get resetPasswordBody =>
+      'Choose a new password for your account. You\'ll be signed in automatically once you save it.';
+
+  @override
+  String get resetPasswordNewLabel => 'New password';
+
+  @override
+  String get resetPasswordNewRequired => 'Enter your new password.';
+
+  @override
+  String get resetPasswordSave => 'Save password';
+
+  @override
+  String get onboardingSlide1Title => 'Spot money leaks';
+
+  @override
+  String get onboardingSlide1Body =>
+      'Those small, sneaky expenses that slip by unnoticed. leakless makes them visible so you regain control.';
+
+  @override
+  String get onboardingSlide2Title => 'Track spending together';
+
+  @override
+  String get onboardingSlide2Body =>
+      'A shared, real-time ledger. When one of you spends, you both know instantly.';
+
+  @override
+  String get onboardingSlide3Title => 'Save together with clear goals';
+
+  @override
+  String get onboardingSlide3Body =>
+      'Set goals, watch the liquid progress fill up, and celebrate every contribution toward the future you want.';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingStart => 'Get started';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get householdSetupPartnerEmailInvalid =>
+      'Enter a valid email for your partner.';
+
+  @override
+  String householdSetupInvitationFailed(String error) {
+    return 'We saved the household, but couldn\'t create the invitation. $error';
+  }
+
+  @override
+  String get householdSetupTitle => 'Set up household';
+
+  @override
+  String get householdSetupPreparing => 'Preparing your household…';
+
+  @override
+  String get householdSetupLoadErrorTitle => 'We couldn\'t load your household';
+
+  @override
+  String get householdSetupNoHouseholdTitle =>
+      'Your account doesn\'t have a household yet';
+
+  @override
+  String get householdSetupNoHouseholdMessage =>
+      'We won\'t show financial data until we recover a valid household.';
+
+  @override
+  String get householdSetupWaitingOwnerTitle => 'Waiting for the owner';
+
+  @override
+  String get householdSetupWaitingOwnerMessage =>
+      'The person who created this household must complete the name and currency. We\'ll update this once they\'re done.';
+
+  @override
+  String get householdSetupHeroTitle => 'Let\'s make this household yours';
+
+  @override
+  String get householdSetupHeroSubtitle =>
+      'Set up the shared basics. You can adjust them later.';
+
+  @override
+  String get householdNameLabel => 'Household name';
+
+  @override
+  String get householdNameHint => 'Our home';
+
+  @override
+  String get householdNameRequired => 'Enter a name for the household.';
+
+  @override
+  String get householdCurrencyLabel => 'Primary currency';
+
+  @override
+  String get householdCurrencyNote =>
+      'The currency can only change while the household has no saved amounts.';
+
+  @override
+  String get householdSetupStep2Title => 'Starter categories';
+
+  @override
+  String get householdSetupStep2Subtitle =>
+      'These categories are ready to record expenses.';
+
+  @override
+  String get householdSetupStep3Title => 'Your partner';
+
+  @override
+  String get householdSetupStep3Subtitle =>
+      'The invitation is optional. You can do it later from Settings.';
+
+  @override
+  String get householdPartnerEmailLabel => 'Your partner\'s email';
+
+  @override
+  String get householdPartnerEmailHint => 'partner@email.com';
+
+  @override
+  String get householdSetupSaveAndInvite => 'Save and invite';
+
+  @override
+  String get householdSetupContinueWithoutInvite => 'Continue without inviting';
+
+  @override
+  String get categoriesReviewLoadError =>
+      'We couldn\'t load the categories. Retry before continuing.';
+
+  @override
+  String get categoriesReviewEmpty =>
+      'We couldn\'t find any starter categories.';
+
+  @override
+  String get householdSetupErrorNotOwner =>
+      'Only the person who created this household can set it up.';
+
+  @override
+  String get householdSetupErrorCurrencyLocked =>
+      'This household already has amounts. Changing the currency could reinterpret them, so we\'re keeping the current currency.';
+
+  @override
+  String get householdSetupErrorGeneric =>
+      'We couldn\'t save the household. Try again.';
+
+  @override
+  String get invitationShareSubject => 'Invitation to our leakless household';
+
+  @override
+  String invitationShareText(String link, String code) {
+    return 'Join our household on leakless.\n\n$link\n\nIf the link doesn\'t open, paste this code:\n$code';
+  }
+
+  @override
+  String get invitationShareFailed => 'We couldn\'t open the share menu.';
+
+  @override
+  String get invitationsTitle => 'Invite your partner';
+
+  @override
+  String get invitationsNoHousehold =>
+      'We couldn\'t find an active household to invite to.';
+
+  @override
+  String get invitationsNotOwner =>
+      'Only the person who created this household can send invitations.';
+
+  @override
+  String get invitationEmailRequired => 'Enter their email.';
+
+  @override
+  String get invitationCreate => 'Create invitation';
+
+  @override
+  String get invitationLinkCopied => 'Link copied.';
+
+  @override
+  String get invitationCodeCopied => 'Code copied.';
+
+  @override
+  String get invitationHaveCode => 'I have an invitation code';
+
+  @override
+  String get invitationsIntroTitleFallback => 'Share the household';
+
+  @override
+  String get invitationsIntroSubtitle =>
+      'Generate a one-time link. It only works with the email you specify.';
+
+  @override
+  String invitationExpiresOn(String date) {
+    return 'Expires on $date';
+  }
+
+  @override
+  String get invitationTitle => 'Invitation';
+
+  @override
+  String get invitationShare => 'Share invitation';
+
+  @override
+  String get invitationCopyLink => 'Copy link';
+
+  @override
+  String get invitationCopyCode => 'Copy code';
+
+  @override
+  String get invitationRevoke => 'Revoke invitation';
+
+  @override
+  String get invitationNoLongerShareable =>
+      'This code can no longer be shared.';
+
+  @override
+  String get invitationStatusPending => 'Pending';
+
+  @override
+  String get invitationStatusAccepted => 'Accepted';
+
+  @override
+  String get invitationStatusCancelled => 'Revoked';
+
+  @override
+  String get invitationStatusExpired => 'Expired';
+
+  @override
+  String get invitationCodeInvalidFormat =>
+      'The code must have 64 hexadecimal characters.';
+
+  @override
+  String get invitationExpiredMessage => 'The invitation has expired.';
+
+  @override
+  String get invitationCancelledMessage => 'The invitation was revoked.';
+
+  @override
+  String get invitationAlreadyUsedMessage =>
+      'This invitation has already been used.';
+
+  @override
+  String get invitationPersistenceFailed =>
+      'Keep the app open: we couldn\'t securely save the attempt.';
+
+  @override
+  String get invitationOpenFailed => 'We couldn\'t open this invitation.';
+
+  @override
+  String get invitationSuccessHeroTitle => 'You\'re now connected';
+
+  @override
+  String get invitationHeroTitle => 'One household, shared by two';
+
+  @override
+  String get invitationPasteCodeTitle => 'Paste your code';
+
+  @override
+  String get invitationPasteCodeSubtitle =>
+      'You can open the link or paste the code you were given here.';
+
+  @override
+  String get invitationCodeFieldHint => '64-character code';
+
+  @override
+  String get invitationReview => 'Review invitation';
+
+  @override
+  String get invitationHouseholdFallback => 'Shared household';
+
+  @override
+  String invitationInviterInvited(String inviter) {
+    return '$inviter invited you to share this household.';
+  }
+
+  @override
+  String get invitationInviterFallback => 'Your partner';
+
+  @override
+  String invitationValidUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get invitationAcceptJoin => 'Accept and join';
+
+  @override
+  String get invitationNotNow => 'Not now';
+
+  @override
+  String get invitationUseAnotherAccount => 'Use another account';
+
+  @override
+  String get invitationDiscard => 'Discard invitation';
+
+  @override
+  String get invitationAlreadyMember =>
+      'You already belonged to this household.';
+
+  @override
+  String get invitationAcceptedSuccess =>
+      'The invitation was accepted. You can now see your shared finances.';
+
+  @override
+  String get invitationGoHome => 'Go to home';
+
+  @override
+  String get profileImageTooLarge => 'The image is too large. Try another one.';
+
+  @override
+  String get profileUpdated => 'Profile updated.';
+
+  @override
+  String get profileChangeAvatarTitle => 'Change avatar';
+
+  @override
+  String get profileEditTitle => 'Edit profile';
+
+  @override
+  String get profileLoading => 'Loading your profile…';
+
+  @override
+  String get profileLoadErrorTitle => 'We couldn\'t load your profile';
+
+  @override
+  String get profileNoProfileTitle => 'No profile';
+
+  @override
+  String get profileNoProfileMessage => 'Sign in again to edit your profile.';
+
+  @override
+  String get profileNameLabel => 'Display name';
+
+  @override
+  String get profileNameHint => 'How your partner sees you';
+
+  @override
+  String get profileNameRequired => 'Enter a display name.';
+
+  @override
+  String get profileCurrencyLabel => 'Currency';
+
+  @override
+  String get profileAvatarFailed => 'We couldn\'t use that image. Try again.';
+
+  @override
+  String get profileErrorGeneric => 'We couldn\'t save the changes. Try again.';
+
+  @override
+  String get pickerErrorPhotoAccessDenied =>
+      'Allow photo access in Settings to choose an avatar.';
+
+  @override
+  String get pickerErrorCameraAccessDenied =>
+      'Allow camera access in Settings to take a photo.';
+
+  @override
+  String get pickerErrorGeneric =>
+      'We couldn\'t open the image picker. Try again.';
 }

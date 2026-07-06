@@ -843,6 +843,834 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{name} se cobra pronto'**
   String recurringReminderBody(String name);
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get commonRetry;
+
+  /// No description provided for @commonSaveChanges.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get commonSaveChanges;
+
+  /// No description provided for @commonSignInToContinue.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión para continuar.'**
+  String get commonSignInToContinue;
+
+  /// No description provided for @commonCheckConnection.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu conexión e inténtalo de nuevo.'**
+  String get commonCheckConnection;
+
+  /// No description provided for @commonInvalidNameMax80.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un nombre válido de hasta 80 caracteres.'**
+  String get commonInvalidNameMax80;
+
+  /// No description provided for @commonInvalidCurrency.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una moneda válida.'**
+  String get commonInvalidCurrency;
+
+  /// No description provided for @commonInvalidEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo no válido.'**
+  String get commonInvalidEmail;
+
+  /// No description provided for @authResetPasswordTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Restablecer contraseña'**
+  String get authResetPasswordTitle;
+
+  /// No description provided for @authSignUpConfirmEmailInfo.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos un correo para confirmar tu cuenta. Ábrelo y vuelve para iniciar sesión.'**
+  String get authSignUpConfirmEmailInfo;
+
+  /// No description provided for @authResetLinkSentInfo.
+  ///
+  /// In es, this message translates to:
+  /// **'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'**
+  String get authResetLinkSentInfo;
+
+  /// No description provided for @authCreateAccountTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu cuenta'**
+  String get authCreateAccountTitle;
+
+  /// No description provided for @authReviewInvitationTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Entra para revisar tu invitación'**
+  String get authReviewInvitationTitle;
+
+  /// No description provided for @authWelcomeBackTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Bienvenido de vuelta'**
+  String get authWelcomeBackTitle;
+
+  /// No description provided for @authPendingInvitationHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa el correo al que enviaron la invitación. Continuaremos automáticamente al entrar.'**
+  String get authPendingInvitationHint;
+
+  /// No description provided for @authNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu nombre'**
+  String get authNameHint;
+
+  /// No description provided for @authEmailHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get authEmailHint;
+
+  /// No description provided for @authPasswordHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña'**
+  String get authPasswordHint;
+
+  /// No description provided for @authConfirmPasswordHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar contraseña'**
+  String get authConfirmPasswordHint;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get authForgotPassword;
+
+  /// No description provided for @authCreateAccountCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get authCreateAccountCta;
+
+  /// No description provided for @authSignInCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión'**
+  String get authSignInCta;
+
+  /// No description provided for @authToggleToSignIn.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya tienes cuenta? Inicia sesión'**
+  String get authToggleToSignIn;
+
+  /// No description provided for @authToggleToSignUp.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Sin cuenta? Regístrate'**
+  String get authToggleToSignUp;
+
+  /// No description provided for @authNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu nombre.'**
+  String get authNameRequired;
+
+  /// No description provided for @authEmailRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu correo.'**
+  String get authEmailRequired;
+
+  /// No description provided for @authPasswordRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu contraseña.'**
+  String get authPasswordRequired;
+
+  /// No description provided for @authPasswordTooShort.
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 6 caracteres.'**
+  String get authPasswordTooShort;
+
+  /// No description provided for @authPasswordsDontMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Las contraseñas no coinciden.'**
+  String get authPasswordsDontMatch;
+
+  /// No description provided for @authForgotPasswordBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu correo y te enviaremos un enlace para crear una nueva contraseña.'**
+  String get authForgotPasswordBody;
+
+  /// No description provided for @authSendLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar enlace'**
+  String get authSendLink;
+
+  /// No description provided for @resetPasswordUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña actualizada.'**
+  String get resetPasswordUpdated;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea una nueva contraseña'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige una contraseña nueva para tu cuenta. Al guardarla entrarás automáticamente.'**
+  String get resetPasswordBody;
+
+  /// No description provided for @resetPasswordNewLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva contraseña'**
+  String get resetPasswordNewLabel;
+
+  /// No description provided for @resetPasswordNewRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu nueva contraseña.'**
+  String get resetPasswordNewRequired;
+
+  /// No description provided for @resetPasswordSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar contraseña'**
+  String get resetPasswordSave;
+
+  /// No description provided for @onboardingSlide1Title.
+  ///
+  /// In es, this message translates to:
+  /// **'Detecta las fugas de dinero'**
+  String get onboardingSlide1Title;
+
+  /// No description provided for @onboardingSlide1Body.
+  ///
+  /// In es, this message translates to:
+  /// **'Esos pequeños gastos hormiga que se escapan sin darte cuenta. leakless los hace visibles para que recuperes el control.'**
+  String get onboardingSlide1Body;
+
+  /// No description provided for @onboardingSlide2Title.
+  ///
+  /// In es, this message translates to:
+  /// **'Controlen los gastos en pareja'**
+  String get onboardingSlide2Title;
+
+  /// No description provided for @onboardingSlide2Body.
+  ///
+  /// In es, this message translates to:
+  /// **'Un libro de cuentas compartido y en tiempo real. Si uno gasta, ambos lo saben al instante.'**
+  String get onboardingSlide2Body;
+
+  /// No description provided for @onboardingSlide3Title.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahorren juntos con metas claras'**
+  String get onboardingSlide3Title;
+
+  /// No description provided for @onboardingSlide3Body.
+  ///
+  /// In es, this message translates to:
+  /// **'Definan metas, vean el progreso líquido llenarse y celebren cada aporte hacia el futuro que quieren.'**
+  String get onboardingSlide3Body;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In es, this message translates to:
+  /// **'Saltar'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In es, this message translates to:
+  /// **'Comenzar'**
+  String get onboardingStart;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get onboardingNext;
+
+  /// No description provided for @householdSetupPartnerEmailInvalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un correo válido para tu pareja.'**
+  String get householdSetupPartnerEmailInvalid;
+
+  /// Shown when the household saved but the partner invitation could not be created
+  ///
+  /// In es, this message translates to:
+  /// **'Guardamos el hogar, pero no pudimos crear la invitación. {error}'**
+  String householdSetupInvitationFailed(String error);
+
+  /// No description provided for @householdSetupTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Configurar hogar'**
+  String get householdSetupTitle;
+
+  /// No description provided for @householdSetupPreparing.
+  ///
+  /// In es, this message translates to:
+  /// **'Preparando tu hogar…'**
+  String get householdSetupPreparing;
+
+  /// No description provided for @householdSetupLoadErrorTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar tu hogar'**
+  String get householdSetupLoadErrorTitle;
+
+  /// No description provided for @householdSetupNoHouseholdTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cuenta aún no tiene hogar'**
+  String get householdSetupNoHouseholdTitle;
+
+  /// No description provided for @householdSetupNoHouseholdMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'No mostraremos datos financieros hasta recuperar un hogar válido.'**
+  String get householdSetupNoHouseholdMessage;
+
+  /// No description provided for @householdSetupWaitingOwnerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Esperando al owner'**
+  String get householdSetupWaitingOwnerTitle;
+
+  /// No description provided for @householdSetupWaitingOwnerMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Quien creó este hogar debe completar el nombre y la moneda. Actualizaremos este estado cuando termine.'**
+  String get householdSetupWaitingOwnerMessage;
+
+  /// No description provided for @householdSetupHeroTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Hagamos suyo este hogar'**
+  String get householdSetupHeroTitle;
+
+  /// No description provided for @householdSetupHeroSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Configura la base compartida. Podrás ajustarla más tarde.'**
+  String get householdSetupHeroSubtitle;
+
+  /// No description provided for @householdNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del hogar'**
+  String get householdNameLabel;
+
+  /// No description provided for @householdNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuestra casa'**
+  String get householdNameHint;
+
+  /// No description provided for @householdNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un nombre para el hogar.'**
+  String get householdNameRequired;
+
+  /// No description provided for @householdCurrencyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Moneda principal'**
+  String get householdCurrencyLabel;
+
+  /// No description provided for @householdCurrencyNote.
+  ///
+  /// In es, this message translates to:
+  /// **'La moneda sólo puede cambiar mientras el hogar no tenga importes guardados.'**
+  String get householdCurrencyNote;
+
+  /// No description provided for @householdSetupStep2Title.
+  ///
+  /// In es, this message translates to:
+  /// **'Categorías iniciales'**
+  String get householdSetupStep2Title;
+
+  /// No description provided for @householdSetupStep2Subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Estas categorías ya están listas para registrar gastos.'**
+  String get householdSetupStep2Subtitle;
+
+  /// No description provided for @householdSetupStep3Title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu pareja'**
+  String get householdSetupStep3Title;
+
+  /// No description provided for @householdSetupStep3Subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'La invitación es opcional. Podrás retomarla desde Ajustes.'**
+  String get householdSetupStep3Subtitle;
+
+  /// No description provided for @householdPartnerEmailLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo de tu pareja'**
+  String get householdPartnerEmailLabel;
+
+  /// No description provided for @householdPartnerEmailHint.
+  ///
+  /// In es, this message translates to:
+  /// **'pareja@correo.com'**
+  String get householdPartnerEmailHint;
+
+  /// No description provided for @householdSetupSaveAndInvite.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar e invitar'**
+  String get householdSetupSaveAndInvite;
+
+  /// No description provided for @householdSetupContinueWithoutInvite.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar sin invitar'**
+  String get householdSetupContinueWithoutInvite;
+
+  /// No description provided for @categoriesReviewLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar las categorías. Reintenta antes de continuar.'**
+  String get categoriesReviewLoadError;
+
+  /// No description provided for @categoriesReviewEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos categorías iniciales.'**
+  String get categoriesReviewEmpty;
+
+  /// No description provided for @householdSetupErrorNotOwner.
+  ///
+  /// In es, this message translates to:
+  /// **'Sólo quien creó este hogar puede configurarlo.'**
+  String get householdSetupErrorNotOwner;
+
+  /// No description provided for @householdSetupErrorCurrencyLocked.
+  ///
+  /// In es, this message translates to:
+  /// **'Este hogar ya tiene importes. Cambiar la moneda podría reinterpretarlos, así que conservamos la moneda actual.'**
+  String get householdSetupErrorCurrencyLocked;
+
+  /// No description provided for @householdSetupErrorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el hogar. Inténtalo de nuevo.'**
+  String get householdSetupErrorGeneric;
+
+  /// No description provided for @invitationShareSubject.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación a nuestro hogar en leakless'**
+  String get invitationShareSubject;
+
+  /// Share-sheet body when inviting a partner
+  ///
+  /// In es, this message translates to:
+  /// **'Únete a nuestro hogar en leakless.\n\n{link}\n\nSi el enlace no abre, pega este código:\n{code}'**
+  String invitationShareText(String link, String code);
+
+  /// No description provided for @invitationShareFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir el menú para compartir.'**
+  String get invitationShareFailed;
+
+  /// No description provided for @invitationsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitar a tu pareja'**
+  String get invitationsTitle;
+
+  /// No description provided for @invitationsNoHousehold.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos un hogar activo para invitar.'**
+  String get invitationsNoHousehold;
+
+  /// No description provided for @invitationsNotOwner.
+  ///
+  /// In es, this message translates to:
+  /// **'Sólo quien creó este hogar puede enviar invitaciones.'**
+  String get invitationsNotOwner;
+
+  /// No description provided for @invitationEmailRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe su correo.'**
+  String get invitationEmailRequired;
+
+  /// No description provided for @invitationCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear invitación'**
+  String get invitationCreate;
+
+  /// No description provided for @invitationLinkCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlace copiado.'**
+  String get invitationLinkCopied;
+
+  /// No description provided for @invitationCodeCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Código copiado.'**
+  String get invitationCodeCopied;
+
+  /// No description provided for @invitationHaveCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Tengo un código de invitación'**
+  String get invitationHaveCode;
+
+  /// No description provided for @invitationsIntroTitleFallback.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir el hogar'**
+  String get invitationsIntroTitleFallback;
+
+  /// No description provided for @invitationsIntroSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Genera un enlace de un solo uso. Sólo funcionará con el correo que indiques.'**
+  String get invitationsIntroSubtitle;
+
+  /// When a shared invitation expires
+  ///
+  /// In es, this message translates to:
+  /// **'Vence el {date}'**
+  String invitationExpiresOn(String date);
+
+  /// No description provided for @invitationTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación'**
+  String get invitationTitle;
+
+  /// No description provided for @invitationShare.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir invitación'**
+  String get invitationShare;
+
+  /// No description provided for @invitationCopyLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar enlace'**
+  String get invitationCopyLink;
+
+  /// No description provided for @invitationCopyCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar código'**
+  String get invitationCopyCode;
+
+  /// No description provided for @invitationRevoke.
+  ///
+  /// In es, this message translates to:
+  /// **'Revocar invitación'**
+  String get invitationRevoke;
+
+  /// No description provided for @invitationNoLongerShareable.
+  ///
+  /// In es, this message translates to:
+  /// **'Este código ya no se puede compartir.'**
+  String get invitationNoLongerShareable;
+
+  /// No description provided for @invitationStatusPending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get invitationStatusPending;
+
+  /// No description provided for @invitationStatusAccepted.
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptada'**
+  String get invitationStatusAccepted;
+
+  /// No description provided for @invitationStatusCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Revocada'**
+  String get invitationStatusCancelled;
+
+  /// No description provided for @invitationStatusExpired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencida'**
+  String get invitationStatusExpired;
+
+  /// No description provided for @invitationCodeInvalidFormat.
+  ///
+  /// In es, this message translates to:
+  /// **'El código debe tener 64 caracteres hexadecimales.'**
+  String get invitationCodeInvalidFormat;
+
+  /// No description provided for @invitationExpiredMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'La invitación ha vencido.'**
+  String get invitationExpiredMessage;
+
+  /// No description provided for @invitationCancelledMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'La invitación fue revocada.'**
+  String get invitationCancelledMessage;
+
+  /// No description provided for @invitationAlreadyUsedMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta invitación ya fue utilizada.'**
+  String get invitationAlreadyUsedMessage;
+
+  /// No description provided for @invitationPersistenceFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'Mantén la app abierta: no pudimos guardar el intento de forma segura.'**
+  String get invitationPersistenceFailed;
+
+  /// No description provided for @invitationOpenFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir esta invitación.'**
+  String get invitationOpenFailed;
+
+  /// No description provided for @invitationSuccessHeroTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya están conectados'**
+  String get invitationSuccessHeroTitle;
+
+  /// No description provided for @invitationHeroTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Un hogar, entre dos'**
+  String get invitationHeroTitle;
+
+  /// No description provided for @invitationPasteCodeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega tu código'**
+  String get invitationPasteCodeTitle;
+
+  /// No description provided for @invitationPasteCodeSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes abrir el enlace o pegar aquí el código que te compartieron.'**
+  String get invitationPasteCodeSubtitle;
+
+  /// No description provided for @invitationCodeFieldHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Código de 64 caracteres'**
+  String get invitationCodeFieldHint;
+
+  /// No description provided for @invitationReview.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisar invitación'**
+  String get invitationReview;
+
+  /// No description provided for @invitationHouseholdFallback.
+  ///
+  /// In es, this message translates to:
+  /// **'Hogar compartido'**
+  String get invitationHouseholdFallback;
+
+  /// Preview subtitle naming who sent the invitation
+  ///
+  /// In es, this message translates to:
+  /// **'{inviter} te invitó a compartir este hogar.'**
+  String invitationInviterInvited(String inviter);
+
+  /// No description provided for @invitationInviterFallback.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu pareja'**
+  String get invitationInviterFallback;
+
+  /// Invitation validity deadline in the recipient preview
+  ///
+  /// In es, this message translates to:
+  /// **'Válida hasta {date}'**
+  String invitationValidUntil(String date);
+
+  /// No description provided for @invitationAcceptJoin.
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptar y unirme'**
+  String get invitationAcceptJoin;
+
+  /// No description provided for @invitationNotNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get invitationNotNow;
+
+  /// No description provided for @invitationUseAnotherAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Usar otra cuenta'**
+  String get invitationUseAnotherAccount;
+
+  /// No description provided for @invitationDiscard.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar invitación'**
+  String get invitationDiscard;
+
+  /// No description provided for @invitationAlreadyMember.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya pertenecías a este hogar.'**
+  String get invitationAlreadyMember;
+
+  /// No description provided for @invitationAcceptedSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'La invitación fue aceptada. Ya pueden ver sus finanzas compartidas.'**
+  String get invitationAcceptedSuccess;
+
+  /// No description provided for @invitationGoHome.
+  ///
+  /// In es, this message translates to:
+  /// **'Ir al inicio'**
+  String get invitationGoHome;
+
+  /// No description provided for @profileImageTooLarge.
+  ///
+  /// In es, this message translates to:
+  /// **'La imagen es demasiado grande. Prueba con otra.'**
+  String get profileImageTooLarge;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil actualizado.'**
+  String get profileUpdated;
+
+  /// No description provided for @profileChangeAvatarTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar avatar'**
+  String get profileChangeAvatarTitle;
+
+  /// No description provided for @profileEditTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar perfil'**
+  String get profileEditTitle;
+
+  /// No description provided for @profileLoading.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando tu perfil…'**
+  String get profileLoading;
+
+  /// No description provided for @profileLoadErrorTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar tu perfil'**
+  String get profileLoadErrorTitle;
+
+  /// No description provided for @profileNoProfileTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin perfil'**
+  String get profileNoProfileTitle;
+
+  /// No description provided for @profileNoProfileMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión de nuevo para editar tu perfil.'**
+  String get profileNoProfileMessage;
+
+  /// No description provided for @profileNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre visible'**
+  String get profileNameLabel;
+
+  /// No description provided for @profileNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo te ve tu pareja'**
+  String get profileNameHint;
+
+  /// No description provided for @profileNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un nombre visible.'**
+  String get profileNameRequired;
+
+  /// No description provided for @profileCurrencyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Moneda'**
+  String get profileCurrencyLabel;
+
+  /// No description provided for @profileAvatarFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos usar esa imagen. Inténtalo de nuevo.'**
+  String get profileAvatarFailed;
+
+  /// No description provided for @profileErrorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar los cambios. Inténtalo de nuevo.'**
+  String get profileErrorGeneric;
+
+  /// No description provided for @pickerErrorPhotoAccessDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'Permite el acceso a tus fotos desde Ajustes para elegir un avatar.'**
+  String get pickerErrorPhotoAccessDenied;
+
+  /// No description provided for @pickerErrorCameraAccessDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'Permite el acceso a la cámara desde Ajustes para tomar una foto.'**
+  String get pickerErrorCameraAccessDenied;
+
+  /// No description provided for @pickerErrorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir el selector de imágenes. Inténtalo de nuevo.'**
+  String get pickerErrorGeneric;
 }
 
 class _AppLocalizationsDelegate

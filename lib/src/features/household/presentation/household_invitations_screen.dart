@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../domain/enums/household_invitation_status.dart';
@@ -118,14 +119,13 @@ class _HouseholdInvitationsScreenState
   }
 
   Future<void> _share(BuildContext buttonContext, String link) async {
+    final l10n = buttonContext.l10n;
     final box = buttonContext.findRenderObject() as RenderBox?;
     try {
       await SharePlus.instance.share(
         ShareParams(
-          subject: 'Invitación a nuestro hogar en leakless',
-          text:
-              'Únete a nuestro hogar en leakless.\n\n$link\n\n'
-              'Si el enlace no abre, pega este código:\n${_invitation!.token}',
+          subject: l10n.invitationShareSubject,
+          text: l10n.invitationShareText(link, _invitation!.token ?? ''),
           sharePositionOrigin: box == null
               ? null
               : box.localToGlobal(Offset.zero) & box.size,
@@ -134,15 +134,14 @@ class _HouseholdInvitationsScreenState
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No pudimos abrir el menú para compartir.'),
-        ),
+        SnackBar(content: Text(l10n.invitationShareFailed)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final householdAsync = ref.watch(currentHouseholdProvider);
     final household = householdAsync.asData?.value;
     final user = ref.watch(currentUserProvider);
@@ -154,7 +153,7 @@ class _HouseholdInvitationsScreenState
           onPressed: context.pop,
           icon: const Icon(CupertinoIcons.back),
         ),
-        title: const Text('Invitar a tu pareja'),
+        title: Text(l10n.invitationsTitle),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
@@ -169,14 +168,14 @@ class _HouseholdInvitationsScreenState
           if (householdAsync.isLoading)
             const Center(child: CircularProgressIndicator())
           else if (household == null)
-            const _NoticeCard(
+            _NoticeCard(
               icon: CupertinoIcons.exclamationmark_triangle,
-              message: 'No encontramos un hogar activo para invitar.',
+              message: l10n.invitationsNoHousehold,
             )
           else if (!isOwner)
-            const _NoticeCard(
+            _NoticeCard(
               icon: CupertinoIcons.lock,
-              message: 'Sólo quien creó este hogar puede enviar invitaciones.',
+              message: l10n.invitationsNotOwner,
             )
           else ...[
             Form(
@@ -186,7 +185,7 @@ class _HouseholdInvitationsScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Correo de tu pareja',
+                      l10n.householdPartnerEmailLabel,
                       style: AppTypography.titleMedium,
                     ),
                     AppSpacing.gapMd,
@@ -199,15 +198,15 @@ class _HouseholdInvitationsScreenState
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
                       ],
-                      decoration: const InputDecoration(
-                        hintText: 'pareja@correo.com',
-                        prefixIcon: Icon(CupertinoIcons.mail),
+                      decoration: InputDecoration(
+                        hintText: l10n.householdPartnerEmailHint,
+                        prefixIcon: const Icon(CupertinoIcons.mail),
                       ),
                       validator: (value) {
                         final email = (value ?? '').trim();
-                        if (email.isEmpty) return 'Escribe su correo.';
+                        if (email.isEmpty) return l10n.invitationEmailRequired;
                         if (!_emailPattern.hasMatch(email)) {
-                          return 'Correo no válido.';
+                          return l10n.commonInvalidEmail;
                         }
                         return null;
                       },
@@ -215,7 +214,7 @@ class _HouseholdInvitationsScreenState
                     ),
                     AppSpacing.gapLg,
                     GlassButton(
-                      label: 'Crear invitación',
+                      label: l10n.invitationCreate,
                       icon: CupertinoIcons.paperplane,
                       loading: _loading,
                       onPressed: _loading ? null : () => _create(household),
@@ -237,8 +236,8 @@ class _HouseholdInvitationsScreenState
               _InvitationShareCard(
                 invitation: _invitation!,
                 loading: _loading,
-                onCopyLink: (value) => _copy(value, 'Enlace copiado.'),
-                onCopyCode: (value) => _copy(value, 'Código copiado.'),
+                onCopyLink: (value) => _copy(value, l10n.invitationLinkCopied),
+                onCopyCode: (value) => _copy(value, l10n.invitationCodeCopied),
                 onShare: _share,
                 onCancel: _cancel,
               ),
@@ -246,7 +245,7 @@ class _HouseholdInvitationsScreenState
           ],
           AppSpacing.gapLg,
           GlassButton(
-            label: 'Tengo un código de invitación',
+            label: l10n.invitationHaveCode,
             icon: CupertinoIcons.number,
             variant: GlassButtonVariant.glass,
             onPressed: () => context.push(AppRoutes.invitation),
@@ -274,13 +273,13 @@ class _IntroCard extends StatelessWidget {
         ),
         AppSpacing.gapMd,
         Text(
-          householdName == null ? 'Compartir el hogar' : householdName!,
+          householdName ?? context.l10n.invitationsIntroTitleFallback,
           style: AppTypography.headlineMedium,
           textAlign: TextAlign.center,
         ),
         AppSpacing.gapSm,
         Text(
-          'Genera un enlace de un solo uso. Sólo funcionará con el correo que indiques.',
+          context.l10n.invitationsIntroSubtitle,
           style: AppTypography.bodyMedium.copyWith(
             color: context.colors.textSecondary,
           ),
@@ -310,6 +309,8 @@ class _InvitationShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final localeName = Localizations.localeOf(context).toString();
     final token = invitation.token;
     final active =
         invitation.status == HouseholdInvitationStatus.pending && token != null;
@@ -318,9 +319,9 @@ class _InvitationShareCard extends StatelessWidget {
         : null;
     final expires = invitation.expiresAt == null
         ? null
-        : DateFormat(
-            "d 'de' MMMM, HH:mm",
-          ).format(invitation.expiresAt!.toLocal());
+        : DateFormat.MMMMd(localeName)
+              .add_Hm()
+              .format(invitation.expiresAt!.toLocal());
 
     return GlassCard(
       strong: true,
@@ -329,14 +330,14 @@ class _InvitationShareCard extends StatelessWidget {
           _StatusPill(status: invitation.status),
           AppSpacing.gapMd,
           Text(
-            invitation.invitedEmail ?? 'Invitación',
+            invitation.invitedEmail ?? l10n.invitationTitle,
             style: AppTypography.titleLarge,
             textAlign: TextAlign.center,
           ),
           if (expires != null && active) ...[
             AppSpacing.gapXs,
             Text(
-              'Vence el $expires',
+              l10n.invitationExpiresOn(expires),
               style: AppTypography.bodySmall.copyWith(
                 color: context.colors.textSecondary,
               ),
@@ -377,7 +378,7 @@ class _InvitationShareCard extends StatelessWidget {
             AppSpacing.gapLg,
             Builder(
               builder: (buttonContext) => GlassButton(
-                label: 'Compartir invitación',
+                label: l10n.invitationShare,
                 icon: CupertinoIcons.share,
                 onPressed: loading ? null : () => onShare(buttonContext, link),
               ),
@@ -389,21 +390,21 @@ class _InvitationShareCard extends StatelessWidget {
                   child: TextButton.icon(
                     onPressed: () => onCopyLink(link),
                     icon: const Icon(CupertinoIcons.link),
-                    label: const Text('Copiar enlace'),
+                    label: Text(l10n.invitationCopyLink),
                   ),
                 ),
                 Expanded(
                   child: TextButton.icon(
                     onPressed: () => onCopyCode(token),
                     icon: const Icon(CupertinoIcons.doc_on_doc),
-                    label: const Text('Copiar código'),
+                    label: Text(l10n.invitationCopyCode),
                   ),
                 ),
               ],
             ),
             AppSpacing.gapSm,
             GlassButton(
-              label: 'Revocar invitación',
+              label: l10n.invitationRevoke,
               icon: CupertinoIcons.xmark_circle,
               variant: GlassButtonVariant.glass,
               accent: context.colors.expense,
@@ -413,7 +414,7 @@ class _InvitationShareCard extends StatelessWidget {
           ] else ...[
             AppSpacing.gapMd,
             Text(
-              'Este código ya no se puede compartir.',
+              l10n.invitationNoLongerShareable,
               style: AppTypography.bodyMedium.copyWith(
                 color: context.colors.textSecondary,
               ),
@@ -432,15 +433,22 @@ class _StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final (label, color) = switch (status) {
-      HouseholdInvitationStatus.pending => ('Pendiente', context.colors.alert),
-      HouseholdInvitationStatus.accepted => ('Aceptada', context.colors.income),
+      HouseholdInvitationStatus.pending => (
+        l10n.invitationStatusPending,
+        context.colors.alert,
+      ),
+      HouseholdInvitationStatus.accepted => (
+        l10n.invitationStatusAccepted,
+        context.colors.income,
+      ),
       HouseholdInvitationStatus.cancelled => (
-        'Revocada',
+        l10n.invitationStatusCancelled,
         context.colors.expense,
       ),
       HouseholdInvitationStatus.expired => (
-        'Vencida',
+        l10n.invitationStatusExpired,
         context.colors.textTertiary,
       ),
     };

@@ -60,7 +60,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final email = _partnerEmail.text.trim();
     if (invite && !_emailPattern.hasMatch(email)) {
-      setState(() => _error = 'Escribe un correo válido para tu pareja.');
+      setState(() => _error = context.l10n.householdSetupPartnerEmailInvalid);
       return;
     }
 
@@ -81,6 +81,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
       setState(() {
         _submitting = false;
         _error = _setupErrorMessage(
+          context.l10n,
           state.error ?? StateError('Household setup failed'),
         );
       });
@@ -101,9 +102,11 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
       if (invitation?.token == null) {
         setState(() {
           _submitting = false;
-          _error =
-              'Guardamos el hogar, pero no pudimos crear la invitación. '
-              '${invitationErrorMessage(invitationState.error ?? StateError('Invitation failed'))}';
+          _error = context.l10n.householdSetupInvitationFailed(
+            invitationErrorMessage(
+              invitationState.error ?? StateError('Invitation failed'),
+            ),
+          );
         });
         return;
       }
@@ -124,6 +127,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final householdAsync = ref.watch(currentHouseholdProvider);
     final household = householdAsync.asData?.value;
     final user = ref.watch(currentUserProvider);
@@ -136,26 +140,23 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                 onPressed: context.pop,
                 icon: const Icon(CupertinoIcons.back),
               ),
-              title: const Text('Configurar hogar'),
+              title: Text(l10n.householdSetupTitle),
             ),
       body: switch (householdAsync) {
-        AsyncLoading() => const AppLoader(message: 'Preparando tu hogar…'),
+        AsyncLoading() => AppLoader(message: l10n.householdSetupPreparing),
         AsyncError() => _SetupUnavailable(
-          title: 'No pudimos cargar tu hogar',
-          message: 'Revisa tu conexión e inténtalo de nuevo.',
+          title: l10n.householdSetupLoadErrorTitle,
+          message: l10n.commonCheckConnection,
           onRetry: _retry,
         ),
         _ when household == null => _SetupUnavailable(
-          title: 'Tu cuenta aún no tiene hogar',
-          message:
-              'No mostraremos datos financieros hasta recuperar un hogar válido.',
+          title: l10n.householdSetupNoHouseholdTitle,
+          message: l10n.householdSetupNoHouseholdMessage,
           onRetry: _retry,
         ),
         _ when household.ownerId != user?.id => _SetupUnavailable(
-          title: 'Esperando al owner',
-          message:
-              'Quien creó este hogar debe completar el nombre y la moneda. '
-              'Actualizaremos este estado cuando termine.',
+          title: l10n.householdSetupWaitingOwnerTitle,
+          message: l10n.householdSetupWaitingOwnerMessage,
           onRetry: _retry,
         ),
         _ => _buildForm(context, household),
@@ -166,6 +167,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
   Widget _buildForm(BuildContext context, Household household) {
     _initialize(household);
     final colors = context.colors;
+    final l10n = context.l10n;
     final categories = ref.watch(categoriesProvider);
 
     return ListView(
@@ -180,13 +182,13 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
           Icon(CupertinoIcons.house_fill, size: 48, color: colors.primary),
           AppSpacing.gapMd,
           Text(
-            'Hagamos suyo este hogar',
+            l10n.householdSetupHeroTitle,
             textAlign: TextAlign.center,
             style: AppTypography.displaySmall,
           ),
           AppSpacing.gapSm,
           Text(
-            'Configura la base compartida. Podrás ajustarla más tarde.',
+            l10n.householdSetupHeroSubtitle,
             textAlign: TextAlign.center,
             style: AppTypography.bodyMedium.copyWith(
               color: colors.textSecondary,
@@ -202,9 +204,9 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _StepTitle(
+                    _StepTitle(
                       number: '1',
-                      title: 'Nombre y moneda',
+                      title: l10n.settingsHouseholdNameCurrency,
                       icon: CupertinoIcons.house,
                     ),
                     AppSpacing.gapLg,
@@ -217,21 +219,23 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'[\n\r]')),
                       ],
-                      decoration: const InputDecoration(
-                        labelText: 'Nombre del hogar',
-                        hintText: 'Nuestra casa',
-                        prefixIcon: Icon(CupertinoIcons.home),
+                      decoration: InputDecoration(
+                        labelText: l10n.householdNameLabel,
+                        hintText: l10n.householdNameHint,
+                        prefixIcon: const Icon(CupertinoIcons.home),
                       ),
                       validator: (value) => (value ?? '').trim().isEmpty
-                          ? 'Escribe un nombre para el hogar.'
+                          ? l10n.householdNameRequired
                           : null,
                     ),
                     AppSpacing.gapMd,
                     DropdownButtonFormField<String>(
                       initialValue: _currency,
-                      decoration: const InputDecoration(
-                        labelText: 'Moneda principal',
-                        prefixIcon: Icon(CupertinoIcons.money_dollar_circle),
+                      decoration: InputDecoration(
+                        labelText: l10n.householdCurrencyLabel,
+                        prefixIcon: const Icon(
+                          CupertinoIcons.money_dollar_circle,
+                        ),
                       ),
                       items: [
                         if (!supportedCurrencies.any(
@@ -254,7 +258,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                     ),
                     AppSpacing.gapSm,
                     Text(
-                      'La moneda sólo puede cambiar mientras el hogar no tenga importes guardados.',
+                      l10n.householdCurrencyNote,
                       style: AppTypography.bodySmall.copyWith(
                         color: colors.textSecondary,
                       ),
@@ -267,14 +271,14 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _StepTitle(
+                    _StepTitle(
                       number: '2',
-                      title: 'Categorías iniciales',
+                      title: l10n.householdSetupStep2Title,
                       icon: CupertinoIcons.square_grid_2x2,
                     ),
                     AppSpacing.gapSm,
                     Text(
-                      'Estas categorías ya están listas para registrar gastos.',
+                      l10n.householdSetupStep2Subtitle,
                       style: AppTypography.bodySmall.copyWith(
                         color: colors.textSecondary,
                       ),
@@ -290,14 +294,14 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const _StepTitle(
+                      _StepTitle(
                         number: '3',
-                        title: 'Tu pareja',
+                        title: l10n.householdSetupStep3Title,
                         icon: CupertinoIcons.person_2,
                       ),
                       AppSpacing.gapSm,
                       Text(
-                        'La invitación es opcional. Podrás retomarla desde Ajustes.',
+                        l10n.householdSetupStep3Subtitle,
                         style: AppTypography.bodySmall.copyWith(
                           color: colors.textSecondary,
                         ),
@@ -312,10 +316,10 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r'\s')),
                         ],
-                        decoration: const InputDecoration(
-                          labelText: 'Correo de tu pareja',
-                          hintText: 'pareja@correo.com',
-                          prefixIcon: Icon(CupertinoIcons.mail),
+                        decoration: InputDecoration(
+                          labelText: l10n.householdPartnerEmailLabel,
+                          hintText: l10n.householdPartnerEmailHint,
+                          prefixIcon: const Icon(CupertinoIcons.mail),
                         ),
                         onFieldSubmitted: (_) => _save(household, invite: true),
                       ),
@@ -330,7 +334,7 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
         AppSpacing.gapXl,
         if (widget.isOnboarding) ...[
           GlassButton(
-            label: 'Guardar e invitar',
+            label: l10n.householdSetupSaveAndInvite,
             icon: CupertinoIcons.paperplane,
             loading: _submitting,
             onPressed: _submitting
@@ -342,11 +346,11 @@ class _HouseholdSetupScreenState extends ConsumerState<HouseholdSetupScreen> {
             onPressed: _submitting
                 ? null
                 : () => _save(household, invite: false),
-            child: const Text('Continuar sin invitar'),
+            child: Text(l10n.householdSetupContinueWithoutInvite),
           ),
         ] else
           GlassButton(
-            label: 'Guardar cambios',
+            label: l10n.commonSaveChanges,
             icon: CupertinoIcons.checkmark_alt,
             loading: _submitting,
             onPressed: _submitting
@@ -408,11 +412,11 @@ class _CategoryReview extends StatelessWidget {
   Widget build(BuildContext context) => switch (categories) {
     AsyncLoading() => const LinearProgressIndicator(),
     AsyncError() => Text(
-      'No pudimos cargar las categorías. Reintenta antes de continuar.',
+      context.l10n.categoriesReviewLoadError,
       style: AppTypography.bodySmall.copyWith(color: context.colors.expense),
     ),
     AsyncData(:final value) when value.isEmpty => Text(
-      'No encontramos categorías iniciales.',
+      context.l10n.categoriesReviewEmpty,
       style: AppTypography.bodySmall.copyWith(color: context.colors.alert),
     ),
     AsyncData(:final value) => Wrap(
@@ -445,7 +449,7 @@ class _SetupUnavailable extends StatelessWidget {
     icon: CupertinoIcons.house,
     title: title,
     message: message,
-    actionLabel: 'Reintentar',
+    actionLabel: context.l10n.commonRetry,
     onAction: onRetry,
   );
 }
@@ -471,16 +475,15 @@ class _ErrorCard extends StatelessWidget {
   );
 }
 
-String _setupErrorMessage(Object error) {
+String _setupErrorMessage(AppLocalizations l10n, Object error) {
   final code = error is ServerException ? error.code : null;
   return switch (code) {
-    'invalid_household_name' =>
-      'Escribe un nombre válido de hasta 80 caracteres.',
-    'invalid_currency' => 'Selecciona una moneda válida.',
-    'not_household_owner' => 'Sólo quien creó este hogar puede configurarlo.',
+    'invalid_household_name' => l10n.commonInvalidNameMax80,
+    'invalid_currency' => l10n.commonInvalidCurrency,
+    'not_household_owner' => l10n.householdSetupErrorNotOwner,
     'currency_change_requires_empty_household' =>
-      'Este hogar ya tiene importes. Cambiar la moneda podría reinterpretarlos, así que conservamos la moneda actual.',
-    'authentication_required' => 'Inicia sesión para continuar.',
-    _ => 'No pudimos guardar el hogar. Inténtalo de nuevo.',
+      l10n.householdSetupErrorCurrencyLocked,
+    'authentication_required' => l10n.commonSignInToContinue,
+    _ => l10n.householdSetupErrorGeneric,
   };
 }

@@ -149,5 +149,254 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "commonRetry": "Retry",
+  "commonSaveChanges": "Save changes",
+  "commonSignInToContinue": "Sign in to continue.",
+  "commonCheckConnection": "Check your connection and try again.",
+  "commonInvalidNameMax80": "Enter a valid name up to 80 characters.",
+  "commonInvalidCurrency": "Select a valid currency.",
+  "commonInvalidEmail": "Invalid email.",
+
+  "authResetPasswordTitle": "Reset password",
+  "authSignUpConfirmEmailInfo": "We sent you an email to confirm your account. Open it and come back to sign in.",
+  "authResetLinkSentInfo": "If the email is registered, we sent a link to reset your password.",
+  "authCreateAccountTitle": "Create your account",
+  "authReviewInvitationTitle": "Sign in to review your invitation",
+  "authWelcomeBackTitle": "Welcome back",
+  "authPendingInvitationHint": "Use the email the invitation was sent to. We'll continue automatically once you sign in.",
+  "authNameHint": "Your name",
+  "authEmailHint": "Email",
+  "authPasswordHint": "Password",
+  "authConfirmPasswordHint": "Confirm password",
+  "authForgotPassword": "Forgot your password?",
+  "authCreateAccountCta": "Create account",
+  "authSignInCta": "Sign in",
+  "authToggleToSignIn": "Already have an account? Sign in",
+  "authToggleToSignUp": "No account? Sign up",
+  "authNameRequired": "Enter your name.",
+  "authEmailRequired": "Enter your email.",
+  "authPasswordRequired": "Enter your password.",
+  "authPasswordTooShort": "At least 6 characters.",
+  "authPasswordsDontMatch": "Passwords don't match.",
+  "authForgotPasswordBody": "Enter your email and we'll send you a link to create a new password.",
+  "authSendLink": "Send link",
+
+  "resetPasswordUpdated": "Password updated.",
+  "resetPasswordTitle": "Create a new password",
+  "resetPasswordBody": "Choose a new password for your account. You'll be signed in automatically once you save it.",
+  "resetPasswordNewLabel": "New password",
+  "resetPasswordNewRequired": "Enter your new password.",
+  "resetPasswordSave": "Save password",
+
+  "onboardingSlide1Title": "Spot money leaks",
+  "onboardingSlide1Body": "Those small, sneaky expenses that slip by unnoticed. leakless makes them visible so you regain control.",
+  "onboardingSlide2Title": "Track spending together",
+  "onboardingSlide2Body": "A shared, real-time ledger. When one of you spends, you both know instantly.",
+  "onboardingSlide3Title": "Save together with clear goals",
+  "onboardingSlide3Body": "Set goals, watch the liquid progress fill up, and celebrate every contribution toward the future you want.",
+  "onboardingSkip": "Skip",
+  "onboardingStart": "Get started",
+  "onboardingNext": "Next",
+
+  "householdSetupPartnerEmailInvalid": "Enter a valid email for your partner.",
+  "householdSetupInvitationFailed": "We saved the household, but couldn't create the invitation. {error}",
+  "@householdSetupInvitationFailed": {
+    "description": "Shown when the household saved but the partner invitation could not be created",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "householdSetupTitle": "Set up household",
+  "householdSetupPreparing": "Preparing your household…",
+  "householdSetupLoadErrorTitle": "We couldn't load your household",
+  "householdSetupNoHouseholdTitle": "Your account doesn't have a household yet",
+  "householdSetupNoHouseholdMessage": "We won't show financial data until we recover a valid household.",
+  "householdSetupWaitingOwnerTitle": "Waiting for the owner",
+  "householdSetupWaitingOwnerMessage": "The person who created this household must complete the name and currency. We'll update this once they're done.",
+  "householdSetupHeroTitle": "Let's make this household yours",
+  "householdSetupHeroSubtitle": "Set up the shared basics. You can adjust them later.",
+  "householdNameLabel": "Household name",
+  "householdNameHint": "Our home",
+  "householdNameRequired": "Enter a name for the household.",
+  "householdCurrencyLabel": "Primary currency",
+  "householdCurrencyNote": "The currency can only change while the household has no saved amounts.",
+  "householdSetupStep2Title": "Starter categories",
+  "householdSetupStep2Subtitle": "These categories are ready to record expenses.",
+  "householdSetupStep3Title": "Your partner",
+  "householdSetupStep3Subtitle": "The invitation is optional. You can do it later from Settings.",
+  "householdPartnerEmailLabel": "Your partner's email",
+  "householdPartnerEmailHint": "partner@email.com",
+  "householdSetupSaveAndInvite": "Save and invite",
+  "householdSetupContinueWithoutInvite": "Continue without inviting",
+  "categoriesReviewLoadError": "We couldn't load the categories. Retry before continuing.",
+  "categoriesReviewEmpty": "We couldn't find any starter categories.",
+  "householdSetupErrorNotOwner": "Only the person who created this household can set it up.",
+  "householdSetupErrorCurrencyLocked": "This household already has amounts. Changing the currency could reinterpret them, so we're keeping the current currency.",
+  "householdSetupErrorGeneric": "We couldn't save the household. Try again.",
+
+  "invitationShareSubject": "Invitation to our leakless household",
+  "invitationShareText": "Join our household on leakless.\n\n{link}\n\nIf the link doesn't open, paste this code:\n{code}",
+  "@invitationShareText": {
+    "description": "Share-sheet body when inviting a partner",
+    "placeholders": {
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationShareFailed": "We couldn't open the share menu.",
+  "invitationsTitle": "Invite your partner",
+  "invitationsNoHousehold": "We couldn't find an active household to invite to.",
+  "invitationsNotOwner": "Only the person who created this household can send invitations.",
+  "invitationEmailRequired": "Enter their email.",
+  "invitationCreate": "Create invitation",
+  "invitationLinkCopied": "Link copied.",
+  "invitationCodeCopied": "Code copied.",
+  "invitationHaveCode": "I have an invitation code",
+  "invitationsIntroTitleFallback": "Share the household",
+  "invitationsIntroSubtitle": "Generate a one-time link. It only works with the email you specify.",
+  "invitationExpiresOn": "Expires on {date}",
+  "@invitationExpiresOn": {
+    "description": "When a shared invitation expires",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationTitle": "Invitation",
+  "invitationShare": "Share invitation",
+  "invitationCopyLink": "Copy link",
+  "invitationCopyCode": "Copy code",
+  "invitationRevoke": "Revoke invitation",
+  "invitationNoLongerShareable": "This code can no longer be shared.",
+  "invitationStatusPending": "Pending",
+  "invitationStatusAccepted": "Accepted",
+  "invitationStatusCancelled": "Revoked",
+  "invitationStatusExpired": "Expired",
+
+  "invitationCodeInvalidFormat": "The code must have 64 hexadecimal characters.",
+  "invitationExpiredMessage": "The invitation has expired.",
+  "invitationCancelledMessage": "The invitation was revoked.",
+  "invitationAlreadyUsedMessage": "This invitation has already been used.",
+  "invitationPersistenceFailed": "Keep the app open: we couldn't securely save the attempt.",
+  "invitationOpenFailed": "We couldn't open this invitation.",
+  "invitationSuccessHeroTitle": "You're now connected",
+  "invitationHeroTitle": "One household, shared by two",
+  "invitationPasteCodeTitle": "Paste your code",
+  "invitationPasteCodeSubtitle": "You can open the link or paste the code you were given here.",
+  "invitationCodeFieldHint": "64-character code",
+  "invitationReview": "Review invitation",
+  "invitationHouseholdFallback": "Shared household",
+  "invitationInviterInvited": "{inviter} invited you to share this household.",
+  "@invitationInviterInvited": {
+    "description": "Preview subtitle naming who sent the invitation",
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationInviterFallback": "Your partner",
+  "invitationValidUntil": "Valid until {date}",
+  "@invitationValidUntil": {
+    "description": "Invitation validity deadline in the recipient preview",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invitationAcceptJoin": "Accept and join",
+  "invitationNotNow": "Not now",
+  "invitationUseAnotherAccount": "Use another account",
+  "invitationDiscard": "Discard invitation",
+  "invitationAlreadyMember": "You already belonged to this household.",
+  "invitationAcceptedSuccess": "The invitation was accepted. You can now see your shared finances.",
+  "invitationGoHome": "Go to home",
+
+  "profileImageTooLarge": "The image is too large. Try another one.",
+  "profileUpdated": "Profile updated.",
+  "profileChangeAvatarTitle": "Change avatar",
+  "profileEditTitle": "Edit profile",
+  "profileLoading": "Loading your profile…",
+  "profileLoadErrorTitle": "We couldn't load your profile",
+  "profileNoProfileTitle": "No profile",
+  "profileNoProfileMessage": "Sign in again to edit your profile.",
+  "profileNameLabel": "Display name",
+  "profileNameHint": "How your partner sees you",
+  "profileNameRequired": "Enter a display name.",
+  "profileCurrencyLabel": "Currency",
+  "profileAvatarFailed": "We couldn't use that image. Try again.",
+  "profileErrorGeneric": "We couldn't save the changes. Try again.",
+  "pickerErrorPhotoAccessDenied": "Allow photo access in Settings to choose an avatar.",
+  "pickerErrorCameraAccessDenied": "Allow camera access in Settings to take a photo.",
+  "pickerErrorGeneric": "We couldn't open the image picker. Try again.",
+
+  "dashboardLoading": "Loading your dashboard…",
+  "dashboardLoadErrorTitle": "We couldn't load the dashboard",
+  "dashboardLoadErrorMessage": "Try again in a moment.",
+  "dashboardAvailableBalance": "Available balance",
+  "dashboardRecentActivity": "Recent activity",
+  "dashboardSeeAll": "See all",
+  "dashboardSavingsRate": "Real savings rate",
+  "dashboardRecurringExpenses": "Recurring expenses",
+  "dashboardLimitAlerts": "Limit alerts",
+  "dashboardSavingsRateShort": "savings rate",
+  "dashboardLeak": "Leak {amount}",
+
+  "transactionsLoadError": "We couldn't load the history",
+  "transactionsEmptyTitle": "No transactions",
+  "transactionsEmptyMessage": "Adjust the filters or record your first expense.",
+  "transactionFallbackTitle": "Transaction",
+
+  "errorAuthSession": "We couldn't verify your session.",
+  "errorNetwork": "Check your internet connection.",
+  "errorNotFound": "We couldn't find what you were looking for.",
+  "errorServer": "Something went wrong on the server. Try again.",
+  "errorUnexpected": "An unexpected error occurred.",
+
+  "authErrorInvalidCredentials": "Incorrect email or password.",
+  "authErrorEmailNotConfirmed": "Confirm your email before signing in. Check your inbox.",
+  "authErrorEmailExists": "An account with this email already exists. Sign in.",
+  "authErrorWeakPassword": "The password is too weak. Use at least 6 characters.",
+  "authErrorSamePassword": "The new password must be different from the previous one.",
+  "authErrorInvalidEmail": "The email isn't valid.",
+  "authErrorSignupDisabled": "Sign-up is disabled for now.",
+  "authErrorRateLimit": "Too many attempts. Wait a moment and try again.",
+  "authErrorGeneric": "We couldn't complete the operation. Try again.",
+  "authErrorUnexpected": "An unexpected error occurred. Try again.",
+
+  "invitationErrorInvalidEmail": "Enter a valid email.",
+  "invitationErrorInvalidExpiry": "The invitation duration isn't valid.",
+  "invitationErrorCannotInviteSelf": "You can't invite your own email.",
+  "invitationErrorNotOwner": "Only the person who created this household can invite.",
+  "invitationErrorAlreadyMember": "That person already belongs to this household.",
+  "invitationErrorInvalidToken": "The invitation link or code isn't valid.",
+  "invitationErrorEmailMismatch": "This invitation was sent to a different email. Use that account to continue.",
+  "invitationErrorNotFound": "We couldn't find this invitation.",
+  "invitationErrorAcceptedCannotCancel": "An accepted invitation can no longer be revoked.",
+  "invitationErrorHouseholdNotEmpty": "Your current household has data. We can't move it automatically.",
+  "invitationErrorProfileNotFound": "We couldn't find your profile. Try again.",
+  "invitationErrorGeneric": "We couldn't complete the invitation. Try again.",
+
+  "currencyCAD": "Canadian dollar",
+  "currencyUSD": "US dollar",
+  "currencyEUR": "Euro",
+  "currencyMXN": "Mexican peso",
+  "currencyCOP": "Colombian peso",
+  "currencyARS": "Argentine peso",
+  "currencyCLP": "Chilean peso",
+  "currencyPEN": "Peruvian sol",
+  "currencyBRL": "Brazilian real",
+  "currencyGBP": "Pound sterling",
+  "currencyJPY": "Japanese yen",
+  "currencyCHF": "Swiss franc"
 }

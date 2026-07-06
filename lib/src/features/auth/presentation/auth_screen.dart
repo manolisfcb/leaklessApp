@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../household/application/invitation_intent_controller.dart';
@@ -74,9 +75,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       if (!mounted) return;
       if (outcome == SignUpOutcome.emailConfirmationRequired) {
         setState(() {
-          _info =
-              'Te enviamos un correo para confirmar tu cuenta. Ábrelo y '
-              'vuelve para iniciar sesión.';
+          _info = context.l10n.authSignUpConfirmEmailInfo;
           _isSignUp = false;
           _confirm.clear();
         });
@@ -90,14 +89,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Future<void> _openForgotPassword() async {
     final sent = await GlassBottomSheet.show<bool>(
       context,
-      title: 'Restablecer contraseña',
+      title: context.l10n.authResetPasswordTitle,
       builder: (_) => _ForgotPasswordSheet(initialEmail: _email.text.trim()),
     );
     if (sent == true && mounted) {
       setState(() {
-        _info =
-            'Si el correo está registrado, te enviamos un enlace para '
-            'restablecer tu contraseña.';
+        _info = context.l10n.authResetLinkSentInfo;
       });
     }
   }
@@ -105,6 +102,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
     final state = ref.watch(authControllerProvider);
     final hasPendingInvitation =
         ref.watch(invitationIntentControllerProvider).token != null;
@@ -140,10 +138,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 AppSpacing.gapXs,
                 Text(
                   _isSignUp
-                      ? 'Crea tu cuenta'
+                      ? l10n.authCreateAccountTitle
                       : hasPendingInvitation
-                      ? 'Entra para revisar tu invitación'
-                      : 'Bienvenido de vuelta',
+                      ? l10n.authReviewInvitationTitle
+                      : l10n.authWelcomeBackTitle,
                   style: AppTypography.bodyLarge.copyWith(
                     color: colors.textSecondary,
                   ),
@@ -159,8 +157,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         AppSpacing.gapMd,
                         Expanded(
                           child: Text(
-                            'Usa el correo al que enviaron la invitación. '
-                            'Continuaremos automáticamente al entrar.',
+                            l10n.authPendingInvitationHint,
                             style: AppTypography.bodySmall,
                           ),
                         ),
@@ -175,7 +172,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       if (_isSignUp) ...[
                         _GlassField(
                           controller: _name,
-                          hint: 'Tu nombre',
+                          hint: l10n.authNameHint,
                           icon: CupertinoIcons.person,
                           textInputAction: TextInputAction.next,
                           textCapitalization: TextCapitalization.words,
@@ -186,7 +183,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       ],
                       _GlassField(
                         controller: _email,
-                        hint: 'Correo electrónico',
+                        hint: l10n.authEmailHint,
                         icon: CupertinoIcons.mail,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -199,7 +196,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       AppSpacing.gapMd,
                       _GlassField(
                         controller: _password,
-                        hint: 'Contraseña',
+                        hint: l10n.authPasswordHint,
                         icon: CupertinoIcons.lock,
                         obscure: _obscurePassword,
                         textInputAction: _isSignUp
@@ -221,7 +218,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         AppSpacing.gapMd,
                         _GlassField(
                           controller: _confirm,
-                          hint: 'Confirmar contraseña',
+                          hint: l10n.authConfirmPasswordHint,
                           icon: CupertinoIcons.lock_shield,
                           obscure: _obscureConfirm,
                           textInputAction: TextInputAction.done,
@@ -246,7 +243,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     child: TextButton(
                       onPressed: loading ? null : _openForgotPassword,
                       child: Text(
-                        '¿Olvidaste tu contraseña?',
+                        l10n.authForgotPassword,
                         style: AppTypography.labelLarge.copyWith(
                           color: colors.textSecondary,
                         ),
@@ -263,7 +260,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ],
                 AppSpacing.gapXl,
                 GlassButton(
-                  label: _isSignUp ? 'Crear cuenta' : 'Iniciar sesión',
+                  label: _isSignUp ? l10n.authCreateAccountCta : l10n.authSignInCta,
                   loading: loading,
                   onPressed: loading ? null : _submit,
                 ),
@@ -272,8 +269,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   onPressed: loading ? null : _toggleMode,
                   child: Text(
                     _isSignUp
-                        ? '¿Ya tienes cuenta? Inicia sesión'
-                        : '¿Sin cuenta? Regístrate',
+                        ? l10n.authToggleToSignIn
+                        : l10n.authToggleToSignUp,
                     style: AppTypography.labelLarge.copyWith(
                       color: colors.primary,
                     ),
@@ -288,26 +285,26 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   String? _validateName(String? value) {
-    if ((value ?? '').trim().isEmpty) return 'Escribe tu nombre.';
+    if ((value ?? '').trim().isEmpty) return context.l10n.authNameRequired;
     return null;
   }
 
   String? _validateEmail(String? value) {
     final email = (value ?? '').trim();
-    if (email.isEmpty) return 'Escribe tu correo.';
-    if (!_emailRegExp.hasMatch(email)) return 'Correo no válido.';
+    if (email.isEmpty) return context.l10n.authEmailRequired;
+    if (!_emailRegExp.hasMatch(email)) return context.l10n.commonInvalidEmail;
     return null;
   }
 
   String? _validatePassword(String? value) {
     final password = value ?? '';
-    if (password.isEmpty) return 'Escribe tu contraseña.';
-    if (password.length < 6) return 'Mínimo 6 caracteres.';
+    if (password.isEmpty) return context.l10n.authPasswordRequired;
+    if (password.length < 6) return context.l10n.authPasswordTooShort;
     return null;
   }
 
   String? _validateConfirm(String? value) {
-    if (value != _password.text) return 'Las contraseñas no coinciden.';
+    if (value != _password.text) return context.l10n.authPasswordsDontMatch;
     return null;
   }
 }
@@ -361,6 +358,7 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
     return Form(
       key: _formKey,
       child: Column(
@@ -368,8 +366,7 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Escribe tu correo y te enviaremos un enlace para crear una nueva '
-            'contraseña.',
+            l10n.authForgotPasswordBody,
             style: AppTypography.bodyMedium.copyWith(
               color: colors.textSecondary,
             ),
@@ -377,7 +374,7 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
           AppSpacing.gapLg,
           _GlassField(
             controller: _email,
-            hint: 'Correo electrónico',
+            hint: l10n.authEmailHint,
             icon: CupertinoIcons.mail,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,
@@ -386,8 +383,8 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
             onSubmitted: (_) => _send(),
             validator: (value) {
               final email = (value ?? '').trim();
-              if (email.isEmpty) return 'Escribe tu correo.';
-              if (!_emailRegExp.hasMatch(email)) return 'Correo no válido.';
+              if (email.isEmpty) return l10n.authEmailRequired;
+              if (!_emailRegExp.hasMatch(email)) return l10n.commonInvalidEmail;
               return null;
             },
           ),
@@ -397,7 +394,7 @@ class _ForgotPasswordSheetState extends ConsumerState<_ForgotPasswordSheet> {
           ],
           AppSpacing.gapLg,
           GlassButton(
-            label: 'Enviar enlace',
+            label: l10n.authSendLink,
             loading: _loading,
             onPressed: _loading ? null : _send,
           ),

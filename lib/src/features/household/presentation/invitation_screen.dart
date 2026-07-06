@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/errors/app_exception.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../domain/enums/household_invitation_status.dart';
@@ -60,7 +61,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
     if (token == null) {
       setState(() {
         _view = _InvitationView.error;
-        _error = 'El código debe tener 64 caracteres hexadecimales.';
+        _error = context.l10n.invitationCodeInvalidFormat;
         _errorCode = 'invalid_invitation_token';
       });
       return;
@@ -99,10 +100,12 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
           : _InvitationView.error;
       if (_view == _InvitationView.error) {
         _error = switch (result.status) {
-          HouseholdInvitationStatus.expired => 'La invitación ha vencido.',
-          HouseholdInvitationStatus.cancelled => 'La invitación fue revocada.',
+          HouseholdInvitationStatus.expired =>
+            context.l10n.invitationExpiredMessage,
+          HouseholdInvitationStatus.cancelled =>
+            context.l10n.invitationCancelledMessage,
           HouseholdInvitationStatus.accepted =>
-            'Esta invitación ya fue utilizada.',
+            context.l10n.invitationAlreadyUsedMessage,
           HouseholdInvitationStatus.pending => null,
         };
       }
@@ -161,11 +164,12 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final intent = ref.watch(invitationIntentControllerProvider);
     if (intent.token case final token?) _scheduleInspection(token);
 
     return GlassScaffold(
-      appBar: AppBar(title: const Text('Invitación')),
+      appBar: AppBar(title: Text(l10n.invitationTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.lg,
@@ -177,10 +181,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
           _InvitationHero(view: _view),
           AppSpacing.gapXl,
           if (intent.persistenceFailed && intent.token != null) ...[
-            const _InlineNotice(
-              message:
-                  'Mantén la app abierta: no pudimos guardar el intento de forma segura.',
-            ),
+            _InlineNotice(message: l10n.invitationPersistenceFailed),
             AppSpacing.gapLg,
           ],
           switch (_view) {
@@ -200,7 +201,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
               onReject: _discard,
             ),
             _InvitationView.error => _ErrorCard(
-              message: _error ?? 'No pudimos abrir esta invitación.',
+              message: _error ?? l10n.invitationOpenFailed,
               emailMismatch: _errorCode == 'invitation_email_mismatch',
               onUseAnotherAccount: _useAnotherAccount,
               onDiscard: _discard,
@@ -243,7 +244,9 @@ class _InvitationHero extends StatelessWidget {
         ),
         AppSpacing.gapLg,
         Text(
-          success ? 'Ya están conectados' : 'Un hogar, entre dos',
+          success
+              ? context.l10n.invitationSuccessHeroTitle
+              : context.l10n.invitationHeroTitle,
           style: AppTypography.headlineMedium,
           textAlign: TextAlign.center,
         ),
@@ -259,43 +262,46 @@ class _CodeCard extends StatelessWidget {
   final VoidCallback onSubmit;
 
   @override
-  Widget build(BuildContext context) => GlassCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Pega tu código', style: AppTypography.titleLarge),
-        AppSpacing.gapSm,
-        Text(
-          'Puedes abrir el enlace o pegar aquí el código que te compartieron.',
-          style: AppTypography.bodyMedium.copyWith(
-            color: context.colors.textSecondary,
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.invitationPasteCodeTitle, style: AppTypography.titleLarge),
+          AppSpacing.gapSm,
+          Text(
+            l10n.invitationPasteCodeSubtitle,
+            style: AppTypography.bodyMedium.copyWith(
+              color: context.colors.textSecondary,
+            ),
           ),
-        ),
-        AppSpacing.gapLg,
-        TextField(
-          controller: controller,
-          autocorrect: false,
-          enableSuggestions: false,
-          textInputAction: TextInputAction.done,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp('[a-fA-F0-9]')),
-            LengthLimitingTextInputFormatter(64),
-          ],
-          decoration: const InputDecoration(
-            hintText: 'Código de 64 caracteres',
-            prefixIcon: Icon(CupertinoIcons.number),
+          AppSpacing.gapLg,
+          TextField(
+            controller: controller,
+            autocorrect: false,
+            enableSuggestions: false,
+            textInputAction: TextInputAction.done,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp('[a-fA-F0-9]')),
+              LengthLimitingTextInputFormatter(64),
+            ],
+            decoration: InputDecoration(
+              hintText: l10n.invitationCodeFieldHint,
+              prefixIcon: const Icon(CupertinoIcons.number),
+            ),
+            onSubmitted: (_) => onSubmit(),
           ),
-          onSubmitted: (_) => onSubmit(),
-        ),
-        AppSpacing.gapLg,
-        GlassButton(
-          label: 'Revisar invitación',
-          icon: CupertinoIcons.arrow_right,
-          onPressed: onSubmit,
-        ),
-      ],
-    ),
-  );
+          AppSpacing.gapLg,
+          GlassButton(
+            label: l10n.invitationReview,
+            icon: CupertinoIcons.arrow_right,
+            onPressed: onSubmit,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _PreviewCard extends StatelessWidget {
@@ -311,24 +317,28 @@ class _PreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final localeName = Localizations.localeOf(context).toString();
     final expires = invitation.expiresAt == null
         ? null
-        : DateFormat(
-            "d 'de' MMMM, HH:mm",
-          ).format(invitation.expiresAt!.toLocal());
+        : DateFormat.MMMMd(localeName)
+              .add_Hm()
+              .format(invitation.expiresAt!.toLocal());
     return GlassCard(
       strong: true,
       gradientGlow: context.colors.goal,
       child: Column(
         children: [
           Text(
-            invitation.householdName ?? 'Hogar compartido',
+            invitation.householdName ?? l10n.invitationHouseholdFallback,
             style: AppTypography.headlineMedium,
             textAlign: TextAlign.center,
           ),
           AppSpacing.gapSm,
           Text(
-            '${invitation.inviterDisplayName ?? 'Tu pareja'} te invitó a compartir este hogar.',
+            l10n.invitationInviterInvited(
+              invitation.inviterDisplayName ?? l10n.invitationInviterFallback,
+            ),
             style: AppTypography.bodyLarge.copyWith(
               color: context.colors.textSecondary,
             ),
@@ -342,18 +352,18 @@ class _PreviewCard extends StatelessWidget {
             AppSpacing.gapSm,
             _DetailRow(
               icon: CupertinoIcons.clock,
-              text: 'Válida hasta $expires',
+              text: l10n.invitationValidUntil(expires),
             ),
           ],
           AppSpacing.gapXl,
           GlassButton(
-            label: 'Aceptar y unirme',
+            label: l10n.invitationAcceptJoin,
             icon: CupertinoIcons.check_mark,
             onPressed: onAccept,
           ),
           AppSpacing.gapSm,
           GlassButton(
-            label: 'Ahora no',
+            label: l10n.invitationNotNow,
             variant: GlassButtonVariant.glass,
             onPressed: onReject,
           ),
@@ -418,14 +428,14 @@ class _ErrorCard extends StatelessWidget {
         if (emailMismatch) ...[
           AppSpacing.gapLg,
           GlassButton(
-            label: 'Usar otra cuenta',
+            label: context.l10n.invitationUseAnotherAccount,
             icon: CupertinoIcons.person_crop_circle_badge_xmark,
             onPressed: onUseAnotherAccount,
           ),
         ],
         AppSpacing.gapSm,
         GlassButton(
-          label: 'Descartar invitación',
+          label: context.l10n.invitationDiscard,
           variant: GlassButtonVariant.glass,
           accent: context.colors.expense,
           onPressed: onDiscard,
@@ -448,14 +458,14 @@ class _SuccessCard extends StatelessWidget {
       children: [
         Text(
           alreadyAccepted
-              ? 'Ya pertenecías a este hogar.'
-              : 'La invitación fue aceptada. Ya pueden ver sus finanzas compartidas.',
+              ? context.l10n.invitationAlreadyMember
+              : context.l10n.invitationAcceptedSuccess,
           style: AppTypography.bodyLarge,
           textAlign: TextAlign.center,
         ),
         AppSpacing.gapXl,
         GlassButton(
-          label: 'Ir al inicio',
+          label: context.l10n.invitationGoHome,
           icon: CupertinoIcons.house_fill,
           accent: context.colors.income,
           onPressed: onContinue,

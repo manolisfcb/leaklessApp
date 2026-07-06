@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../application/auth_error_message.dart';
@@ -45,7 +46,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     if (!mounted) return;
     if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Contraseña actualizada.')),
+        SnackBar(content: Text(context.l10n.resetPasswordUpdated)),
       );
       // Recovery flag is cleared by the controller; the router redirects away.
     }
@@ -60,6 +61,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
     final state = ref.watch(resetPasswordControllerProvider);
     final loading = state.isLoading;
     final errorMessage = state.hasError ? authErrorMessage(state.error!) : null;
@@ -78,14 +80,13 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 Icon(CupertinoIcons.lock_rotation, size: 56, color: colors.primary),
                 AppSpacing.gapLg,
                 Text(
-                  'Crea una nueva contraseña',
+                  l10n.resetPasswordTitle,
                   style: AppTypography.titleLarge,
                   textAlign: TextAlign.center,
                 ),
                 AppSpacing.gapXs,
                 Text(
-                  'Elige una contraseña nueva para tu cuenta. Al guardarla '
-                  'entrarás automáticamente.',
+                  l10n.resetPasswordBody,
                   style: AppTypography.bodyMedium.copyWith(
                     color: colors.textSecondary,
                   ),
@@ -102,7 +103,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                         textInputAction: TextInputAction.next,
                         autofillHints: const [AutofillHints.newPassword],
                         decoration: InputDecoration(
-                          labelText: 'Nueva contraseña',
+                          labelText: l10n.resetPasswordNewLabel,
                           prefixIcon: const Icon(CupertinoIcons.lock),
                           suffixIcon: IconButton(
                             onPressed: () => setState(
@@ -126,7 +127,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                         textInputAction: TextInputAction.done,
                         autofillHints: const [AutofillHints.newPassword],
                         decoration: InputDecoration(
-                          labelText: 'Confirmar contraseña',
+                          labelText: l10n.authConfirmPasswordHint,
                           prefixIcon: const Icon(CupertinoIcons.lock_shield),
                           suffixIcon: IconButton(
                             onPressed: () => setState(
@@ -141,7 +142,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           ),
                         ),
                         validator: (value) => value != _password.text
-                            ? 'Las contraseñas no coinciden.'
+                            ? l10n.authPasswordsDontMatch
                             : null,
                         onFieldSubmitted: (_) => _submit(),
                       ),
@@ -171,7 +172,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 ],
                 AppSpacing.gapXl,
                 GlassButton(
-                  label: 'Guardar contraseña',
+                  label: l10n.resetPasswordSave,
                   loading: loading,
                   onPressed: loading ? null : _submit,
                 ),
@@ -179,7 +180,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 TextButton(
                   onPressed: loading ? null : _cancel,
                   child: Text(
-                    'Cancelar',
+                    l10n.commonCancel,
                     style: AppTypography.labelLarge.copyWith(
                       color: colors.textSecondary,
                     ),
@@ -195,8 +196,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   String? _validatePassword(String? value) {
     final password = value ?? '';
-    if (password.isEmpty) return 'Escribe tu nueva contraseña.';
-    if (password.length < 6) return 'Mínimo 6 caracteres.';
+    if (password.isEmpty) return context.l10n.resetPasswordNewRequired;
+    if (password.length < 6) return context.l10n.authPasswordTooShort;
     return null;
   }
 }
