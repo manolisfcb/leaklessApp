@@ -24,12 +24,36 @@ abstract final class SubscriptionMapper {
         row['status'],
         SubscriptionStatus.active,
       ),
+      frequency: _enumByName(
+        SubscriptionFrequency.values,
+        row['frequency'],
+        SubscriptionFrequency.monthly,
+      ),
       nextChargeAt: _parseDate(row['next_charge_at']),
       categoryId: row['category_id'] as String?,
+      reminderEnabled: (row['reminder_enabled'] as bool?) ?? false,
+      reminderDaysBefore: (row['reminder_days_before'] as num?)?.toInt() ?? 1,
       createdAt: _parseDate(row['created_at']),
       updatedAt: _parseDate(row['updated_at']),
     );
   }
+
+  static Map<String, dynamic> toInsert(SubscriptionItem item) => {
+    'household_id': item.householdId,
+    ...toUpdate(item),
+  };
+
+  static Map<String, dynamic> toUpdate(SubscriptionItem item) => {
+    'name': item.name,
+    'amount': item.amount.major,
+    'currency': item.amount.currency,
+    'status': item.status.name,
+    'frequency': item.frequency.name,
+    'next_charge_at': item.nextChargeAt?.toUtc().toIso8601String(),
+    'category_id': item.categoryId,
+    'reminder_enabled': item.reminderEnabled,
+    'reminder_days_before': item.reminderDaysBefore,
+  };
 
   static T _enumByName<T extends Enum>(List<T> values, Object? raw, T fallback) {
     final name = raw as String?;

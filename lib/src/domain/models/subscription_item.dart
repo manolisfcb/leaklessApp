@@ -15,8 +15,11 @@ abstract class SubscriptionItem with _$SubscriptionItem {
     required String name,
     required Money amount,
     @Default(SubscriptionStatus.active) SubscriptionStatus status,
+    @Default(SubscriptionFrequency.monthly) SubscriptionFrequency frequency,
     DateTime? nextChargeAt,
     String? categoryId,
+    @Default(false) bool reminderEnabled,
+    @Default(1) int reminderDaysBefore,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _SubscriptionItem;
