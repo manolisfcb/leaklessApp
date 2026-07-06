@@ -1069,9 +1069,112 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insightsTitle => 'Dashboard';
 
   @override
-  String get insightsComingSoonTitle => 'Em breve';
+  String get insightsLoading => 'Carregando suas estatísticas…';
 
   @override
-  String get insightsComingSoonMessage =>
-      'Estamos preparando suas estatísticas e tendências de gastos.';
+  String get insightsErrorTitle => 'Não conseguimos carregar suas estatísticas';
+
+  @override
+  String get insightsErrorMessage => 'Verifique sua conexão e tente novamente.';
+
+  @override
+  String get insightsRetry => 'Tentar de novo';
+
+  @override
+  String get insightsEmptyTitle => 'Ainda não há gastos';
+
+  @override
+  String get insightsEmptyMessage =>
+      'Registre seu primeiro gasto para ver as estatísticas do mês.';
+
+  @override
+  String get insightsEmptyAction => 'Registrar um gasto';
+
+  @override
+  String get insightsMonthSummaryTitle => 'Resumo do mês';
+
+  @override
+  String get insightsSpentLabel => 'Gasto neste mês';
+
+  @override
+  String insightsOfBudget(String budget) {
+    return 'de $budget';
+  }
+
+  @override
+  String insightsBudgetUsed(int percent) {
+    return '$percent% usado';
+  }
+
+  @override
+  String insightsRemaining(String amount) {
+    return 'Restam $amount';
+  }
+
+  @override
+  String insightsOverBudgetBy(String amount) {
+    return 'Você passou $amount';
+  }
+
+  @override
+  String get insightsNoBudgetNote =>
+      'Você ainda não definiu um orçamento este mês. Crie um para acompanhar seu ritmo.';
+
+  @override
+  String get insightsCreateBudget => 'Criar orçamento';
+
+  @override
+  String get insightsStatusOnTrack => 'Você está em dia com seu orçamento.';
+
+  @override
+  String get insightsStatusAhead =>
+      'Você está abaixo do ritmo previsto. Muito bem!';
+
+  @override
+  String get insightsStatusAtRisk =>
+      'Você está gastando mais rápido do que o previsto.';
+
+  @override
+  String get insightsStatusOver => 'Você ultrapassou o orçamento do mês.';
+
+  @override
+  String get insightsPaceTitle => 'Ritmo de gasto';
+
+  @override
+  String get insightsPaceExpected => 'Esperado até hoje';
+
+  @override
+  String get insightsPaceActual => 'Gasto até hoje';
+
+  @override
+  String insightsPaceAhead(String amount) {
+    return 'Você está $amount abaixo do ritmo.';
+  }
+
+  @override
+  String insightsPaceBehind(String amount) {
+    return 'Você está $amount acima do ritmo.';
+  }
+
+  @override
+  String get insightsPaceOnPace => 'Exatamente no ritmo previsto.';
+
+  @override
+  String insightsPaceReduce(String amount) {
+    return 'Reduza $amount para fechar dentro do orçamento.';
+  }
+
+  @override
+  String get insightsCategoriesTitle => 'Gasto por categoria';
+
+  @override
+  String insightsCategoryShare(int percent) {
+    return '$percent% do total';
+  }
+
+  @override
+  String get insightsCategoryUnnamed => 'Categoria';
+
+  @override
+  String get quickEntryTitle => 'Registro rápido';
 }

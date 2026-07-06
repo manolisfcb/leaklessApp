@@ -403,6 +403,102 @@
   "currencyCHF": "Franco suíço",
 
   "insightsTitle": "Dashboard",
-  "insightsComingSoonTitle": "Em breve",
-  "insightsComingSoonMessage": "Estamos preparando suas estatísticas e tendências de gastos."
+  "insightsLoading": "Carregando suas estatísticas…",
+  "insightsErrorTitle": "Não conseguimos carregar suas estatísticas",
+  "insightsErrorMessage": "Verifique sua conexão e tente novamente.",
+  "insightsRetry": "Tentar de novo",
+  "insightsEmptyTitle": "Ainda não há gastos",
+  "insightsEmptyMessage": "Registre seu primeiro gasto para ver as estatísticas do mês.",
+  "insightsEmptyAction": "Registrar um gasto",
+
+  "insightsMonthSummaryTitle": "Resumo do mês",
+  "insightsSpentLabel": "Gasto neste mês",
+  "insightsOfBudget": "de {budget}",
+  "@insightsOfBudget": {
+    "description": "Shows the total monthly budget next to what has been spent",
+    "placeholders": {
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsBudgetUsed": "{percent}% usado",
+  "@insightsBudgetUsed": {
+    "description": "Percentage of the total monthly budget consumed",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsRemaining": "Restam {amount}",
+  "@insightsRemaining": {
+    "description": "Remaining amount of the monthly budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsOverBudgetBy": "Você passou {amount}",
+  "@insightsOverBudgetBy": {
+    "description": "How much the month is over its total budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsNoBudgetNote": "Você ainda não definiu um orçamento este mês. Crie um para acompanhar seu ritmo.",
+  "insightsCreateBudget": "Criar orçamento",
+  "insightsStatusOnTrack": "Você está em dia com seu orçamento.",
+  "insightsStatusAhead": "Você está abaixo do ritmo previsto. Muito bem!",
+  "insightsStatusAtRisk": "Você está gastando mais rápido do que o previsto.",
+  "insightsStatusOver": "Você ultrapassou o orçamento do mês.",
+
+  "insightsPaceTitle": "Ritmo de gasto",
+  "insightsPaceExpected": "Esperado até hoje",
+  "insightsPaceActual": "Gasto até hoje",
+  "insightsPaceAhead": "Você está {amount} abaixo do ritmo.",
+  "@insightsPaceAhead": {
+    "description": "The month is spending below the linear budget pace",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsPaceBehind": "Você está {amount} acima do ritmo.",
+  "@insightsPaceBehind": {
+    "description": "The month is spending above the linear budget pace",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsPaceOnPace": "Exatamente no ritmo previsto.",
+  "insightsPaceReduce": "Reduza {amount} para fechar dentro do orçamento.",
+  "@insightsPaceReduce": {
+    "description": "Amount to trim to close the month within budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "insightsCategoriesTitle": "Gasto por categoria",
+  "insightsCategoryShare": "{percent}% do total",
+  "@insightsCategoryShare": {
+    "description": "A category's share of the month's total spend",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsCategoryUnnamed": "Categoria",
+
+  "quickEntryTitle": "Registro rápido"
 }

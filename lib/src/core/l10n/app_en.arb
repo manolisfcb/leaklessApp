@@ -403,6 +403,102 @@
   "currencyCHF": "Swiss franc",
 
   "insightsTitle": "Dashboard",
-  "insightsComingSoonTitle": "Coming soon",
-  "insightsComingSoonMessage": "We’re getting your spending stats and trends ready."
+  "insightsLoading": "Loading your stats…",
+  "insightsErrorTitle": "We couldn’t load your stats",
+  "insightsErrorMessage": "Check your connection and try again.",
+  "insightsRetry": "Retry",
+  "insightsEmptyTitle": "No expenses yet",
+  "insightsEmptyMessage": "Log your first expense to see this month’s stats.",
+  "insightsEmptyAction": "Log an expense",
+
+  "insightsMonthSummaryTitle": "This month",
+  "insightsSpentLabel": "Spent this month",
+  "insightsOfBudget": "of {budget}",
+  "@insightsOfBudget": {
+    "description": "Shows the total monthly budget next to what has been spent",
+    "placeholders": {
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsBudgetUsed": "{percent}% used",
+  "@insightsBudgetUsed": {
+    "description": "Percentage of the total monthly budget consumed",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsRemaining": "{amount} left",
+  "@insightsRemaining": {
+    "description": "Remaining amount of the monthly budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsOverBudgetBy": "Over by {amount}",
+  "@insightsOverBudgetBy": {
+    "description": "How much the month is over its total budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsNoBudgetNote": "You haven’t set a budget this month yet. Create one to track your pace.",
+  "insightsCreateBudget": "Create budget",
+  "insightsStatusOnTrack": "You’re right on track with your budget.",
+  "insightsStatusAhead": "You’re under your expected pace. Nice!",
+  "insightsStatusAtRisk": "You’re spending faster than planned.",
+  "insightsStatusOver": "You’ve gone over this month’s budget.",
+
+  "insightsPaceTitle": "Spending pace",
+  "insightsPaceExpected": "Expected by today",
+  "insightsPaceActual": "Spent by today",
+  "insightsPaceAhead": "You’re {amount} under pace.",
+  "@insightsPaceAhead": {
+    "description": "The month is spending below the linear budget pace",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsPaceBehind": "You’re {amount} over pace.",
+  "@insightsPaceBehind": {
+    "description": "The month is spending above the linear budget pace",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsPaceOnPace": "Right on the expected pace.",
+  "insightsPaceReduce": "Trim {amount} to close within budget.",
+  "@insightsPaceReduce": {
+    "description": "Amount to trim to close the month within budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "insightsCategoriesTitle": "Spending by category",
+  "insightsCategoryShare": "{percent}% of total",
+  "@insightsCategoryShare": {
+    "description": "A category's share of the month's total spend",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsCategoryUnnamed": "Category",
+
+  "quickEntryTitle": "Quick entry"
 }

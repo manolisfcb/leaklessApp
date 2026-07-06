@@ -2014,17 +2014,185 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get insightsTitle;
 
-  /// No description provided for @insightsComingSoonTitle.
+  /// No description provided for @insightsLoading.
   ///
   /// In es, this message translates to:
-  /// **'Próximamente'**
-  String get insightsComingSoonTitle;
+  /// **'Cargando tus estadísticas…'**
+  String get insightsLoading;
 
-  /// No description provided for @insightsComingSoonMessage.
+  /// No description provided for @insightsErrorTitle.
   ///
   /// In es, this message translates to:
-  /// **'Estamos preparando tus estadísticas y tendencias de gasto.'**
-  String get insightsComingSoonMessage;
+  /// **'No pudimos cargar tus estadísticas'**
+  String get insightsErrorTitle;
+
+  /// No description provided for @insightsErrorMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu conexión e inténtalo de nuevo.'**
+  String get insightsErrorMessage;
+
+  /// No description provided for @insightsRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get insightsRetry;
+
+  /// No description provided for @insightsEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay gastos'**
+  String get insightsEmptyTitle;
+
+  /// No description provided for @insightsEmptyMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Registra tu primer gasto para ver tus estadísticas del mes.'**
+  String get insightsEmptyMessage;
+
+  /// No description provided for @insightsEmptyAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar un gasto'**
+  String get insightsEmptyAction;
+
+  /// No description provided for @insightsMonthSummaryTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen del mes'**
+  String get insightsMonthSummaryTitle;
+
+  /// No description provided for @insightsSpentLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastado este mes'**
+  String get insightsSpentLabel;
+
+  /// Shows the total monthly budget next to what has been spent
+  ///
+  /// In es, this message translates to:
+  /// **'de {budget}'**
+  String insightsOfBudget(String budget);
+
+  /// Percentage of the total monthly budget consumed
+  ///
+  /// In es, this message translates to:
+  /// **'{percent}% usado'**
+  String insightsBudgetUsed(int percent);
+
+  /// Remaining amount of the monthly budget
+  ///
+  /// In es, this message translates to:
+  /// **'Te queda {amount}'**
+  String insightsRemaining(String amount);
+
+  /// How much the month is over its total budget
+  ///
+  /// In es, this message translates to:
+  /// **'Te pasaste por {amount}'**
+  String insightsOverBudgetBy(String amount);
+
+  /// No description provided for @insightsNoBudgetNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no defines un presupuesto este mes. Crea uno para seguir tu ritmo.'**
+  String get insightsNoBudgetNote;
+
+  /// No description provided for @insightsCreateBudget.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear presupuesto'**
+  String get insightsCreateBudget;
+
+  /// No description provided for @insightsStatusOnTrack.
+  ///
+  /// In es, this message translates to:
+  /// **'Vas al día con tu presupuesto.'**
+  String get insightsStatusOnTrack;
+
+  /// No description provided for @insightsStatusAhead.
+  ///
+  /// In es, this message translates to:
+  /// **'Vas por debajo del ritmo previsto. ¡Bien!'**
+  String get insightsStatusAhead;
+
+  /// No description provided for @insightsStatusAtRisk.
+  ///
+  /// In es, this message translates to:
+  /// **'Estás gastando más rápido de lo previsto.'**
+  String get insightsStatusAtRisk;
+
+  /// No description provided for @insightsStatusOver.
+  ///
+  /// In es, this message translates to:
+  /// **'Superaste tu presupuesto del mes.'**
+  String get insightsStatusOver;
+
+  /// No description provided for @insightsPaceTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ritmo de gasto'**
+  String get insightsPaceTitle;
+
+  /// No description provided for @insightsPaceExpected.
+  ///
+  /// In es, this message translates to:
+  /// **'Esperado a hoy'**
+  String get insightsPaceExpected;
+
+  /// No description provided for @insightsPaceActual.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastado a hoy'**
+  String get insightsPaceActual;
+
+  /// The month is spending below the linear budget pace
+  ///
+  /// In es, this message translates to:
+  /// **'Vas {amount} por debajo del ritmo.'**
+  String insightsPaceAhead(String amount);
+
+  /// The month is spending above the linear budget pace
+  ///
+  /// In es, this message translates to:
+  /// **'Vas {amount} por encima del ritmo.'**
+  String insightsPaceBehind(String amount);
+
+  /// No description provided for @insightsPaceOnPace.
+  ///
+  /// In es, this message translates to:
+  /// **'Justo en el ritmo previsto.'**
+  String get insightsPaceOnPace;
+
+  /// Amount to trim to close the month within budget
+  ///
+  /// In es, this message translates to:
+  /// **'Reduce {amount} para cerrar dentro del presupuesto.'**
+  String insightsPaceReduce(String amount);
+
+  /// No description provided for @insightsCategoriesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Gasto por categoría'**
+  String get insightsCategoriesTitle;
+
+  /// A category's share of the month's total spend
+  ///
+  /// In es, this message translates to:
+  /// **'{percent}% del total'**
+  String insightsCategoryShare(int percent);
+
+  /// No description provided for @insightsCategoryUnnamed.
+  ///
+  /// In es, this message translates to:
+  /// **'Categoría'**
+  String get insightsCategoryUnnamed;
+
+  /// No description provided for @quickEntryTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Registro rápido'**
+  String get quickEntryTitle;
 }
 
 class _AppLocalizationsDelegate
