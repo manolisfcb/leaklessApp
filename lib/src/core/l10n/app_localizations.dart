@@ -2194,6 +2194,36 @@ abstract class AppLocalizations {
   /// **'Categoría'**
   String get insightsCategoryUnnamed;
 
+  /// Amount left in a category's budget
+  ///
+  /// In es, this message translates to:
+  /// **'Quedan {amount}'**
+  String insightsCategoryRemaining(String amount);
+
+  /// Amount a category has exceeded its budget by
+  ///
+  /// In es, this message translates to:
+  /// **'Excedido por {amount}'**
+  String insightsCategoryOverBy(String amount);
+
+  /// No description provided for @insightsPieTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Distribución por categoría'**
+  String get insightsPieTitle;
+
+  /// No description provided for @insightsPieOthers.
+  ///
+  /// In es, this message translates to:
+  /// **'Otros'**
+  String get insightsPieOthers;
+
+  /// No description provided for @insightsPieCenterLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'gastado'**
+  String get insightsPieCenterLabel;
+
   /// No description provided for @insightsRunawayTitle.
   ///
   /// In es, this message translates to:

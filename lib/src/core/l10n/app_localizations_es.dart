@@ -1180,6 +1180,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get insightsCategoryUnnamed => 'Categoría';
 
   @override
+  String insightsCategoryRemaining(String amount) {
+    return 'Quedan $amount';
+  }
+
+  @override
+  String insightsCategoryOverBy(String amount) {
+    return 'Excedido por $amount';
+  }
+
+  @override
+  String get insightsPieTitle => 'Distribución por categoría';
+
+  @override
+  String get insightsPieOthers => 'Otros';
+
+  @override
+  String get insightsPieCenterLabel => 'gastado';
+
+  @override
   String get insightsRunawayTitle => 'Categorías fuera de control';
 
   @override

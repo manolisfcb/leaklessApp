@@ -8,6 +8,7 @@ export 'amount_text.dart';
 export 'app_empty_state.dart';
 export 'app_loader.dart';
 export 'category_chip.dart';
+export 'donut_chart.dart';
 export 'glass_bottom_sheet.dart';
 export 'glass_button.dart';
 export 'glass_card.dart';

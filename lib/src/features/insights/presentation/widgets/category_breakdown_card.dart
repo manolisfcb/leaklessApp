@@ -4,6 +4,7 @@ import '../../../../core/l10n/category_names.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/utils/category_icons.dart';
+import '../../../../domain/models/money.dart';
 import '../../../../domain/models/transaction_category.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../domain/month_insights.dart';
@@ -124,14 +125,26 @@ class _CategoryRow extends StatelessWidget {
             ),
             if (insight.limit != null)
               Text(
-                insight.limit!.format(),
+                _remainingLabel(l10n, insight.limit!, insight.spent),
                 style: AppTypography.bodySmall.copyWith(
-                  color: colors.textSecondary,
+                  color: _isOverLimit(insight.limit!, insight.spent)
+                      ? colors.expense
+                      : colors.textSecondary,
                 ),
               ),
           ],
         ),
       ],
     );
+  }
+
+  static bool _isOverLimit(Money limit, Money spent) =>
+      (limit - spent).minorUnits < 0;
+
+  static String _remainingLabel(AppLocalizations l10n, Money limit, Money spent) {
+    final remaining = limit - spent;
+    return _isOverLimit(limit, spent)
+        ? l10n.insightsCategoryOverBy(remaining.absolute.format())
+        : l10n.insightsCategoryRemaining(remaining.format());
   }
 }

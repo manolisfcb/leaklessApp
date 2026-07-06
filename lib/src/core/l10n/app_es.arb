@@ -573,6 +573,28 @@
     }
   },
   "insightsCategoryUnnamed": "Categoría",
+  "insightsCategoryRemaining": "Quedan {amount}",
+  "@insightsCategoryRemaining": {
+    "description": "Amount left in a category's budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsCategoryOverBy": "Excedido por {amount}",
+  "@insightsCategoryOverBy": {
+    "description": "Amount a category has exceeded its budget by",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "insightsPieTitle": "Distribución por categoría",
+  "insightsPieOthers": "Otros",
+  "insightsPieCenterLabel": "gastado",
 
   "insightsRunawayTitle": "Categorías fuera de control",
   "insightsRunawayBadge": "+{percent}%",

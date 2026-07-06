@@ -14,6 +14,7 @@ import '../application/insights_providers.dart';
 import '../domain/month_insights.dart';
 import 'widgets/category_breakdown_card.dart';
 import 'widgets/category_last_activity_card.dart';
+import 'widgets/category_pie_card.dart';
 import 'widgets/daily_spend_card.dart';
 import 'widgets/month_summary_card.dart';
 import 'widgets/projection_card.dart';
@@ -110,6 +111,8 @@ class _InsightsBody extends ConsumerWidget {
           SpendingPaceCard(insights: insights),
         ],
         if (insights.categories.isNotEmpty) ...[
+          AppSpacing.gapLg,
+          CategoryPieCard(insights: insights, categories: categories),
           AppSpacing.gapLg,
           CategoryBreakdownCard(
             insights: insights,

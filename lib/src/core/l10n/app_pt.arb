@@ -500,6 +500,28 @@
     }
   },
   "insightsCategoryUnnamed": "Categoria",
+  "insightsCategoryRemaining": "Restam {amount}",
+  "@insightsCategoryRemaining": {
+    "description": "Amount left in a category's budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsCategoryOverBy": "Excedido em {amount}",
+  "@insightsCategoryOverBy": {
+    "description": "Amount a category has exceeded its budget by",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "insightsPieTitle": "Distribuição por categoria",
+  "insightsPieOthers": "Outros",
+  "insightsPieCenterLabel": "gasto",
 
   "insightsRunawayTitle": "Categorias fora de controle",
   "insightsRunawayBadge": "+{percent}%",

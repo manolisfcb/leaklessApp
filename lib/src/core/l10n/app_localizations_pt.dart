@@ -1179,6 +1179,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insightsCategoryUnnamed => 'Categoria';
 
   @override
+  String insightsCategoryRemaining(String amount) {
+    return 'Restam $amount';
+  }
+
+  @override
+  String insightsCategoryOverBy(String amount) {
+    return 'Excedido em $amount';
+  }
+
+  @override
+  String get insightsPieTitle => 'Distribuição por categoria';
+
+  @override
+  String get insightsPieOthers => 'Outros';
+
+  @override
+  String get insightsPieCenterLabel => 'gasto';
+
+  @override
   String get insightsRunawayTitle => 'Categorias fora de controle';
 
   @override

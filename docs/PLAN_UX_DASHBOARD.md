@@ -60,7 +60,7 @@ monto es visible (`find.text(...)` + `tester.getRect` dentro del viewport) y act
 
 ---
 
-## Tarea B — El FAB "+" no debe tapar contenido (feedback #3)
+## Tarea B — El FAB "+" no debe tapar contenido (feedback #3) ✅ HECHA
 
 **Problema**: el FAB de registro rápido ([app_shell.dart:26](../lib/src/core/router/app_shell.dart))
 usa la posición por defecto (`endFloat`) y flota por encima de las cards; al final de las listas tapa
@@ -96,7 +96,7 @@ testear ese widget aislado.
 
 ---
 
-## Tarea C — Pie chart de gasto por categorías en el dashboard (feedback #2)
+## Tarea C — Pie chart de gasto por categorías en el dashboard (feedback #2) ✅ HECHA
 
 **Problema**: no hay vista proporcional del gasto; el usuario quiere ver de un vistazo en qué
 categorías gasta más/menos. Hoy solo existe la lista con barras (`CategoryBreakdownCard`).
@@ -161,7 +161,7 @@ temas y total del mes en el centro.
 
 ---
 
-## Tarea D (opcional, pequeña) — "Te quedan $X" por categoría en el desglose
+## Tarea D (opcional, pequeña) — "Te quedan $X" por categoría en el desglose ✅ HECHA
 
 **Contexto**: `CategoryBreakdownCard` ya muestra gasto, % y límite, pero no el **restante** explícito,
 que es lo que el usuario quiere leer ("cuánto me queda en ocio").

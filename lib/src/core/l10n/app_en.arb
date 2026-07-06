@@ -500,6 +500,28 @@
     }
   },
   "insightsCategoryUnnamed": "Category",
+  "insightsCategoryRemaining": "{amount} left",
+  "@insightsCategoryRemaining": {
+    "description": "Amount left in a category's budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsCategoryOverBy": "Over by {amount}",
+  "@insightsCategoryOverBy": {
+    "description": "Amount a category has exceeded its budget by",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "insightsPieTitle": "Spending by category",
+  "insightsPieOthers": "Others",
+  "insightsPieCenterLabel": "spent",
 
   "insightsRunawayTitle": "Categories out of control",
   "insightsRunawayBadge": "+{percent}%",
