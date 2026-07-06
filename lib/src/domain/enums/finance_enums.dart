@@ -10,12 +10,6 @@ enum BudgetStatus {
   @JsonValue('exceeded')
   exceeded; // >= 100%
 
-  String get label => switch (this) {
-    BudgetStatus.normal => 'En control',
-    BudgetStatus.warning => 'Cerca del límite',
-    BudgetStatus.exceeded => 'Límite superado',
-  };
-
   /// Maps a spent/limit [ratio] to its status (75% / 100% thresholds).
   static BudgetStatus fromRatio(double ratio) {
     if (ratio >= 1.0) return BudgetStatus.exceeded;
@@ -34,13 +28,6 @@ enum GoalStatus {
   paused,
   @JsonValue('archived')
   archived;
-
-  String get label => switch (this) {
-    GoalStatus.active => 'Activa',
-    GoalStatus.completed => 'Completada',
-    GoalStatus.paused => 'En pausa',
-    GoalStatus.archived => 'Archivada',
-  };
 }
 
 /// How often a recurring subscription is charged. Drives the next-charge date
@@ -52,12 +39,6 @@ enum SubscriptionFrequency {
   monthly,
   @JsonValue('yearly')
   yearly;
-
-  String get label => switch (this) {
-    SubscriptionFrequency.weekly => 'Semanal',
-    SubscriptionFrequency.monthly => 'Mensual',
-    SubscriptionFrequency.yearly => 'Anual',
-  };
 
   /// The charge date immediately following [from] for this frequency.
   ///
@@ -103,11 +84,4 @@ enum SubscriptionStatus {
   paused,
   @JsonValue('canceled')
   canceled;
-
-  String get label => switch (this) {
-    SubscriptionStatus.active => 'Activa',
-    SubscriptionStatus.trial => 'Prueba',
-    SubscriptionStatus.paused => 'En pausa',
-    SubscriptionStatus.canceled => 'Cancelada',
-  };
 }

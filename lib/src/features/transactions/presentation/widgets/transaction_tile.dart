@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/category_names.dart';
+import '../../../../core/l10n/enum_labels.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/utils/category_icons.dart';
@@ -27,7 +28,7 @@ class TransactionTile extends StatelessWidget {
     final title = transaction.description?.trim().isNotEmpty ?? false
         ? transaction.description!
         : category == null
-        ? 'Movimiento'
+        ? context.l10n.transactionFallbackTitle
         : categoryDisplayName(category!, context.l10n);
 
     return Padding(
@@ -60,7 +61,7 @@ class TransactionTile extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
-                  '${transaction.priority.label} · ${transaction.responsible.label}',
+                  '${transaction.priority.localizedLabel(context.l10n)} · ${transaction.responsible.localizedLabel(context.l10n)}',
                   style: AppTypography.bodySmall.copyWith(
                     color: colors.textSecondary,
                   ),

@@ -16,46 +16,22 @@ void main() {
     });
   });
 
-  group('domain labels', () {
-    test('priority labels are the product wording', () {
-      expect(TransactionPriority.ant.label, 'Hormiga');
-      expect(TransactionPriority.necessity.label, 'Necesidad');
-    });
-
-    test('responsible labels', () {
-      expect(ResponsibleType.me.label, 'Tú');
-      expect(ResponsibleType.partner.label, 'Pareja');
-      expect(ResponsibleType.shared.label, 'Compartido');
-    });
-  });
-
   group('localized enum labels', () {
     final es = lookupAppLocalizations(const Locale('es'));
     final en = lookupAppLocalizations(const Locale('en'));
     final pt = lookupAppLocalizations(const Locale('pt'));
 
-    test('spanish matches the legacy .label wording', () {
-      for (final type in TransactionType.values) {
-        expect(type.localizedLabel(es), type.label);
-      }
-      for (final priority in TransactionPriority.values) {
-        expect(priority.localizedLabel(es), priority.label);
-      }
-      for (final source in TransactionSource.values) {
-        expect(source.localizedLabel(es), source.label);
-      }
-      for (final responsible in ResponsibleType.values) {
-        expect(responsible.localizedLabel(es), responsible.label);
-      }
-      for (final status in BudgetStatus.values) {
-        expect(status.localizedLabel(es), status.label);
-      }
-      for (final status in GoalStatus.values) {
-        expect(status.localizedLabel(es), status.label);
-      }
-      for (final status in SubscriptionStatus.values) {
-        expect(status.localizedLabel(es), status.label);
-      }
+    test('spanish keeps the product wording', () {
+      expect(TransactionPriority.ant.localizedLabel(es), 'Hormiga');
+      expect(TransactionPriority.necessity.localizedLabel(es), 'Necesidad');
+      expect(ResponsibleType.me.localizedLabel(es), 'Tú');
+      expect(ResponsibleType.partner.localizedLabel(es), 'Pareja');
+      expect(ResponsibleType.shared.localizedLabel(es), 'Compartido');
+      expect(TransactionType.expense.localizedLabel(es), 'Gasto');
+      expect(TransactionSource.plaid.localizedLabel(es), 'Banco');
+      expect(BudgetStatus.exceeded.localizedLabel(es), 'Límite superado');
+      expect(GoalStatus.completed.localizedLabel(es), 'Completada');
+      expect(SubscriptionStatus.trial.localizedLabel(es), 'Prueba');
     });
 
     test('english and portuguese translate the product wording', () {

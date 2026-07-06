@@ -7,10 +7,5 @@ enum MemberRole {
   @JsonValue('member')
   member;
 
-  String get label => switch (this) {
-    MemberRole.owner => 'Propietario',
-    MemberRole.member => 'Miembro',
-  };
-
   bool get isOwner => this == MemberRole.owner;
 }

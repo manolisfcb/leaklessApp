@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../domain/models/money.dart';
 import '../../../../shared/widgets/widgets.dart';
@@ -42,7 +43,7 @@ class HydrometerGauge extends StatelessWidget {
                 ),
               ),
               Text(
-                'tasa de ahorro',
+                context.l10n.dashboardSavingsRateShort,
                 style: AppTypography.bodySmall.copyWith(
                   color: colors.textSecondary,
                 ),
@@ -83,7 +84,7 @@ class _LeakChip extends StatelessWidget {
           Icon(CupertinoIcons.drop, size: 14, color: colors.alert),
           AppSpacing.gapXs,
           Text(
-            'Fuga ${leak.format()}',
+            context.l10n.dashboardLeak(leak.format()),
             style: AppTypography.labelSmall.copyWith(color: colors.alert),
           ),
         ],

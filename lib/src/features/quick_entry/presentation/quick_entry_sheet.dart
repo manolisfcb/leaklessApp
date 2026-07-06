@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/l10n/category_names.dart';
+import '../../../core/l10n/enum_labels.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
@@ -267,7 +268,10 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
           _Segmented<ResponsibleType>(
             value: _responsible,
             onChanged: (v) => setState(() => _responsible = v),
-            options: {for (final r in ResponsibleType.values) r: r.label},
+            options: {
+              for (final r in ResponsibleType.values)
+                r: r.localizedLabel(context.l10n),
+            },
           ),
           AppSpacing.gapXl,
           const _Label('Categoría'),
@@ -441,7 +445,7 @@ class _PriorityPicker extends StatelessWidget {
                       ),
                       AppSpacing.gapXs,
                       Text(
-                        p.label,
+                        p.localizedLabel(context.l10n),
                         textAlign: TextAlign.center,
                         style: AppTypography.labelSmall.copyWith(
                           color: p == value

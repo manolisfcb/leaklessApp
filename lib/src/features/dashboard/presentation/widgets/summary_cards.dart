@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../shared/widgets/widgets.dart';
@@ -15,25 +16,26 @@ class SummaryCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
     final cards = [
       _CardData(
         icon: CupertinoIcons.chart_pie,
         accent: colors.income,
         value: '${(summary.savingsRate * 100).round()}%',
-        label: 'Tasa de ahorro real',
+        label: l10n.dashboardSavingsRate,
       ),
       _CardData(
         icon: CupertinoIcons.creditcard,
         accent: colors.goal,
         value: '${summary.activeSubscriptions}',
-        label: 'Gastos recurrentes',
+        label: l10n.dashboardRecurringExpenses,
         onTap: () => context.push(AppRoutes.subscriptions),
       ),
       _CardData(
         icon: CupertinoIcons.exclamationmark_triangle,
         accent: colors.alert,
         value: '${summary.activeAlerts}',
-        label: 'Alertas de límites',
+        label: l10n.dashboardLimitAlerts,
         onTap: () => context.go(AppRoutes.budgets),
       ),
     ];

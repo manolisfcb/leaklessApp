@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/app_exception.dart';
 import '../../../core/l10n/category_names.dart';
+import '../../../core/l10n/enum_labels.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
@@ -208,7 +209,7 @@ class _BudgetCard extends StatelessWidget {
                 ),
                 AppSpacing.gapXs,
                 Text(
-                  '${budget.status.label} · ${budget.percent.round()}%',
+                  '${budget.status.localizedLabel(context.l10n)} · ${budget.percent.round()}%',
                   style: AppTypography.bodySmall.copyWith(color: accent),
                 ),
                 if (exceeded) ...[

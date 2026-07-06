@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/enum_labels.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../shared/widgets/widgets.dart';
@@ -16,11 +18,12 @@ class TransactionsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final transactions = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesByIdProvider);
 
     return GlassScaffold(
-      appBar: AppBar(title: const Text('Historial')),
+      appBar: AppBar(title: Text(l10n.navHistory)),
       body: Column(
         children: [
           const _Filters(),
@@ -28,16 +31,16 @@ class TransactionsScreen extends ConsumerWidget {
           Expanded(
             child: transactions.when(
               loading: () => const AppLoader(),
-              error: (_, _) => const AppEmptyState(
+              error: (_, _) => AppEmptyState(
                 icon: CupertinoIcons.exclamationmark_circle,
-                title: 'No pudimos cargar el historial',
+                title: l10n.transactionsLoadError,
               ),
               data: (items) {
                 if (items.isEmpty) {
-                  return const AppEmptyState(
+                  return AppEmptyState(
                     icon: CupertinoIcons.tray,
-                    title: 'Sin movimientos',
-                    message: 'Ajusta los filtros o registra tu primer gasto.',
+                    title: l10n.transactionsEmptyTitle,
+                    message: l10n.transactionsEmptyMessage,
                   );
                 }
                 return ListView.builder(
@@ -70,6 +73,7 @@ class _Filters extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final filter = ref.watch(transactionFilterProvider);
     final controller = ref.read(transactionFilterProvider.notifier);
 
@@ -81,14 +85,14 @@ class _Filters extends ConsumerWidget {
         children: [
           for (final r in ResponsibleType.values)
             _Chip(
-              label: r.label,
+              label: r.localizedLabel(l10n),
               selected: filter.responsible == r,
               onTap: () => controller.toggleResponsible(r),
             ),
           const _Divider(),
           for (final p in TransactionPriority.values)
             _Chip(
-              label: p.label,
+              label: p.localizedLabel(l10n),
               selected: filter.priority == p,
               onTap: () => controller.togglePriority(p),
             ),

@@ -8,12 +8,6 @@ enum TransactionType {
   expense,
   @JsonValue('transfer')
   transfer;
-
-  String get label => switch (this) {
-    TransactionType.income => 'Ingreso',
-    TransactionType.expense => 'Gasto',
-    TransactionType.transfer => 'Transferencia',
-  };
 }
 
 /// The "intention" behind a spend — the core of leakless's leak detection.
@@ -29,13 +23,6 @@ enum TransactionPriority {
   future,
   @JsonValue('ant')
   ant;
-
-  String get label => switch (this) {
-    TransactionPriority.necessity => 'Necesidad',
-    TransactionPriority.lifestyle => 'Estilo de Vida',
-    TransactionPriority.future => 'Futuro',
-    TransactionPriority.ant => 'Hormiga',
-  };
 }
 
 /// Where a transaction came from.
@@ -51,12 +38,6 @@ enum TransactionSource {
   @JsonValue('import')
   import;
 
-  String get label => switch (this) {
-    TransactionSource.manual => 'Manual',
-    TransactionSource.plaid => 'Banco',
-    TransactionSource.import => 'Importado',
-  };
-
   /// True when the movement was captured automatically (not hand-entered).
   bool get isAutomatic => this != TransactionSource.manual;
 }
@@ -69,10 +50,4 @@ enum ResponsibleType {
   partner,
   @JsonValue('shared')
   shared;
-
-  String get label => switch (this) {
-    ResponsibleType.me => 'Tú',
-    ResponsibleType.partner => 'Pareja',
-    ResponsibleType.shared => 'Compartido',
-  };
 }
