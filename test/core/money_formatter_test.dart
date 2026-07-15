@@ -21,8 +21,7 @@ void main() {
     });
 
     test('format without symbol drops the currency symbol', () {
-      final formatted =
-          MoneyFormatter.format(1099, showSymbol: false).trim();
+      final formatted = MoneyFormatter.format(1099, showSymbol: false).trim();
       expect(formatted, isNot(contains(r'$')));
       expect(formatted, contains('10.99'));
     });

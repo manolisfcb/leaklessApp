@@ -67,7 +67,9 @@ class _DeleteAccountSheetState extends ConsumerState<DeleteAccountSheet> {
     FocusScope.of(context).unfocus();
     if (!(_formKey.currentState?.validate() ?? false)) return;
     if (_isSolo && !_acknowledged) {
-      setState(() => _error = 'Confirma que entiendes que se borrarán los datos.');
+      setState(
+        () => _error = 'Confirma que entiendes que se borrarán los datos.',
+      );
       return;
     }
 

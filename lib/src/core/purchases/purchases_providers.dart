@@ -17,9 +17,10 @@ final entitlementProvider = StreamProvider<Entitlement>((ref) {
   final controller = StreamController<Entitlement>();
 
   unawaited(
-    service.currentEntitlement().then(controller.add).catchError(
-          (Object _) => controller.add(Entitlement.free),
-        ),
+    service
+        .currentEntitlement()
+        .then(controller.add)
+        .catchError((Object _) => controller.add(Entitlement.free)),
   );
   final unsubscribe = service.listen(controller.add);
 

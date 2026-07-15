@@ -1,5 +1,44 @@
 import 'package:json_annotation/json_annotation.dart';
 
+enum AccountKind {
+  @JsonValue('cash')
+  cash,
+  @JsonValue('checking')
+  checking,
+  @JsonValue('savings')
+  savings,
+  @JsonValue('credit_card')
+  creditCard,
+  @JsonValue('loan')
+  loan,
+  @JsonValue('investment')
+  investment,
+  @JsonValue('other')
+  other,
+}
+
+enum BalanceNature {
+  @JsonValue('asset')
+  asset,
+  @JsonValue('liability')
+  liability,
+}
+
+enum IncomeSourceType {
+  @JsonValue('employment')
+  employment,
+  @JsonValue('business')
+  business,
+  @JsonValue('freelance')
+  freelance,
+  @JsonValue('investment')
+  investment,
+  @JsonValue('benefit')
+  benefit,
+  @JsonValue('other')
+  other,
+}
+
 /// Budget consumption state. Derived from spent/limit ratio but stored/typed so
 /// the UI (tube color, alert borders) maps directly.
 enum BudgetStatus {
@@ -27,7 +66,7 @@ enum GoalStatus {
   @JsonValue('paused')
   paused,
   @JsonValue('archived')
-  archived;
+  archived,
 }
 
 /// How often a recurring subscription is charged. Drives the next-charge date
@@ -83,5 +122,5 @@ enum SubscriptionStatus {
   @JsonValue('paused')
   paused,
   @JsonValue('canceled')
-  canceled;
+  canceled,
 }

@@ -116,6 +116,18 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const _RowDivider(),
                 _SettingsRow(
+                  icon: CupertinoIcons.creditcard,
+                  label: l10n.accountsTitle,
+                  onTap: () => context.push(AppRoutes.accounts),
+                ),
+                const _RowDivider(),
+                _SettingsRow(
+                  icon: CupertinoIcons.briefcase,
+                  label: l10n.incomeSourcesTitle,
+                  onTap: () => context.push(AppRoutes.incomeSources),
+                ),
+                const _RowDivider(),
+                _SettingsRow(
                   icon: CupertinoIcons.chart_bar_alt_fill,
                   label: context.l10n.settingsBudgets,
                   onTap: () => context.push(AppRoutes.budgets),
@@ -216,7 +228,10 @@ class SettingsScreen extends ConsumerWidget {
 
   /// Opens the re-authenticated deletion sheet, choosing the consequence copy
   /// from the caller's role in their household.
-  Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
+  Future<void> _confirmDeleteAccount(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     final userId = ref.read(currentUserProvider)?.id;
     final household = ref.read(currentHouseholdProvider).asData?.value;
     final memberCount =

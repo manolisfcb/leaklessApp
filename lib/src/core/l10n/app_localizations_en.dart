@@ -1401,4 +1401,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickEntryTitle => 'Quick entry';
+
+  @override
+  String get movementNew => 'New transaction';
+
+  @override
+  String get movementExpense => 'Record expense';
+
+  @override
+  String get movementIncome => 'Record income';
+
+  @override
+  String get movementTransfer => 'Transfer between accounts';
+
+  @override
+  String get currencyLabel => 'Currency';
+
+  @override
+  String get accountLabel => 'Account';
+
+  @override
+  String get accountDestination => 'Destination account';
+
+  @override
+  String get accountSource => 'Source account';
+
+  @override
+  String get amountReceived => 'Amount received';
+
+  @override
+  String get amountSent => 'Amount sent';
+
+  @override
+  String get incomeSourceLabel => 'Income source';
+
+  @override
+  String get incomeSourceNew => 'New source';
+
+  @override
+  String get optionalNote => 'Note (optional)';
+
+  @override
+  String get saveIncome => 'Save income';
+
+  @override
+  String get saveTransfer => 'Save transfer';
+
+  @override
+  String get withoutSource => 'No source';
+
+  @override
+  String get accountsTitle => 'Accounts';
+
+  @override
+  String get incomeSourcesTitle => 'Income sources';
+
+  @override
+  String get archivedLabel => 'Archived';
+
+  @override
+  String get archiveAction => 'Archive';
+
+  @override
+  String get accountNew => 'New account';
+
+  @override
+  String get accountEdit => 'Edit account';
+
+  @override
+  String get sourceEdit => 'Edit source';
+
+  @override
+  String get nameLabel => 'Name';
+
+  @override
+  String get openingBalance => 'Opening balance';
+
+  @override
+  String get billedCurrency => 'Billing currency';
+
+  @override
+  String get usualAccount => 'Usual account';
+
+  @override
+  String get totalBalance => 'Total balance';
+
+  @override
+  String get partialTotal => 'Partial total · an exchange rate is missing';
+
+  @override
+  String get monthlyNetFlow => 'Monthly net flow';
+
+  @override
+  String get incomeBySource => 'Income by source';
+
+  @override
+  String get incomeByCurrency => 'Income by currency';
+
+  @override
+  String get noIncomePeriod => 'No income in this period';
+
+  @override
+  String get accountsLoadError => 'Accounts could not be loaded';
+
+  @override
+  String get incomeSourcesLoadError => 'Income sources could not be loaded';
 }

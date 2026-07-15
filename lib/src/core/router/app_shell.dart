@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/quick_entry/presentation/quick_entry_sheet.dart';
+import '../../features/income_sources/presentation/income_entry_sheet.dart';
+import '../../features/transfers/presentation/transfer_entry_sheet.dart';
 import '../../shared/widgets/widgets.dart';
 import '../l10n/l10n.dart';
 import '../theme/theme.dart';
@@ -29,14 +31,76 @@ class AppShell extends StatelessWidget {
           index,
           initialLocation: index == navigationShell.currentIndex,
         ),
-        onQuickEntry: () => GlassBottomSheet.show<void>(
-          context,
-          title: 'Registro rápido',
-          builder: (_) => const QuickEntrySheet(),
-        ),
+        onQuickEntry: () => _openEntryChooser(context),
       ),
     );
   }
+
+  Future<void> _openEntryChooser(BuildContext context) async {
+    final choice = await GlassBottomSheet.show<_EntryKind>(
+      context,
+      title: context.l10n.movementNew,
+      builder: (sheetContext) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _EntryChoice(
+            icon: CupertinoIcons.arrow_up_circle,
+            label: context.l10n.movementExpense,
+            onTap: () => Navigator.pop(sheetContext, _EntryKind.expense),
+          ),
+          AppSpacing.gapSm,
+          _EntryChoice(
+            icon: CupertinoIcons.arrow_down_circle,
+            label: context.l10n.movementIncome,
+            onTap: () => Navigator.pop(sheetContext, _EntryKind.income),
+          ),
+          AppSpacing.gapSm,
+          _EntryChoice(
+            icon: CupertinoIcons.arrow_right_arrow_left_circle,
+            label: context.l10n.movementTransfer,
+            onTap: () => Navigator.pop(sheetContext, _EntryKind.transfer),
+          ),
+        ],
+      ),
+    );
+    if (choice == null || !context.mounted) return;
+    await GlassBottomSheet.show<void>(
+      context,
+      title: switch (choice) {
+        _EntryKind.expense => context.l10n.movementExpense,
+        _EntryKind.income => context.l10n.movementIncome,
+        _EntryKind.transfer => context.l10n.movementTransfer,
+      },
+      builder: (_) => switch (choice) {
+        _EntryKind.expense => const QuickEntrySheet(),
+        _EntryKind.income => const IncomeEntrySheet(),
+        _EntryKind.transfer => const TransferEntrySheet(),
+      },
+    );
+  }
+}
+
+enum _EntryKind { expense, income, transfer }
+
+class _EntryChoice extends StatelessWidget {
+  const _EntryChoice({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    leading: Icon(icon, color: context.colors.primary),
+    title: Text(label, style: AppTypography.labelLarge),
+    trailing: const Icon(CupertinoIcons.chevron_forward),
+    shape: RoundedRectangleBorder(borderRadius: AppRadii.cardRadius),
+    tileColor: context.colors.glassFill,
+    onTap: onTap,
+  );
 }
 
 class _QuickEntryButton extends StatelessWidget {

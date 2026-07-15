@@ -75,9 +75,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     }
 
     setState(() => _savingProfile = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.profileUpdated)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.profileUpdated)));
     if (context.canPop()) context.pop();
   }
 
@@ -377,7 +377,11 @@ class _AvatarSourceTile extends StatelessWidget {
           Icon(icon, color: colors.primary),
           AppSpacing.gapMd,
           Expanded(child: Text(label, style: AppTypography.titleMedium)),
-          Icon(CupertinoIcons.chevron_right, size: 16, color: colors.textTertiary),
+          Icon(
+            CupertinoIcons.chevron_right,
+            size: 16,
+            color: colors.textTertiary,
+          ),
         ],
       ),
     );

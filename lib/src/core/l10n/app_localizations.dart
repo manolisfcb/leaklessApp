@@ -2529,6 +2529,216 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Registro rápido'**
   String get quickEntryTitle;
+
+  /// No description provided for @movementNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo movimiento'**
+  String get movementNew;
+
+  /// No description provided for @movementExpense.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar gasto'**
+  String get movementExpense;
+
+  /// No description provided for @movementIncome.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar ingreso'**
+  String get movementIncome;
+
+  /// No description provided for @movementTransfer.
+  ///
+  /// In es, this message translates to:
+  /// **'Transferir entre cuentas'**
+  String get movementTransfer;
+
+  /// No description provided for @currencyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Moneda'**
+  String get currencyLabel;
+
+  /// No description provided for @accountLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta'**
+  String get accountLabel;
+
+  /// No description provided for @accountDestination.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta de destino'**
+  String get accountDestination;
+
+  /// No description provided for @accountSource.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta origen'**
+  String get accountSource;
+
+  /// No description provided for @amountReceived.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad recibida'**
+  String get amountReceived;
+
+  /// No description provided for @amountSent.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad enviada'**
+  String get amountSent;
+
+  /// No description provided for @incomeSourceLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Fuente de ingreso'**
+  String get incomeSourceLabel;
+
+  /// No description provided for @incomeSourceNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva fuente'**
+  String get incomeSourceNew;
+
+  /// No description provided for @optionalNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Nota (opcional)'**
+  String get optionalNote;
+
+  /// No description provided for @saveIncome.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar ingreso'**
+  String get saveIncome;
+
+  /// No description provided for @saveTransfer.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar transferencia'**
+  String get saveTransfer;
+
+  /// No description provided for @withoutSource.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin fuente'**
+  String get withoutSource;
+
+  /// No description provided for @accountsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuentas'**
+  String get accountsTitle;
+
+  /// No description provided for @incomeSourcesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Fuentes de ingreso'**
+  String get incomeSourcesTitle;
+
+  /// No description provided for @archivedLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivada'**
+  String get archivedLabel;
+
+  /// No description provided for @archiveAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivar'**
+  String get archiveAction;
+
+  /// No description provided for @accountNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva cuenta'**
+  String get accountNew;
+
+  /// No description provided for @accountEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar cuenta'**
+  String get accountEdit;
+
+  /// No description provided for @sourceEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar fuente'**
+  String get sourceEdit;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get nameLabel;
+
+  /// No description provided for @openingBalance.
+  ///
+  /// In es, this message translates to:
+  /// **'Saldo inicial'**
+  String get openingBalance;
+
+  /// No description provided for @billedCurrency.
+  ///
+  /// In es, this message translates to:
+  /// **'Moneda facturada'**
+  String get billedCurrency;
+
+  /// No description provided for @usualAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta habitual'**
+  String get usualAccount;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In es, this message translates to:
+  /// **'Saldo total'**
+  String get totalBalance;
+
+  /// No description provided for @partialTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Total parcial · falta una tasa de cambio'**
+  String get partialTotal;
+
+  /// No description provided for @monthlyNetFlow.
+  ///
+  /// In es, this message translates to:
+  /// **'Flujo neto del mes'**
+  String get monthlyNetFlow;
+
+  /// No description provided for @incomeBySource.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresos por fuente'**
+  String get incomeBySource;
+
+  /// No description provided for @incomeByCurrency.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresos por moneda'**
+  String get incomeByCurrency;
+
+  /// No description provided for @noIncomePeriod.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin ingresos en este período'**
+  String get noIncomePeriod;
+
+  /// No description provided for @accountsLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudieron cargar las cuentas'**
+  String get accountsLoadError;
+
+  /// No description provided for @incomeSourcesLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudieron cargar las fuentes'**
+  String get incomeSourcesLoadError;
 }
 
 class _AppLocalizationsDelegate

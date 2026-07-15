@@ -68,7 +68,9 @@ class _DonutPainter extends CustomPainter {
     for (final slice in slices) {
       if (slice.value <= 0) continue;
       final sweep = slice.value / total * 2 * math.pi;
-      final effectiveSweep = singleSlice ? sweep : (sweep - _gap).clamp(0.0, sweep);
+      final effectiveSweep = singleSlice
+          ? sweep
+          : (sweep - _gap).clamp(0.0, sweep);
 
       final paint = Paint()
         ..color = slice.color

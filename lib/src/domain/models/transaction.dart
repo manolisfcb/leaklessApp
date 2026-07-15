@@ -18,10 +18,20 @@ abstract class Transaction with _$Transaction {
     required ResponsibleType responsible,
     required DateTime occurredAt,
     @Default(TransactionSource.manual) TransactionSource source,
+    @Default(TransactionStatus.confirmed) TransactionStatus status,
     String? externalId,
+    String? accountId,
+    String? incomeSourceId,
     String? categoryId,
     String? responsibleMemberId,
     String? description,
+    Money? reportingAmount,
+    int? exchangeRateScaled,
+    DateTime? exchangeRateDate,
+    String? exchangeRateSource,
+    @Default(false) bool exchangeRateEstimated,
+    String? transferGroupId,
+    TransferDirection? transferDirection,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _Transaction;
@@ -32,12 +42,14 @@ abstract class Transaction with _$Transaction {
 
   bool get isExpense => type == TransactionType.expense;
   bool get isIncome => type == TransactionType.income;
+  bool get isTransfer => type == TransactionType.transfer;
 
   /// "Ant" expenses (gastos hormiga) are the micro-leaks leakless hunts for.
   bool get isAntLeak =>
       type == TransactionType.expense && priority == TransactionPriority.ant;
 
   /// Signed amount: expenses are negative, income positive.
-  Money get signedAmount =>
-      isExpense ? amount.absolute.copyWith(minorUnits: -amount.absolute.minorUnits) : amount.absolute;
+  Money get signedAmount => isExpense
+      ? amount.absolute.copyWith(minorUnits: -amount.absolute.minorUnits)
+      : amount.absolute;
 }

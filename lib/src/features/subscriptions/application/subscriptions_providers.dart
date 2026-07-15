@@ -4,12 +4,16 @@ import '../../../core/supabase/supabase_providers.dart';
 import '../../../domain/enums/finance_enums.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/subscription_item.dart';
+import '../../accounts/application/accounts_providers.dart';
+import '../../fx/application/exchange_rates_providers.dart';
 import '../../household/application/household_providers.dart';
 import '../data/subscriptions_repository.dart';
 
 /// Real (Supabase) or mock repository, chosen by config — same pattern as
 /// [budgetsRepositoryProvider] / [transactionsRepositoryProvider].
-final subscriptionsRepositoryProvider = Provider<SubscriptionsRepository>((ref) {
+final subscriptionsRepositoryProvider = Provider<SubscriptionsRepository>((
+  ref,
+) {
   if (ref.watch(supabaseEnabledProvider)) {
     return SupabaseSubscriptionsRepository(ref.watch(supabaseClientProvider));
   }
@@ -41,6 +45,8 @@ class SubscriptionsController extends Notifier<AsyncValue<void>> {
     String? subscriptionId,
     required String name,
     required int amountMinorUnits,
+    String? currency,
+    String? accountId,
     SubscriptionFrequency frequency = SubscriptionFrequency.monthly,
     DateTime? nextChargeAt,
     String? categoryId,
@@ -54,18 +60,54 @@ class SubscriptionsController extends Notifier<AsyncValue<void>> {
       if (household == null) {
         throw StateError('No active household to save a subscription.');
       }
+      final billingCurrency = currency ?? household.currency;
+      final accounts = await ref.read(accountsProvider.future);
+      final resolvedAccountId =
+          accountId ??
+          accounts
+              .where((account) => account.currency == billingCurrency)
+              .map((account) => account.id)
+              .firstOrNull;
+      Money? reportingAmount;
+      DateTime? rateDate;
+      if (billingCurrency == household.currency) {
+        reportingAmount = Money(
+          minorUnits: amountMinorUnits,
+          currency: household.currency,
+        );
+        rateDate = nextChargeAt ?? DateTime.now();
+      } else {
+        final date = nextChargeAt ?? DateTime.now();
+        final rate = await ref
+            .read(exchangeRatesRepositoryProvider)
+            .resolve(
+              foreignCurrency: 'USD',
+              reportingCurrency: 'CAD',
+              onOrBefore: date,
+            );
+        if (rate != null) {
+          reportingAmount = ref
+              .read(currencyConverterProvider)
+              .convert(
+                Money(minorUnits: amountMinorUnits, currency: billingCurrency),
+                household.currency,
+                rate: rate,
+              );
+          rateDate = rate.rateDate;
+        }
+      }
       final item = SubscriptionItem(
         id: subscriptionId ?? '',
         householdId: household.id,
         name: name.trim(),
-        amount: Money(
-          minorUnits: amountMinorUnits,
-          currency: household.currency,
-        ),
+        amount: Money(minorUnits: amountMinorUnits, currency: billingCurrency),
         status: status,
         frequency: frequency,
         nextChargeAt: nextChargeAt,
         categoryId: categoryId,
+        accountId: resolvedAccountId,
+        estimatedReportingAmount: reportingAmount,
+        exchangeRateDate: rateDate,
         reminderEnabled: reminderEnabled,
         reminderDaysBefore: reminderDaysBefore,
       );

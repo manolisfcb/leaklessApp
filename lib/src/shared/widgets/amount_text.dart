@@ -27,8 +27,9 @@ class AmountText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final effectiveStyle =
-        (style ?? AppTypography.displaySmall).copyWith(color: color ?? colors.textPrimary);
+    final effectiveStyle = (style ?? AppTypography.displaySmall).copyWith(
+      color: color ?? colors.textPrimary,
+    );
 
     final body = compact
         ? money.absolute.formatCompact()

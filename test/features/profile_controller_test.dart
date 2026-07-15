@@ -31,7 +31,10 @@ void main() {
 
     expect(saved?.displayName, 'Marien');
     expect(saved?.currency, 'EUR');
-    expect(container.read(profileControllerProvider).value?.displayName, 'Marien');
+    expect(
+      container.read(profileControllerProvider).value?.displayName,
+      'Marien',
+    );
 
     // Member representation is invalidated so it re-reads the new name/avatar.
     await container.read(householdMembersProvider.future);
@@ -99,7 +102,9 @@ class _FakeProfileRepository implements ProfileRepository {
     required Uint8List bytes,
     required String fileExtension,
   }) async {
-    _profile = _profile.copyWith(avatarUrl: 'https://cdn/avatar.$fileExtension');
+    _profile = _profile.copyWith(
+      avatarUrl: 'https://cdn/avatar.$fileExtension',
+    );
     return _profile;
   }
 }

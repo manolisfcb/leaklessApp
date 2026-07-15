@@ -22,7 +22,10 @@ void main() {
 
       expect(ok, isTrue);
       expect(auth.currentUser, isNull, reason: 'session should be cleared');
-      expect(container.read(accountDeletionControllerProvider).hasError, isFalse);
+      expect(
+        container.read(accountDeletionControllerProvider).hasError,
+        isFalse,
+      );
     });
 
     test('surfaces a wrong password without deleting the account', () async {
@@ -39,7 +42,11 @@ void main() {
           .deleteAccount(password: 'wrong', confirmHouseholdDeletion: false);
 
       expect(ok, isFalse);
-      expect(auth.currentUser, isNotNull, reason: 'account must not be deleted');
+      expect(
+        auth.currentUser,
+        isNotNull,
+        reason: 'account must not be deleted',
+      );
       final error = container.read(accountDeletionControllerProvider).error;
       expect(error, isA<AuthFailureException>());
     });

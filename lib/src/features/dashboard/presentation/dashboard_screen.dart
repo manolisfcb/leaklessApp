@@ -56,35 +56,86 @@ class _DashboardBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final recent = ref.watch(transactionsStreamProvider).asData?.value ?? const [];
+    final recent =
+        ref.watch(transactionsStreamProvider).asData?.value ?? const [];
     final categories = ref.watch(categoriesByIdProvider);
 
     return ListView(
       padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: 120),
       children: [
-        const Padding(
-          padding: AppSpacing.screen,
-          child: _MonthSelector(),
-        ),
+        const Padding(padding: AppSpacing.screen, child: _MonthSelector()),
         AppSpacing.gapLg,
         Center(
           child: Column(
             children: [
               Text(
-                l10n.dashboardAvailableBalance,
+                l10n.totalBalance,
                 style: AppTypography.bodyMedium.copyWith(
                   color: colors.textSecondary,
                 ),
               ),
               AppSpacing.gapXs,
               AmountText(
-                money: summary.balance,
+                money: summary.totalBalance,
                 style: AppTypography.displayLarge,
-                color: summary.balance.isNegative
+                color: summary.totalBalance.isNegative
                     ? colors.expense
                     : colors.textPrimary,
               ),
+              if (summary.overview?.isPartial ?? false)
+                Text(
+                  l10n.partialTotal,
+                  style: AppTypography.bodySmall.copyWith(color: colors.alert),
+                ),
+              if (summary.overview?.rate case final rate?)
+                Text(
+                  '1 ${rate.foreignCurrency} = ${rate.decimalValue} '
+                  '${rate.reportingCurrency} · ${DateFormat.yMMMd().format(rate.rateDate)}',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: colors.textTertiary,
+                  ),
+                ),
             ],
+          ),
+        ),
+        if (summary.overview case final overview?) ...[
+          AppSpacing.gapLg,
+          Padding(
+            padding: AppSpacing.screen,
+            child: GlassCard(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                children: [
+                  for (final valuation in overview.accounts)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.xs,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(child: Text(valuation.account.name)),
+                          Text(valuation.balance.format(showSymbol: false)),
+                          if (valuation.reportingValue != null &&
+                              valuation.balance.currency !=
+                                  valuation.reportingValue!.currency)
+                            Text(
+                              ' ≈ ${valuation.reportingValue!.format(showSymbol: false)}',
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+        AppSpacing.gapLg,
+        Center(
+          child: Text(
+            '${l10n.monthlyNetFlow}: ${summary.netFlow.format(showSymbol: false)}',
+            style: AppTypography.labelLarge.copyWith(
+              color: colors.textSecondary,
+            ),
           ),
         ),
         AppSpacing.gapLg,

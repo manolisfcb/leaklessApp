@@ -177,7 +177,11 @@ final class AppColors extends ThemeExtension<AppColors> {
     return AppColors(
       background: Color.lerp(background, other.background, t)!,
       backgroundTop: Color.lerp(backgroundTop, other.backgroundTop, t)!,
-      backgroundBottom: Color.lerp(backgroundBottom, other.backgroundBottom, t)!,
+      backgroundBottom: Color.lerp(
+        backgroundBottom,
+        other.backgroundBottom,
+        t,
+      )!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,

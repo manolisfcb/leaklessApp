@@ -1407,4 +1407,109 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get quickEntryTitle => 'Registro rápido';
+
+  @override
+  String get movementNew => 'Nuevo movimiento';
+
+  @override
+  String get movementExpense => 'Registrar gasto';
+
+  @override
+  String get movementIncome => 'Registrar ingreso';
+
+  @override
+  String get movementTransfer => 'Transferir entre cuentas';
+
+  @override
+  String get currencyLabel => 'Moneda';
+
+  @override
+  String get accountLabel => 'Cuenta';
+
+  @override
+  String get accountDestination => 'Cuenta de destino';
+
+  @override
+  String get accountSource => 'Cuenta origen';
+
+  @override
+  String get amountReceived => 'Cantidad recibida';
+
+  @override
+  String get amountSent => 'Cantidad enviada';
+
+  @override
+  String get incomeSourceLabel => 'Fuente de ingreso';
+
+  @override
+  String get incomeSourceNew => 'Nueva fuente';
+
+  @override
+  String get optionalNote => 'Nota (opcional)';
+
+  @override
+  String get saveIncome => 'Guardar ingreso';
+
+  @override
+  String get saveTransfer => 'Guardar transferencia';
+
+  @override
+  String get withoutSource => 'Sin fuente';
+
+  @override
+  String get accountsTitle => 'Cuentas';
+
+  @override
+  String get incomeSourcesTitle => 'Fuentes de ingreso';
+
+  @override
+  String get archivedLabel => 'Archivada';
+
+  @override
+  String get archiveAction => 'Archivar';
+
+  @override
+  String get accountNew => 'Nueva cuenta';
+
+  @override
+  String get accountEdit => 'Editar cuenta';
+
+  @override
+  String get sourceEdit => 'Editar fuente';
+
+  @override
+  String get nameLabel => 'Nombre';
+
+  @override
+  String get openingBalance => 'Saldo inicial';
+
+  @override
+  String get billedCurrency => 'Moneda facturada';
+
+  @override
+  String get usualAccount => 'Cuenta habitual';
+
+  @override
+  String get totalBalance => 'Saldo total';
+
+  @override
+  String get partialTotal => 'Total parcial · falta una tasa de cambio';
+
+  @override
+  String get monthlyNetFlow => 'Flujo neto del mes';
+
+  @override
+  String get incomeBySource => 'Ingresos por fuente';
+
+  @override
+  String get incomeByCurrency => 'Ingresos por moneda';
+
+  @override
+  String get noIncomePeriod => 'Sin ingresos en este período';
+
+  @override
+  String get accountsLoadError => 'No se pudieron cargar las cuentas';
+
+  @override
+  String get incomeSourcesLoadError => 'No se pudieron cargar las fuentes';
 }

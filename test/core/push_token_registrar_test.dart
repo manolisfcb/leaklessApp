@@ -135,9 +135,12 @@ void main() {
     expect(store.upserts.last, ('user-2', 'token-3', 'android'));
   });
 
-  test('store failures are swallowed (push plumbing must never crash)', () async {
-    store.throwOnUpsert = StateError('offline');
+  test(
+    'store failures are swallowed (push plumbing must never crash)',
+    () async {
+      store.throwOnUpsert = StateError('offline');
 
-    await expectLater(registrar.handleUserChanged('user-1'), completes);
-  });
+      await expectLater(registrar.handleUserChanged('user-1'), completes);
+    },
+  );
 }

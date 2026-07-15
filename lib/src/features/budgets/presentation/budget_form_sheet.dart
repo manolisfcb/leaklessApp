@@ -241,11 +241,10 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
                       children: [
                         // A legacy/custom threshold stays selectable when
                         // editing, even if it is not one of the presets.
-                        for (final threshold
-                            in {
-                              ..._alertThresholdOptions,
-                              _alertThresholdPct,
-                            }.toList()..sort())
+                        for (final threshold in {
+                          ..._alertThresholdOptions,
+                          _alertThresholdPct,
+                        }.toList()..sort())
                           _ThresholdChip(
                             key: Key('budget-alert-threshold-$threshold'),
                             label: '${100 - threshold}%',

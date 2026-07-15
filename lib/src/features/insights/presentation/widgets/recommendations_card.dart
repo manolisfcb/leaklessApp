@@ -28,7 +28,10 @@ class RecommendationsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.insightsRecommendationsTitle, style: AppTypography.titleLarge),
+          Text(
+            l10n.insightsRecommendationsTitle,
+            style: AppTypography.titleLarge,
+          ),
           AppSpacing.gapLg,
           for (final (i, r) in insights.recommendations.indexed) ...[
             if (i > 0) AppSpacing.gapMd,
@@ -53,8 +56,9 @@ class _RecommendationRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final categoryName =
-        category == null ? l10n.insightsCategoryUnnamed : categoryDisplayName(category!, l10n);
+    final categoryName = category == null
+        ? l10n.insightsCategoryUnnamed
+        : categoryDisplayName(category!, l10n);
 
     final (icon, accent, message) = switch (recommendation.kind) {
       InsightRecommendationKind.reduceCategory => (
@@ -82,9 +86,7 @@ class _RecommendationRow extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: accent),
         AppSpacing.gapSm,
-        Expanded(
-          child: Text(message, style: AppTypography.bodyMedium),
-        ),
+        Expanded(child: Text(message, style: AppTypography.bodyMedium)),
       ],
     );
   }

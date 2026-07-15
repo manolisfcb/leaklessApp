@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../budgets/application/budgets_providers.dart';
+import '../../accounts/application/accounts_providers.dart';
+import '../../fx/application/exchange_rates_providers.dart';
 import '../../household/application/household_providers.dart';
 import '../../subscriptions/application/subscriptions_providers.dart';
 import '../../transactions/application/transactions_providers.dart';
 import '../domain/dashboard_summary.dart';
+import '../domain/financial_overview.dart';
 
 /// The month shown on the dashboard (defaults to the current month).
 class SelectedMonthController extends Notifier<DateTime> {
@@ -44,10 +47,19 @@ final dashboardSummaryProvider = Provider<AsyncValue<DashboardSummary>>((ref) {
   final subscriptions = ref.watch(subscriptionsProvider);
   final members = ref.watch(householdMembersProvider);
   final household = ref.watch(currentHouseholdProvider);
+  final accounts = ref.watch(accountsProvider);
+  final latestRate = ref.watch(latestUsdCadRateProvider);
 
   // Propagate the first error, if any.
-  final error = [transactions, budgets, subscriptions, members, household]
-      .firstWhere((v) => v.hasError, orElse: () => const AsyncData(null));
+  final error = [
+    transactions,
+    budgets,
+    subscriptions,
+    members,
+    household,
+    accounts,
+    latestRate,
+  ].firstWhere((v) => v.hasError, orElse: () => const AsyncData(null));
   if (error.hasError) {
     return AsyncError(error.error!, error.stackTrace ?? StackTrace.current);
   }
@@ -56,10 +68,16 @@ final dashboardSummaryProvider = Provider<AsyncValue<DashboardSummary>>((ref) {
   final budgetData = budgets.asData;
   final subData = subscriptions.asData;
   final memberData = members.asData;
+  final accountData = accounts.asData;
+  final rateData = latestRate.asData;
+  final householdData = household.asData?.value;
   if (txData == null ||
       budgetData == null ||
       subData == null ||
-      memberData == null) {
+      memberData == null ||
+      accountData == null ||
+      rateData == null ||
+      householdData == null) {
     return const AsyncLoading();
   }
 
@@ -70,7 +88,13 @@ final dashboardSummaryProvider = Provider<AsyncValue<DashboardSummary>>((ref) {
       budgets: budgetData.value,
       subscriptions: subData.value,
       members: memberData.value,
-      currency: household.asData?.value?.currency ?? 'USD',
+      currency: householdData.currency,
+      overview: FinancialOverview.calculate(
+        accounts: accountData.value,
+        transactions: txData.value,
+        reportingCurrency: householdData.currency,
+        latestRate: rateData.value,
+      ),
     ),
   );
 });

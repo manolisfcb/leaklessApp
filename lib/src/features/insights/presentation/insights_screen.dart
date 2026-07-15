@@ -13,6 +13,7 @@ import '../../transactions/application/transactions_providers.dart';
 import '../application/insights_providers.dart';
 import '../domain/month_insights.dart';
 import 'widgets/category_breakdown_card.dart';
+import 'widgets/income_sources_card.dart';
 import 'widgets/category_last_activity_card.dart';
 import 'widgets/category_pie_card.dart';
 import 'widgets/daily_spend_card.dart';
@@ -91,6 +92,7 @@ class _InsightsBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoriesByIdProvider);
+    final incomeInsights = ref.watch(incomeInsightsProvider).asData?.value;
     void createBudget() => context.push(AppRoutes.budgets);
     void categorizeUncategorized() {
       ref.read(transactionFilterProvider.notifier).showUncategorizedOnly();
@@ -106,6 +108,10 @@ class _InsightsBody extends ConsumerWidget {
       ),
       children: [
         MonthSummaryCard(insights: insights, onCreateBudget: createBudget),
+        if (incomeInsights != null) ...[
+          AppSpacing.gapLg,
+          IncomeSourcesCard(insights: incomeInsights),
+        ],
         if (insights.hasBudget) ...[
           AppSpacing.gapLg,
           SpendingPaceCard(insights: insights),

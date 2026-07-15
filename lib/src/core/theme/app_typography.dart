@@ -21,7 +21,8 @@ abstract final class AppTypography {
       );
 
   // Hero numbers (balance, amounts).
-  static TextStyle get displayLarge => _display(48, FontWeight.w700, height: 1.0);
+  static TextStyle get displayLarge =>
+      _display(48, FontWeight.w700, height: 1.0);
   static TextStyle get displayMedium =>
       _display(34, FontWeight.w700, height: 1.05);
   static TextStyle get displaySmall =>
@@ -31,17 +32,30 @@ abstract final class AppTypography {
   static TextStyle get headlineMedium =>
       _display(22, FontWeight.w600, height: 1.2);
   static TextStyle get titleLarge => _display(18, FontWeight.w600, height: 1.2);
-  static TextStyle get titleMedium => _display(16, FontWeight.w600, height: 1.3);
+  static TextStyle get titleMedium =>
+      _display(16, FontWeight.w600, height: 1.3);
 
   // Body & labels.
-  static TextStyle get bodyLarge =>
-      GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400, height: 1.4);
-  static TextStyle get bodyMedium =>
-      GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w400, height: 1.4);
-  static TextStyle get bodySmall =>
-      GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w400, height: 1.4);
-  static TextStyle get labelLarge =>
-      GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w600, height: 1.2);
+  static TextStyle get bodyLarge => GoogleFonts.outfit(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+  );
+  static TextStyle get bodyMedium => GoogleFonts.outfit(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+  );
+  static TextStyle get bodySmall => GoogleFonts.outfit(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+  );
+  static TextStyle get labelLarge => GoogleFonts.outfit(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    height: 1.2,
+  );
   static TextStyle get labelSmall => GoogleFonts.outfit(
     fontSize: 11,
     fontWeight: FontWeight.w600,

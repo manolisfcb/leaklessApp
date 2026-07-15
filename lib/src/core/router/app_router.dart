@@ -9,6 +9,8 @@ import '../../domain/models/household_invitation.dart';
 import '../../features/auth/application/auth_providers.dart';
 import '../../features/auth/application/password_recovery_controller.dart';
 import '../../features/auth/presentation/auth_screen.dart';
+import '../../features/accounts/presentation/accounts_screen.dart';
+import '../../features/income_sources/presentation/income_sources_screen.dart';
 import '../../features/auth/presentation/reset_password_screen.dart';
 import '../../features/budgets/presentation/budgets_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
@@ -166,6 +168,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.subscriptionsName,
         parentNavigatorKey: _rootNavigatorKey,
         builder: (_, _) => const SubscriptionsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.accounts,
+        name: AppRoutes.accountsName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, _) => const AccountsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.incomeSources,
+        name: AppRoutes.incomeSourcesName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (_, _) => const IncomeSourcesScreen(),
       ),
       // Budgets left the tab bar in favor of the insights dashboard, but keeps
       // its path so push deep links (budget_alert / limit_reached) still work.

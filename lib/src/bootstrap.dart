@@ -44,9 +44,7 @@ Future<void> bootstrap() async {
           sharedPreferencesProvider.overrideWithValue(prefs),
           supabaseEnabledProvider.overrideWithValue(supabaseReady),
           if (supabaseReady)
-            supabaseClientProvider.overrideWithValue(
-              Supabase.instance.client,
-            ),
+            supabaseClientProvider.overrideWithValue(Supabase.instance.client),
         ],
       );
 

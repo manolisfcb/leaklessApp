@@ -57,7 +57,11 @@ class _RunawayRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(CategoryIcons.forKey(category?.iconName), size: 18, color: colors.alert),
+        Icon(
+          CategoryIcons.forKey(category?.iconName),
+          size: 18,
+          color: colors.alert,
+        ),
         AppSpacing.gapSm,
         Expanded(
           child: Column(
@@ -85,7 +89,9 @@ class _RunawayRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             _Badge(
-              text: l10n.insightsRunawayBadge((runaway.overshootPct * 100).round()),
+              text: l10n.insightsRunawayBadge(
+                (runaway.overshootPct * 100).round(),
+              ),
             ),
             AppSpacing.gapXs,
             AmountText(

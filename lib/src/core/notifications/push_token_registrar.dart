@@ -49,10 +49,11 @@ class SupabasePushTokenStore implements PushTokenStore {
     required String token,
     required String platform,
   }) {
-    return _client.from('device_push_tokens').upsert(
-      {'user_id': userId, 'token': token, 'platform': platform},
-      onConflict: 'token',
-    );
+    return _client.from('device_push_tokens').upsert({
+      'user_id': userId,
+      'token': token,
+      'platform': platform,
+    }, onConflict: 'token');
   }
 
   @override
@@ -73,9 +74,9 @@ class PushTokenRegistrar {
     required NotificationService service,
     required PushTokenStore store,
     required String platform,
-  })  : _service = service,
-        _store = store,
-        _platform = platform;
+  }) : _service = service,
+       _store = store,
+       _platform = platform;
 
   final NotificationService _service;
   final PushTokenStore _store;
@@ -104,7 +105,8 @@ class PushTokenRegistrar {
 
   Future<void> _register(String userId) async {
     final token = await _service.getToken();
-    if (token == null) return; // No Firebase, or iOS permission not granted yet.
+    if (token == null)
+      return; // No Firebase, or iOS permission not granted yet.
     _lastToken = token;
     await _upsert(userId, token);
   }
@@ -158,11 +160,12 @@ final pushTokenRegistrarProvider = Provider<void>((ref) {
 
   final auth = ref.watch(authRepositoryProvider);
   unawaited(registrar.handleUserChanged(auth.currentUser?.id));
-  final authSub = auth
-      .authStateChanges()
-      .listen((user) => registrar.handleUserChanged(user?.id));
-  final tokenSub =
-      service.onTokenRefreshed.listen(registrar.handleTokenRefreshed);
+  final authSub = auth.authStateChanges().listen(
+    (user) => registrar.handleUserChanged(user?.id),
+  );
+  final tokenSub = service.onTokenRefreshed.listen(
+    registrar.handleTokenRefreshed,
+  );
 
   ref.onDispose(() {
     unawaited(authSub.cancel());

@@ -25,6 +25,5 @@ class AutomaticTransactionDetector {
   ParsedBankTransaction? fromNotification({
     required String title,
     required String body,
-  }) =>
-      _notificationParser.parse(title: title, body: body);
+  }) => _notificationParser.parse(title: title, body: body);
 }

@@ -150,7 +150,11 @@ class SupabaseSubscriptionsRepository implements SubscriptionsRepository {
           .order('next_charge_at', ascending: true);
       return rows.map(SubscriptionMapper.fromRow).toList();
     } catch (e, s) {
-      throw ServerException('Failed to load subscriptions', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to load subscriptions',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -170,7 +174,11 @@ class SupabaseSubscriptionsRepository implements SubscriptionsRepository {
           .single();
       return SubscriptionMapper.fromRow(row);
     } catch (e, s) {
-      throw ServerException('Failed to create subscription', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to create subscription',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -184,7 +192,11 @@ class SupabaseSubscriptionsRepository implements SubscriptionsRepository {
           .single();
       return SubscriptionMapper.fromRow(row);
     } catch (e, s) {
-      throw ServerException('Failed to update subscription', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to update subscription',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -193,7 +205,11 @@ class SupabaseSubscriptionsRepository implements SubscriptionsRepository {
     try {
       await _table.delete().eq('id', subscriptionId);
     } catch (e, s) {
-      throw ServerException('Failed to delete subscription', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to delete subscription',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 

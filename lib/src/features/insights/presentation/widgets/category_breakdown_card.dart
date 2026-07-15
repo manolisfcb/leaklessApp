@@ -38,10 +38,7 @@ class CategoryBreakdownCard extends StatelessWidget {
           AppSpacing.gapLg,
           for (final (i, c) in insights.categories.indexed) ...[
             if (i > 0) AppSpacing.gapLg,
-            _CategoryRow(
-              insight: c,
-              category: categories[c.categoryId],
-            ),
+            _CategoryRow(insight: c, category: categories[c.categoryId]),
           ],
           if (!insights.hasBudget) ...[
             AppSpacing.gapLg,
@@ -141,7 +138,11 @@ class _CategoryRow extends StatelessWidget {
   static bool _isOverLimit(Money limit, Money spent) =>
       (limit - spent).minorUnits < 0;
 
-  static String _remainingLabel(AppLocalizations l10n, Money limit, Money spent) {
+  static String _remainingLabel(
+    AppLocalizations l10n,
+    Money limit,
+    Money spent,
+  ) {
     final remaining = limit - spent;
     return _isOverLimit(limit, spent)
         ? l10n.insightsCategoryOverBy(remaining.absolute.format())

@@ -15,17 +15,18 @@ abstract final class AppTheme {
   static ThemeData light() => _build(AppColors.light);
 
   static ThemeData _build(AppColors colors) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: colors.primary,
-      surface: colors.surface,
-      // Keep the light, fresh identity regardless of the seed's auto-tones.
-    ).copyWith(
-      primary: colors.primary,
-      secondary: colors.income,
-      error: colors.expense,
-      surface: colors.surface,
-      onSurface: colors.textPrimary,
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: colors.primary,
+          surface: colors.surface,
+          // Keep the light, fresh identity regardless of the seed's auto-tones.
+        ).copyWith(
+          primary: colors.primary,
+          secondary: colors.income,
+          error: colors.expense,
+          surface: colors.surface,
+          onSurface: colors.textPrimary,
+        );
 
     return ThemeData(
       useMaterial3: true,

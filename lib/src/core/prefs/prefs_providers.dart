@@ -6,5 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Overridden in bootstrap with the loaded instance (so reads are synchronous
 /// everywhere). Reading it before bootstrap throws a clear error.
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
-  throw StateError('sharedPreferencesProvider must be overridden in bootstrap.');
+  throw StateError(
+    'sharedPreferencesProvider must be overridden in bootstrap.',
+  );
 });

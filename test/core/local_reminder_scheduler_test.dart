@@ -62,34 +62,40 @@ void main() {
 
   test('reminderNotificationId is deterministic and non-negative', () {
     expect(reminderNotificationId('sub-1'), reminderNotificationId('sub-1'));
-    expect(reminderNotificationId('sub-1'), isNot(reminderNotificationId('sub-2')));
+    expect(
+      reminderNotificationId('sub-1'),
+      isNot(reminderNotificationId('sub-2')),
+    );
     expect(reminderNotificationId('sub-1'), greaterThanOrEqualTo(0));
   });
 
-  test('schedules an enabled reminder at 09:00 daysBefore the charge', () async {
-    final fake = _FakeLocalNotifications();
-    final scheduler = LocalReminderScheduler(fake);
+  test(
+    'schedules an enabled reminder at 09:00 daysBefore the charge',
+    () async {
+      final fake = _FakeLocalNotifications();
+      final scheduler = LocalReminderScheduler(fake);
 
-    final item = sub(
-      reminderDaysBefore: 3,
-      nextChargeAt: DateTime(2026, 3, 20, 15, 0),
-    );
-    final overdue = await scheduler.syncSchedules(
-      [item],
-      content: content,
-      now: DateTime(2026, 3, 1),
-    );
+      final item = sub(
+        reminderDaysBefore: 3,
+        nextChargeAt: DateTime(2026, 3, 20, 15, 0),
+      );
+      final overdue = await scheduler.syncSchedules(
+        [item],
+        content: content,
+        now: DateTime(2026, 3, 1),
+      );
 
-    expect(overdue, isEmpty);
-    final id = reminderNotificationId('sub-1');
-    expect(fake.scheduled.containsKey(id), isTrue);
-    expect(fake.scheduled[id]!.when, DateTime(2026, 3, 17, 9));
-    expect(fake.scheduled[id]!.body, 'body:Netflix');
-    expect(
-      jsonDecode(fake.scheduled[id]!.payload),
-      {'type': 'recurring_reminder', 'subscriptionId': 'sub-1'},
-    );
-  });
+      expect(overdue, isEmpty);
+      final id = reminderNotificationId('sub-1');
+      expect(fake.scheduled.containsKey(id), isTrue);
+      expect(fake.scheduled[id]!.when, DateTime(2026, 3, 17, 9));
+      expect(fake.scheduled[id]!.body, 'body:Netflix');
+      expect(jsonDecode(fake.scheduled[id]!.payload), {
+        'type': 'recurring_reminder',
+        'subscriptionId': 'sub-1',
+      });
+    },
+  );
 
   test('skips disabled reminders and items without a charge date', () async {
     final fake = _FakeLocalNotifications();
@@ -97,7 +103,11 @@ void main() {
 
     await scheduler.syncSchedules(
       [
-        sub(id: 'off', reminderEnabled: false, nextChargeAt: DateTime(2026, 5, 1)),
+        sub(
+          id: 'off',
+          reminderEnabled: false,
+          nextChargeAt: DateTime(2026, 5, 1),
+        ),
         sub(id: 'nodate', nextChargeAt: null),
       ],
       content: content,
@@ -138,7 +148,10 @@ void main() {
 
   test('cancels pending reminders that are no longer wanted', () async {
     final fake = _FakeLocalNotifications()
-      ..pending = {reminderNotificationId('stale'), reminderNotificationId('sub-1')};
+      ..pending = {
+        reminderNotificationId('stale'),
+        reminderNotificationId('sub-1'),
+      };
     final scheduler = LocalReminderScheduler(fake);
 
     await scheduler.syncSchedules(

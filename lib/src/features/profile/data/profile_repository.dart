@@ -144,7 +144,11 @@ class SupabaseProfileRepository implements ProfileRepository {
           .single();
       return ProfileMapper.fromRow(row);
     } catch (e, s) {
-      throw ServerException('Failed to update profile', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to update profile',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 

@@ -15,6 +15,8 @@ abstract final class AppRoutes {
   static const String settings = '/settings';
   static const String categories = '/settings/categories';
   static const String subscriptions = '/settings/subscriptions';
+  static const String accounts = '/settings/accounts';
+  static const String incomeSources = '/settings/income-sources';
   static const String profileEdit = '/profile/edit';
   static const String householdSetup = '/household/setup';
   static const String householdConfiguration = '/household/configuration';
@@ -37,6 +39,8 @@ abstract final class AppRoutes {
   static const String settingsName = 'settings';
   static const String categoriesName = 'categories';
   static const String subscriptionsName = 'subscriptions';
+  static const String accountsName = 'accounts';
+  static const String incomeSourcesName = 'income-sources';
   static const String profileEditName = 'profile-edit';
   static const String householdSetupName = 'household-setup';
   static const String householdConfigurationName = 'household-configuration';

@@ -50,11 +50,7 @@ class HydrometerGauge extends StatelessWidget {
               ),
             ],
           ),
-          if (hasLeak)
-            Positioned(
-              bottom: 8,
-              child: _LeakChip(leak: leak),
-            ),
+          if (hasLeak) Positioned(bottom: 8, child: _LeakChip(leak: leak)),
         ],
       ),
     );

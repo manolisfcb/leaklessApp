@@ -155,7 +155,11 @@ class SupabaseAuthRepository implements AuthRepository {
         stackTrace: s,
       );
     } catch (e, s) {
-      throw ServerException('Failed to delete account', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to delete account',
+        cause: e,
+        stackTrace: s,
+      );
     }
     // The account is gone; drop the local session. Best-effort — the token may
     // already be invalid.
@@ -171,7 +175,12 @@ class SupabaseAuthRepository implements AuthRepository {
     try {
       return await action();
     } on sb.AuthException catch (e, s) {
-      throw AuthFailureException(e.message, code: e.code, cause: e, stackTrace: s);
+      throw AuthFailureException(
+        e.message,
+        code: e.code,
+        cause: e,
+        stackTrace: s,
+      );
     } catch (e, s) {
       throw ServerException('Auth request failed', cause: e, stackTrace: s);
     }

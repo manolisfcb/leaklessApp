@@ -321,9 +321,9 @@ class _PreviewCard extends StatelessWidget {
     final localeName = Localizations.localeOf(context).toString();
     final expires = invitation.expiresAt == null
         ? null
-        : DateFormat.MMMMd(localeName)
-              .add_Hm()
-              .format(invitation.expiresAt!.toLocal());
+        : DateFormat.MMMMd(
+            localeName,
+          ).add_Hm().format(invitation.expiresAt!.toLocal());
     return GlassCard(
       strong: true,
       gradientGlow: context.colors.goal,

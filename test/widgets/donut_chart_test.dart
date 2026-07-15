@@ -3,14 +3,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:leakless/src/shared/widgets/donut_chart.dart';
 
 List<DonutSlice> _slices(int count) => [
-  for (var i = 0; i < count; i++) (value: (i + 1).toDouble(), color: Colors.primaries[i % Colors.primaries.length]),
+  for (var i = 0; i < count; i++)
+    (
+      value: (i + 1).toDouble(),
+      color: Colors.primaries[i % Colors.primaries.length],
+    ),
 ];
 
-Widget _wrap(Widget child) => MaterialApp(home: Scaffold(body: Center(child: child)));
+Widget _wrap(Widget child) => MaterialApp(
+  home: Scaffold(body: Center(child: child)),
+);
 
 void main() {
   group('DonutChart', () {
-    testWidgets('renders a single slice as a full ring without error', (tester) async {
+    testWidgets('renders a single slice as a full ring without error', (
+      tester,
+    ) async {
       await tester.pumpWidget(_wrap(DonutChart(slices: _slices(1))));
 
       expect(tester.takeException(), isNull);

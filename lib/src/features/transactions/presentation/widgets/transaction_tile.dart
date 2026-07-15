@@ -18,6 +18,8 @@ class TransactionTile extends StatelessWidget {
     required this.transaction,
     this.category,
     this.showDate = false,
+    this.accountName,
+    this.incomeSourceName,
     super.key,
   });
 
@@ -27,6 +29,8 @@ class TransactionTile extends StatelessWidget {
   /// The full History screen shows the transaction date. The compact Dashboard
   /// list leaves it out because that surface is intentionally denser.
   final bool showDate;
+  final String? accountName;
+  final String? incomeSourceName;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,14 @@ class TransactionTile extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xxs),
                 ],
                 Text(
-                  '${transaction.priority.localizedLabel(context.l10n)} · ${transaction.responsible.localizedLabel(context.l10n)}',
+                  [
+                    if (transaction.isIncome)
+                      incomeSourceName ?? context.l10n.withoutSource
+                    else if (!transaction.isTransfer)
+                      transaction.priority.localizedLabel(context.l10n),
+                    if (accountName != null) accountName!,
+                    transaction.amount.currency,
+                  ].join(' · '),
                   style: AppTypography.bodySmall.copyWith(
                     color: colors.textSecondary,
                   ),

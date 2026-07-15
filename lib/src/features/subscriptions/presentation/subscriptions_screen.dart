@@ -76,10 +76,8 @@ class SubscriptionsScreen extends ConsumerWidget {
             itemBuilder: (context, i) => _SubscriptionCard(
               subscription: items[i],
               category: categories[items[i].categoryId],
-              onTap: () => SubscriptionFormSheet.show(
-                context,
-                subscription: items[i],
-              ),
+              onTap: () =>
+                  SubscriptionFormSheet.show(context, subscription: items[i]),
               onDelete: () => _confirmDelete(context, ref, items[i]),
             ),
           );

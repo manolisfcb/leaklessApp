@@ -23,7 +23,10 @@ Widget _wrap(Widget sheet, {double bottomInset = 0}) => MaterialApp(
 );
 
 Finder _sheetSurface() => find
-    .descendant(of: find.byType(GlassBottomSheet), matching: find.byType(ClipRRect))
+    .descendant(
+      of: find.byType(GlassBottomSheet),
+      matching: find.byType(ClipRRect),
+    )
     .first;
 
 void main() {
@@ -35,7 +38,9 @@ void main() {
       expect(find.text('hola'), findsOneWidget);
     });
 
-    testWidgets('lifts above the keyboard when viewInsets grow', (tester) async {
+    testWidgets('lifts above the keyboard when viewInsets grow', (
+      tester,
+    ) async {
       const sheet = GlassBottomSheet(child: Text('contenido'));
 
       await tester.pumpWidget(_wrap(sheet));

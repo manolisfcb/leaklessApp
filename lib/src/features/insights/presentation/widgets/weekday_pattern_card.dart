@@ -39,10 +39,7 @@ class WeekdayPatternCard extends StatelessWidget {
             AppSpacing.gapMd,
             _WeekdayRow(
               label: l10n.insightsWeekdayLeastExpensiveLabel,
-              weekdayName: _weekdayName(
-                weekday.leastExpensiveWeekday!,
-                locale,
-              ),
+              weekdayName: _weekdayName(weekday.leastExpensiveWeekday!, locale),
               amount: weekday.averageByWeekday[weekday.leastExpensiveWeekday]!,
               accent: context.colors.goal,
             ),

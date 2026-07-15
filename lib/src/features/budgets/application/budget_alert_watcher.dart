@@ -59,18 +59,19 @@ class BudgetAlertWatcher {
         break;
       }
     }
-    if (budget == null || !budget.alertEnabled || budget.limit.minorUnits <= 0) {
+    if (budget == null ||
+        !budget.alertEnabled ||
+        budget.limit.minorUnits <= 0) {
       return null;
     }
 
     // In Supabase mode `spent` is already fresh: the recompute trigger ran in
     // the same statement as the insert the caller just awaited.
-    final pctSpent =
-        (budget.spent.minorUnits * 100) ~/ budget.limit.minorUnits;
-    final crossed = {budget.alertThresholdPct, 100}
-        .where((threshold) => pctSpent >= threshold)
-        .toList()
-      ..sort();
+    final pctSpent = (budget.spent.minorUnits * 100) ~/ budget.limit.minorUnits;
+    final crossed = {
+      budget.alertThresholdPct,
+      100,
+    }.where((threshold) => pctSpent >= threshold).toList()..sort();
 
     int? fired;
     for (final threshold in crossed) {

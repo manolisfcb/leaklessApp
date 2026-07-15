@@ -76,29 +76,24 @@ void main() {
     expect(await _record(again), isNull);
   });
 
-  test('ignores expenses without category or outside the budget month',
-      () async {
-    final watcher = _watcher([_budget(spentMajor: 95)]);
-    expect(await _record(watcher, categoryId: null), isNull);
-    expect(
-      await _record(watcher, occurredAt: DateTime(2026, 8, 1)),
-      isNull,
-    );
-  });
+  test(
+    'ignores expenses without category or outside the budget month',
+    () async {
+      final watcher = _watcher([_budget(spentMajor: 95)]);
+      expect(await _record(watcher, categoryId: null), isNull);
+      expect(await _record(watcher, occurredAt: DateTime(2026, 8, 1)), isNull);
+    },
+  );
 
   test('a new month alerts again for the same threshold', () async {
     final alerts = MockBudgetAlertsRepository();
     final july = _watcher([_budget(spentMajor: 85)], alerts: alerts);
     expect(await _record(july), isNotNull);
 
-    final august = _watcher(
-      [_budget(spentMajor: 85).copyWith(periodStart: DateTime(2026, 8))],
-      alerts: alerts,
-    );
-    expect(
-      await _record(august, occurredAt: DateTime(2026, 8, 3)),
-      isNotNull,
-    );
+    final august = _watcher([
+      _budget(spentMajor: 85).copyWith(periodStart: DateTime(2026, 8)),
+    ], alerts: alerts);
+    expect(await _record(august, occurredAt: DateTime(2026, 8, 3)), isNotNull);
   });
 }
 

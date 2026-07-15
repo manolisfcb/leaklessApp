@@ -20,12 +20,12 @@ final notificationRouterProvider = Provider<NotificationRouter>(
 /// Permission-flow helper.
 final notificationPermissionHandlerProvider =
     Provider<NotificationPermissionHandler>(
-  (ref) =>
-      NotificationPermissionHandler(ref.watch(notificationServiceProvider)),
-);
+      (ref) =>
+          NotificationPermissionHandler(ref.watch(notificationServiceProvider)),
+    );
 
 /// Current OS notification permission status.
 final notificationPermissionProvider =
     FutureProvider<NotificationPermissionStatus>(
-  (ref) => ref.watch(notificationServiceProvider).currentStatus(),
-);
+      (ref) => ref.watch(notificationServiceProvider).currentStatus(),
+    );

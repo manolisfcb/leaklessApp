@@ -7,8 +7,7 @@ class OnboardingController extends Notifier<bool> {
   static const _key = 'onboarding_completed';
 
   @override
-  bool build() =>
-      ref.watch(sharedPreferencesProvider).getBool(_key) ?? false;
+  bool build() => ref.watch(sharedPreferencesProvider).getBool(_key) ?? false;
 
   Future<void> complete() async {
     await ref.read(sharedPreferencesProvider).setBool(_key, true);

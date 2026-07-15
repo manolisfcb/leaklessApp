@@ -6,3 +6,4 @@ library;
 
 export 'enums/enums.dart';
 export 'models/models.dart';
+export 'services/currency_converter.dart';

@@ -24,9 +24,7 @@ Widget _harness() => ProviderScope(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('es'),
-    home: const Scaffold(
-      body: GlassBottomSheet(child: QuickEntrySheet()),
-    ),
+    home: const Scaffold(body: GlassBottomSheet(child: QuickEntrySheet())),
   ),
 );
 

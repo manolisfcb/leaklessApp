@@ -70,9 +70,7 @@ class CategoriesScreen extends ConsumerWidget {
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.categoryDeleteTitle),
         content: Text(
-          l10n.categoryDeleteWarning(
-            categoryDisplayName(category, l10n),
-          ),
+          l10n.categoryDeleteWarning(categoryDisplayName(category, l10n)),
         ),
         actions: [
           TextButton(

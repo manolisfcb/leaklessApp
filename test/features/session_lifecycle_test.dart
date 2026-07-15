@@ -31,7 +31,11 @@ void main() {
       await auth.signInWithEmail(email: 'a@leakless.app', password: 'x');
       await Future<void>.delayed(Duration.zero);
       await container.read(currentHouseholdProvider.future);
-      expect(builds, 2, reason: 'household should be refetched for the new user');
+      expect(
+        builds,
+        2,
+        reason: 'household should be refetched for the new user',
+      );
 
       // Signing out must also drop it.
       await auth.signOut();

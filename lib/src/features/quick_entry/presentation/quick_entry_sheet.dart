@@ -12,8 +12,10 @@ import '../../../core/utils/category_icons.dart';
 import '../../../core/utils/money_formatter.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/transaction_category.dart';
+import '../../../domain/models/financial_account.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../budgets/application/budget_alert_watcher.dart';
+import '../../accounts/application/accounts_providers.dart';
 import '../../household/application/household_providers.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../../transactions/presentation/category_form_sheet.dart';
@@ -37,10 +39,11 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
   final _note = TextEditingController();
 
   int _cents = 0;
-  TransactionType _type = TransactionType.expense;
   ResponsibleType _responsible = ResponsibleType.me;
   TransactionPriority _priority = TransactionPriority.necessity;
   String? _categoryId;
+  String? _accountId;
+  String? _currency;
 
   /// Purchase date lifted from a scanned receipt; null means "now".
   DateTime? _occurredAt;
@@ -63,9 +66,11 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
         .read(quickEntryControllerProvider.notifier)
         .submit(
           amountMinorUnits: _cents,
-          type: _type,
+          type: TransactionType.expense,
           priority: _priority,
           responsible: _responsible,
+          currency: _currency,
+          accountId: _accountId ?? _defaultAccountId(),
           categoryId: _categoryId,
           description: note.isEmpty ? null : note,
           occurredAt: _occurredAt,
@@ -76,6 +81,21 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     } else if (mounted) {
       _showMessage(l10n.quickEntrySaveError);
     }
+  }
+
+  String? _defaultAccountId() {
+    final accounts = ref.read(activeAccountsProvider).asData?.value ?? const [];
+    final currency =
+        _currency ??
+        ref.read(currentHouseholdProvider).asData?.value?.currency ??
+        'USD';
+    for (final account in accounts) {
+      if (account.currency == currency && account.isDefault) return account.id;
+    }
+    for (final account in accounts) {
+      if (account.currency == currency) return account.id;
+    }
+    return null;
   }
 
   /// Surfaces the in-app half of a budget alert fired by this save. Shown on
@@ -132,7 +152,9 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     if (!mounted) return;
 
     final currency =
-        ref.read(currentHouseholdProvider).asData?.value?.currency ?? 'USD';
+        _currency ??
+        ref.read(currentHouseholdProvider).asData?.value?.currency ??
+        'USD';
     final categories =
         ref.read(categoriesProvider).asData?.value ??
         const <TransactionCategory>[];
@@ -168,8 +190,11 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     List<TransactionCategory> categories,
   ) {
     setState(() {
-      _type = TransactionType.expense;
-      if (result.amount != null) _cents = result.amount!.minorUnits.abs();
+      if (result.amount != null) {
+        _cents = result.amount!.minorUnits.abs();
+        _currency = result.amount!.currency;
+        _accountId = null;
+      }
       if (result.description != null) _note.text = result.description!;
       _occurredAt = result.occurredAt;
       final match = _matchCategory(result.categoryName, categories);
@@ -226,7 +251,12 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final currency =
-        ref.watch(currentHouseholdProvider).asData?.value?.currency ?? 'USD';
+        _currency ??
+        ref.watch(currentHouseholdProvider).asData?.value?.currency ??
+        'USD';
+    final accounts =
+        ref.watch(activeAccountsProvider).asData?.value ??
+        const <FinancialAccount>[];
     final categories = ref.watch(categoriesProvider).asData?.value ?? const [];
     final saving = ref.watch(quickEntryControllerProvider).isLoading;
     final scanEnabled = ref.watch(receiptScanEnabledProvider);
@@ -261,13 +291,47 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
                   ),
                   AppSpacing.gapLg,
                 ],
-                _Segmented<TransactionType>(
-                  value: _type,
-                  onChanged: (v) => setState(() => _type = v),
-                  options: const {
-                    TransactionType.expense: 'Gasto',
-                    TransactionType.income: 'Ingreso',
-                  },
+                DropdownButtonFormField<String>(
+                  key: const Key('expense-currency-field'),
+                  initialValue: currency,
+                  decoration: InputDecoration(
+                    labelText: context.l10n.currencyLabel,
+                  ),
+                  items: const ['CAD', 'USD']
+                      .map(
+                        (code) =>
+                            DropdownMenuItem(value: code, child: Text(code)),
+                      )
+                      .toList(),
+                  onChanged: saving
+                      ? null
+                      : (value) => setState(() {
+                          _currency = value;
+                          _accountId = null;
+                        }),
+                ),
+                AppSpacing.gapLg,
+                DropdownButtonFormField<String>(
+                  key: const Key('expense-account-field'),
+                  initialValue:
+                      accounts.any((account) => account.id == _accountId)
+                      ? _accountId
+                      : _defaultAccountId(),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.accountLabel,
+                  ),
+                  items: [
+                    for (final account in accounts.where(
+                      (a) => a.currency == currency,
+                    ))
+                      DropdownMenuItem(
+                        value: account.id,
+                        child: Text('${account.name} · ${account.currency}'),
+                      ),
+                  ],
+                  onChanged: saving
+                      ? null
+                      : (value) => setState(() => _accountId = value),
                 ),
                 AppSpacing.gapXl,
                 const _Label('¿Quién?'),

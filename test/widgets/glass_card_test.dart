@@ -12,9 +12,7 @@ Widget _wrap(Widget child) => MaterialApp(
 void main() {
   group('GlassCard', () {
     testWidgets('renders its child', (tester) async {
-      await tester.pumpWidget(
-        _wrap(const GlassCard(child: Text('hola'))),
-      );
+      await tester.pumpWidget(_wrap(const GlassCard(child: Text('hola'))));
       expect(find.text('hola'), findsOneWidget);
       expect(find.byType(GlassCard), findsOneWidget);
     });
@@ -22,12 +20,7 @@ void main() {
     testWidgets('invokes onTap', (tester) async {
       var tapped = 0;
       await tester.pumpWidget(
-        _wrap(
-          GlassCard(
-            onTap: () => tapped++,
-            child: const Text('tap'),
-          ),
-        ),
+        _wrap(GlassCard(onTap: () => tapped++, child: const Text('tap'))),
       );
       await tester.tap(find.text('tap'));
       expect(tapped, 1);

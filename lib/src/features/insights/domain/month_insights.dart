@@ -1,4 +1,5 @@
 import '../../../domain/models/budget.dart';
+import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/transaction.dart';
 import '../../../domain/models/transaction_category.dart';
@@ -204,7 +205,11 @@ class UncategorizedSpending {
 /// A single actionable nudge. Holds a [kind] plus optional structured args so
 /// the presentation layer can localize it.
 class InsightRecommendation {
-  const InsightRecommendation({required this.kind, this.categoryId, this.amount});
+  const InsightRecommendation({
+    required this.kind,
+    this.categoryId,
+    this.amount,
+  });
 
   final InsightRecommendationKind kind;
   final String? categoryId;
@@ -298,7 +303,18 @@ class MonthInsights {
     String currency = 'USD',
   }) {
     Money money(int minor) => Money(minorUnits: minor, currency: currency);
-    bool inMonth(DateTime d, DateTime m) => d.year == m.year && d.month == m.month;
+    int reportingMinor(Transaction transaction) {
+      final reporting = transaction.reportingAmount;
+      if (reporting != null && reporting.currency == currency) {
+        return reporting.absolute.minorUnits;
+      }
+      return transaction.amount.currency == currency
+          ? transaction.amount.absolute.minorUnits
+          : 0;
+    }
+
+    bool inMonth(DateTime d, DateTime m) =>
+        d.year == m.year && d.month == m.month;
 
     final validCategoryIds = {for (final c in categories) c.id};
     final monthStart = DateTime(month.year, month.month);
@@ -309,7 +325,7 @@ class MonthInsights {
 
     final expenses = [
       for (final t in transactions)
-        if (t.isExpense) t,
+        if (t.isExpense && t.status == TransactionStatus.confirmed) t,
     ];
     final monthExpenses = [
       for (final t in expenses)
@@ -317,7 +333,7 @@ class MonthInsights {
     ];
 
     int sumMinor(Iterable<Transaction> txs) =>
-        txs.fold(0, (s, t) => s + t.amount.absolute.minorUnits);
+        txs.fold(0, (s, t) => s + reportingMinor(t));
 
     int monthTotalMinor(DateTime m) =>
         sumMinor(expenses.where((t) => inMonth(t.occurredAt, m)));
@@ -328,7 +344,7 @@ class MonthInsights {
         if (!inMonth(t.occurredAt, m)) continue;
         final cid = t.categoryId;
         if (cid == null) continue;
-        map[cid] = (map[cid] ?? 0) + t.amount.absolute.minorUnits;
+        map[cid] = (map[cid] ?? 0) + reportingMinor(t);
       }
       return map;
     }
@@ -341,8 +357,7 @@ class MonthInsights {
     final precedingSpend = preceding.map(categorySpend).toList();
 
     final budgetsByCat = {for (final b in budgets) b.categoryId: b};
-    final totalBudgetMinor =
-        budgets.fold(0, (s, b) => s + b.limit.minorUnits);
+    final totalBudgetMinor = budgets.fold(0, (s, b) => s + b.limit.minorUnits);
 
     // --- Per-category breakdown. ---------------------------------------------
     final categoryInsights = <CategoryInsight>[];
@@ -360,7 +375,8 @@ class MonthInsights {
       TrendDirection? trend;
       double? trendPct;
       if (history.isNotEmpty) {
-        final avgMinor = (history.reduce((a, b) => a + b) / history.length).round();
+        final avgMinor = (history.reduce((a, b) => a + b) / history.length)
+            .round();
         avg = money(avgMinor);
         if (avgMinor > 0) {
           trendPct = (spent - avgMinor) / avgMinor;
@@ -395,7 +411,8 @@ class MonthInsights {
       // Runaway: enough history (>=2 months with data), above a floor, and
       // materially over the average.
       if (spent >= runawayFloorMinorUnits && history.length >= 2) {
-        final avgMinor = (history.reduce((a, b) => a + b) / history.length).round();
+        final avgMinor = (history.reduce((a, b) => a + b) / history.length)
+            .round();
         if (avgMinor > 0) {
           final overshoot = spent / avgMinor - 1;
           if (overshoot >= runawayThreshold) {
@@ -411,16 +428,20 @@ class MonthInsights {
         }
       }
     }
-    categoryInsights.sort((a, b) => b.spent.minorUnits.compareTo(a.spent.minorUnits));
+    categoryInsights.sort(
+      (a, b) => b.spent.minorUnits.compareTo(a.spent.minorUnits),
+    );
     runaways.sort((a, b) => b.overshootPct.compareTo(a.overshootPct));
 
     // --- Projection. ---------------------------------------------------------
-    final reliable = daysElapsed >= minDaysForProjection &&
+    final reliable =
+        daysElapsed >= minDaysForProjection &&
         monthExpenses.length >= minExpensesForProjection;
     int? projectedTotalMinor;
     int? projectedOverMinor;
     if (reliable && daysElapsed > 0) {
-      projectedTotalMinor = (totalSpentMinor / daysElapsed * daysInMonth).round();
+      projectedTotalMinor = (totalSpentMinor / daysElapsed * daysInMonth)
+          .round();
       if (totalBudgetMinor > 0 && projectedTotalMinor > totalBudgetMinor) {
         projectedOverMinor = projectedTotalMinor - totalBudgetMinor;
       }
@@ -429,10 +450,12 @@ class MonthInsights {
       confidence: reliable
           ? ProjectionConfidence.reliable
           : ProjectionConfidence.insufficientData,
-      projectedTotal:
-          projectedTotalMinor == null ? null : money(projectedTotalMinor),
-      projectedOverBudget:
-          projectedOverMinor == null ? null : money(projectedOverMinor),
+      projectedTotal: projectedTotalMinor == null
+          ? null
+          : money(projectedTotalMinor),
+      projectedOverBudget: projectedOverMinor == null
+          ? null
+          : money(projectedOverMinor),
     );
 
     // --- Pace. ---------------------------------------------------------------
@@ -441,8 +464,9 @@ class MonthInsights {
       expectedToDate: money(expectedMinor),
       actualToDate: money(totalSpentMinor),
       difference: money(totalSpentMinor - expectedMinor),
-      amountToReduce:
-          projectedOverMinor == null ? null : money(projectedOverMinor),
+      amountToReduce: projectedOverMinor == null
+          ? null
+          : money(projectedOverMinor),
     );
 
     // --- Status. -------------------------------------------------------------
@@ -468,21 +492,24 @@ class MonthInsights {
     // --- Historical comparison. ---------------------------------------------
     final prevMonthDate = preceding.first;
     final previousTotalMinor = monthTotalMinor(prevMonthDate);
-    final hasPreviousMonth =
-        expenses.any((t) => inMonth(t.occurredAt, prevMonthDate));
+    final hasPreviousMonth = expenses.any(
+      (t) => inMonth(t.occurredAt, prevMonthDate),
+    );
     final changeVsPrev = previousTotalMinor > 0
         ? (totalSpentMinor - previousTotalMinor) / previousTotalMinor
         : null;
 
-    final monthsWithHistory =
-        preceding.where((m) => expenses.any((t) => inMonth(t.occurredAt, m)));
+    final monthsWithHistory = preceding.where(
+      (m) => expenses.any((t) => inMonth(t.occurredAt, m)),
+    );
     final avg3Minor = monthsWithHistory.isEmpty
         ? 0
         : (monthsWithHistory.fold(0, (s, m) => s + monthTotalMinor(m)) /
-                monthsWithHistory.length)
-            .round();
-    final changeVsAvg =
-        avg3Minor > 0 ? (totalSpentMinor - avg3Minor) / avg3Minor : null;
+                  monthsWithHistory.length)
+              .round();
+    final changeVsAvg = avg3Minor > 0
+        ? (totalSpentMinor - avg3Minor) / avg3Minor
+        : null;
 
     final recentTotals = [
       for (final m in [preceding[2], preceding[1], preceding[0], month])
@@ -505,7 +532,7 @@ class MonthInsights {
     final byDayMinor = <int, int>{};
     for (final t in monthExpenses) {
       final d = t.occurredAt.day;
-      byDayMinor[d] = (byDayMinor[d] ?? 0) + t.amount.absolute.minorUnits;
+      byDayMinor[d] = (byDayMinor[d] ?? 0) + reportingMinor(t);
     }
     int? mostExpensiveDay;
     var mostExpensiveDayMinor = 0;
@@ -517,9 +544,13 @@ class MonthInsights {
     });
     final daily = DailySpending(
       byDay: {for (final e in byDayMinor.entries) e.key: money(e.value)},
-      dailyAverage: money(daysElapsed > 0 ? (totalSpentMinor / daysElapsed).round() : 0),
-      daysWithoutSpend:
-          (daysElapsed - byDayMinor.keys.length).clamp(0, daysInMonth),
+      dailyAverage: money(
+        daysElapsed > 0 ? (totalSpentMinor / daysElapsed).round() : 0,
+      ),
+      daysWithoutSpend: (daysElapsed - byDayMinor.keys.length).clamp(
+        0,
+        daysInMonth,
+      ),
       mostExpensiveDay: mostExpensiveDay,
       mostExpensiveDayAmount: money(mostExpensiveDayMinor),
     );
@@ -538,12 +569,14 @@ class MonthInsights {
       if (d.isBefore(windowStart)) continue;
       if (d.isAfter(windowEnd)) continue;
       weekdaySpendMinor[d.weekday] =
-          (weekdaySpendMinor[d.weekday] ?? 0) + t.amount.absolute.minorUnits;
+          (weekdaySpendMinor[d.weekday] ?? 0) + reportingMinor(t);
     }
     final weekdayDayCount = <int, int>{};
-    for (var d = windowStart;
-        !d.isAfter(windowEnd);
-        d = d.add(const Duration(days: 1))) {
+    for (
+      var d = windowStart;
+      !d.isAfter(windowEnd);
+      d = d.add(const Duration(days: 1))
+    ) {
       weekdayDayCount[d.weekday] = (weekdayDayCount[d.weekday] ?? 0) + 1;
     }
     final weekdayAvg = <int, Money>{};
@@ -601,7 +634,8 @@ class MonthInsights {
       );
     }
     recs.sort(
-      (a, b) => (b.amount?.minorUnits ?? 0).compareTo(a.amount?.minorUnits ?? 0),
+      (a, b) =>
+          (b.amount?.minorUnits ?? 0).compareTo(a.amount?.minorUnits ?? 0),
     );
     if (recs.isEmpty) {
       recs.add(
@@ -616,8 +650,9 @@ class MonthInsights {
       totalSpent: money(totalSpentMinor),
       totalBudget: money(totalBudgetMinor),
       budgetDifference: money(totalBudgetMinor - totalSpentMinor),
-      budgetUsedPct:
-          totalBudgetMinor > 0 ? totalSpentMinor / totalBudgetMinor : null,
+      budgetUsedPct: totalBudgetMinor > 0
+          ? totalSpentMinor / totalBudgetMinor
+          : null,
       status: status,
       pace: pace,
       projection: projection,

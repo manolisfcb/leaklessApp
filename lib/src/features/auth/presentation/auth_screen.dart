@@ -262,7 +262,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ],
                 AppSpacing.gapXl,
                 GlassButton(
-                  label: _isSignUp ? l10n.authCreateAccountCta : l10n.authSignInCta,
+                  label: _isSignUp
+                      ? l10n.authCreateAccountCta
+                      : l10n.authSignInCta,
                   loading: loading,
                   onPressed: loading ? null : _submit,
                 ),

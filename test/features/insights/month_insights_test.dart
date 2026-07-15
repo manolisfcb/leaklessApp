@@ -149,8 +149,10 @@ void main() {
           _expense(minor: 1000, on: DateTime(2026, 7, 1), categoryId: 'food'),
         ],
       );
-      expect(insights.projection.confidence,
-          ProjectionConfidence.insufficientData);
+      expect(
+        insights.projection.confidence,
+        ProjectionConfidence.insufficientData,
+      );
       expect(insights.projection.projectedTotal, isNull);
     });
 
@@ -161,8 +163,10 @@ void main() {
           _expense(minor: 1000, on: DateTime(2026, 7, 8), categoryId: 'food'),
         ], // only 2 expenses < min 3
       );
-      expect(insights.projection.confidence,
-          ProjectionConfidence.insufficientData);
+      expect(
+        insights.projection.confidence,
+        ProjectionConfidence.insufficientData,
+      );
     });
 
     test('reliable projection extrapolates the run rate', () {
@@ -188,7 +192,9 @@ void main() {
         transactions: [
           _expense(minor: 5000, on: DateTime(2026, 7, 3), categoryId: 'food'),
         ],
-        budgets: [_budget('food', 31000)], // 1000/day → 15000 expected by day 15
+        budgets: [
+          _budget('food', 31000),
+        ], // 1000/day → 15000 expected by day 15
       );
       expect(insights.pace.expectedToDate.minorUnits, 15000);
       expect(insights.pace.actualToDate.minorUnits, 5000);
@@ -257,7 +263,9 @@ void main() {
       );
 
       expect(insights.categories.map((c) => c.categoryId), ['fun', 'food']);
-      final food = insights.categories.firstWhere((c) => c.categoryId == 'food');
+      final food = insights.categories.firstWhere(
+        (c) => c.categoryId == 'food',
+      );
       expect(food.spent.minorUnits, 4000);
       expect(food.shareOfTotal, closeTo(0.4, 1e-9));
       expect(food.limit!.minorUnits, 8000);
@@ -318,14 +326,18 @@ void main() {
           _expense(minor: 400, on: DateTime(2026, 7, 3), categoryId: 'food'),
         ],
       );
-      expect(
-        insights.comparison.recentTotals.map((m) => m.month),
-        [DateTime(2026, 4), DateTime(2026, 5), DateTime(2026, 6), DateTime(2026, 7)],
-      );
-      expect(
-        insights.comparison.recentTotals.map((m) => m.total.minorUnits),
-        [100, 200, 300, 400],
-      );
+      expect(insights.comparison.recentTotals.map((m) => m.month), [
+        DateTime(2026, 4),
+        DateTime(2026, 5),
+        DateTime(2026, 6),
+        DateTime(2026, 7),
+      ]);
+      expect(insights.comparison.recentTotals.map((m) => m.total.minorUnits), [
+        100,
+        200,
+        300,
+        400,
+      ]);
     });
   });
 
@@ -398,8 +410,10 @@ void main() {
         budgets: [_budget('food', 50000)], // huge budget, no projection over
       );
       expect(insights.recommendations, hasLength(1));
-      expect(insights.recommendations.first.kind,
-          InsightRecommendationKind.allOnTrack);
+      expect(
+        insights.recommendations.first.kind,
+        InsightRecommendationKind.allOnTrack,
+      );
     });
 
     test('suggests trimming the top category when projected over budget', () {
@@ -426,10 +440,14 @@ void main() {
       expect(insights.categories, isEmpty);
       expect(insights.runawayCategories, isEmpty);
       expect(insights.uncategorized.isEmpty, isTrue);
-      expect(insights.projection.confidence,
-          ProjectionConfidence.insufficientData);
-      expect(insights.recommendations.first.kind,
-          InsightRecommendationKind.allOnTrack);
+      expect(
+        insights.projection.confidence,
+        ProjectionConfidence.insufficientData,
+      );
+      expect(
+        insights.recommendations.first.kind,
+        InsightRecommendationKind.allOnTrack,
+      );
     });
   });
 }

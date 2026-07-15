@@ -7,5 +7,6 @@ import 'monitoring/crash_reporter.dart';
 final crashReporterProvider = Provider<CrashReporter>((ref) => CrashReporter());
 
 /// App analytics (Firebase-backed, no-op until configured).
-final analyticsServiceProvider =
-    Provider<AnalyticsService>((ref) => AnalyticsService());
+final analyticsServiceProvider = Provider<AnalyticsService>(
+  (ref) => AnalyticsService(),
+);

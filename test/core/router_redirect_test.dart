@@ -197,14 +197,16 @@ void main() {
       addTearDown(container.dispose);
 
       await tester.pumpWidget(
-        UncontrolledProviderScope(container: container, child: const _TestApp()),
+        UncontrolledProviderScope(
+          container: container,
+          child: const _TestApp(),
+        ),
       );
       await tester.pumpAndSettle();
       final router = container.read(routerProvider);
 
       // Opening the recovery deep link establishes a session AND flags recovery.
-      final auth =
-          container.read(authRepositoryProvider) as FakeAuthRepository;
+      final auth = container.read(authRepositoryProvider) as FakeAuthRepository;
       auth.emitPasswordRecovery();
       await tester.pumpAndSettle();
 

@@ -47,10 +47,7 @@ class GlassCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: borderRadius,
         gradient: AppGradients.glassSheen(colors),
-        border: Border.all(
-          color: borderColor ?? colors.glassBorder,
-          width: 1,
-        ),
+        border: Border.all(color: borderColor ?? colors.glassBorder, width: 1),
       ),
       child: Padding(padding: padding, child: child),
     );

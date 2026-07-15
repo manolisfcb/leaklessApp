@@ -135,9 +135,9 @@ class _HouseholdInvitationsScreenState
       );
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.invitationShareFailed)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.invitationShareFailed)));
     }
   }
 
@@ -321,9 +321,9 @@ class _InvitationShareCard extends StatelessWidget {
         : null;
     final expires = invitation.expiresAt == null
         ? null
-        : DateFormat.MMMMd(localeName)
-              .add_Hm()
-              .format(invitation.expiresAt!.toLocal());
+        : DateFormat.MMMMd(
+            localeName,
+          ).add_Hm().format(invitation.expiresAt!.toLocal());
 
     return GlassCard(
       strong: true,

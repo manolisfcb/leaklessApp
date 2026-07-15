@@ -20,7 +20,9 @@ class SpendingPaceCard extends StatelessWidget {
     final l10n = context.l10n;
     final pace = insights.pace;
     // difference = actual − expected: negative means under pace (good).
-    final bool? ahead = pace.difference.isZero ? null : pace.difference.isNegative;
+    final bool? ahead = pace.difference.isZero
+        ? null
+        : pace.difference.isNegative;
     final accent = switch (ahead) {
       true => colors.income,
       false => colors.alert,
@@ -70,7 +72,9 @@ class SpendingPaceCard extends StatelessWidget {
 
   String _paceMessage(AppLocalizations l10n, bool? ahead) => switch (ahead) {
     true => l10n.insightsPaceAhead(insights.pace.difference.absolute.format()),
-    false => l10n.insightsPaceBehind(insights.pace.difference.absolute.format()),
+    false => l10n.insightsPaceBehind(
+      insights.pace.difference.absolute.format(),
+    ),
     null => l10n.insightsPaceOnPace,
   };
 }

@@ -79,7 +79,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(CupertinoIcons.lock_rotation, size: 56, color: colors.primary),
+                Icon(
+                  CupertinoIcons.lock_rotation,
+                  size: 56,
+                  color: colors.primary,
+                ),
                 AppSpacing.gapLg,
                 Text(
                   l10n.resetPasswordTitle,

@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/dev/demo_data.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/transaction.dart';
 import 'transaction_mapper.dart';
 
@@ -15,10 +16,15 @@ abstract interface class TransactionsRepository {
   Future<void> delete(String transactionId);
 }
 
+abstract interface class TransfersRepository {
+  Future<String> createTransfer(Transaction outgoing, Transaction incoming);
+}
+
 /// In-memory repository so the app is fully usable before the backend exists.
 /// `add` mutates the list and emits, so a new quick-entry instantly appears in
 /// the history and dashboard — matching the real realtime behavior.
-class MockTransactionsRepository implements TransactionsRepository {
+class MockTransactionsRepository
+    implements TransactionsRepository, TransfersRepository {
   MockTransactionsRepository() : _items = DemoData.transactions();
 
   final List<Transaction> _items;
@@ -51,6 +57,27 @@ class MockTransactionsRepository implements TransactionsRepository {
   }
 
   @override
+  Future<String> createTransfer(
+    Transaction outgoing,
+    Transaction incoming,
+  ) async {
+    final groupId = 'transfer-${DateTime.now().microsecondsSinceEpoch}';
+    await add(
+      outgoing.copyWith(
+        transferGroupId: groupId,
+        transferDirection: TransferDirection.outgoing,
+      ),
+    );
+    await add(
+      incoming.copyWith(
+        transferGroupId: groupId,
+        transferDirection: TransferDirection.incoming,
+      ),
+    );
+    return groupId;
+  }
+
+  @override
   Future<void> delete(String transactionId) async {
     _items.removeWhere((transaction) => transaction.id == transactionId);
     _controller.add(_sorted);
@@ -60,7 +87,8 @@ class MockTransactionsRepository implements TransactionsRepository {
 }
 
 /// Supabase-backed repository using realtime streams + the [TransactionMapper].
-class SupabaseTransactionsRepository implements TransactionsRepository {
+class SupabaseTransactionsRepository
+    implements TransactionsRepository, TransfersRepository {
   SupabaseTransactionsRepository(this._client);
 
   final SupabaseClient _client;
@@ -109,6 +137,42 @@ class SupabaseTransactionsRepository implements TransactionsRepository {
     } catch (e, s) {
       throw ServerException(
         'Failed to save transaction',
+        cause: e,
+        stackTrace: s,
+      );
+    }
+  }
+
+  @override
+  Future<String> createTransfer(
+    Transaction outgoing,
+    Transaction incoming,
+  ) async {
+    try {
+      final result = await _client.rpc<Object?>(
+        'create_account_transfer',
+        params: {
+          'p_household_id': outgoing.householdId,
+          'p_from_account_id': outgoing.accountId,
+          'p_to_account_id': incoming.accountId,
+          'p_sent_amount': outgoing.amount.major,
+          'p_received_amount': incoming.amount.major,
+          'p_reporting_currency': outgoing.reportingAmount!.currency,
+          'p_sent_reporting_amount': outgoing.reportingAmount!.major,
+          'p_received_reporting_amount': incoming.reportingAmount!.major,
+          'p_rate_date': outgoing.exchangeRateDate!
+              .toIso8601String()
+              .split('T')
+              .first,
+          'p_rate_source': outgoing.exchangeRateSource,
+          'p_occurred_at': outgoing.occurredAt.toUtc().toIso8601String(),
+          'p_description': outgoing.description,
+        },
+      );
+      return result.toString();
+    } catch (e, s) {
+      throw ServerException(
+        'Failed to create transfer',
         cause: e,
         stackTrace: s,
       );

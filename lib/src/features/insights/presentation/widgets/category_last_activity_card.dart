@@ -46,7 +46,11 @@ class CategoryLastActivityCard extends StatelessWidget {
   String _relativeLabel(DateTime lastActivity, AppLocalizations l10n) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final day = DateTime(lastActivity.year, lastActivity.month, lastActivity.day);
+    final day = DateTime(
+      lastActivity.year,
+      lastActivity.month,
+      lastActivity.day,
+    );
     final daysAgo = today.difference(day).inDays;
     if (daysAgo <= 0) return l10n.insightsLastActivityToday;
     if (daysAgo == 1) return l10n.insightsLastActivityYesterday;
@@ -72,11 +76,17 @@ class _LastActivityRow extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(CategoryIcons.forKey(category?.iconName), size: 18, color: colors.textSecondary),
+        Icon(
+          CategoryIcons.forKey(category?.iconName),
+          size: 18,
+          color: colors.textSecondary,
+        ),
         AppSpacing.gapSm,
         Expanded(
           child: Text(
-            category == null ? l10n.insightsCategoryUnnamed : categoryDisplayName(category!, l10n),
+            category == null
+                ? l10n.insightsCategoryUnnamed
+                : categoryDisplayName(category!, l10n),
             style: AppTypography.bodyMedium,
             overflow: TextOverflow.ellipsis,
           ),

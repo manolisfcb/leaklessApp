@@ -80,10 +80,8 @@ int reminderNotificationId(String subscriptionId) {
 /// and triggers another sync with the fresh dates — reminders keep firing across
 /// months without a server).
 class LocalReminderScheduler {
-  LocalReminderScheduler(
-    this._notifications, {
-    int reminderHour = 9,
-  }) : _reminderHour = reminderHour;
+  LocalReminderScheduler(this._notifications, {int reminderHour = 9})
+    : _reminderHour = reminderHour;
 
   final LocalNotifications _notifications;
   final int _reminderHour;
@@ -304,20 +302,19 @@ class ReminderSyncController {
 /// falling back to Spanish — mirrors the fallback in [LeaklessApp].
 Locale _resolveLocale(Locale? override) {
   const supported = {'es', 'en', 'pt'};
-  final code = override?.languageCode ??
-      PlatformDispatcher.instance.locale.languageCode;
+  final code =
+      override?.languageCode ?? PlatformDispatcher.instance.locale.languageCode;
   return Locale(supported.contains(code) ? code : 'es');
 }
 
 final reminderSyncControllerProvider = Provider<ReminderSyncController>((ref) {
   final controller = ReminderSyncController(ref);
-  ref.listen<AsyncValue<List<SubscriptionItem>>>(
-    subscriptionsProvider,
-    (_, next) {
-      final items = next.asData?.value;
-      if (items != null) unawaited(controller.sync(items));
-    },
-    fireImmediately: true,
-  );
+  ref.listen<AsyncValue<List<SubscriptionItem>>>(subscriptionsProvider, (
+    _,
+    next,
+  ) {
+    final items = next.asData?.value;
+    if (items != null) unawaited(controller.sync(items));
+  }, fireImmediately: true);
   return controller;
 });

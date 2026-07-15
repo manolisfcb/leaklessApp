@@ -7,7 +7,7 @@ enum TransactionType {
   @JsonValue('expense')
   expense,
   @JsonValue('transfer')
-  transfer;
+  transfer,
 }
 
 /// The "intention" behind a spend — the core of leakless's leak detection.
@@ -22,7 +22,7 @@ enum TransactionPriority {
   @JsonValue('future')
   future,
   @JsonValue('ant')
-  ant;
+  ant,
 }
 
 /// Where a transaction came from.
@@ -42,6 +42,20 @@ enum TransactionSource {
   bool get isAutomatic => this != TransactionSource.manual;
 }
 
+enum TransactionStatus {
+  @JsonValue('confirmed')
+  confirmed,
+  @JsonValue('pending')
+  pending,
+}
+
+enum TransferDirection {
+  @JsonValue('outgoing')
+  outgoing,
+  @JsonValue('incoming')
+  incoming,
+}
+
 /// Who is responsible for a transaction within the household.
 enum ResponsibleType {
   @JsonValue('me')
@@ -49,5 +63,5 @@ enum ResponsibleType {
   @JsonValue('partner')
   partner,
   @JsonValue('shared')
-  shared;
+  shared,
 }

@@ -27,5 +27,4 @@ abstract class HouseholdInvitation with _$HouseholdInvitation {
     DateTime? acceptedAt,
     @Default(false) bool alreadyAccepted,
   }) = _HouseholdInvitation;
-
 }

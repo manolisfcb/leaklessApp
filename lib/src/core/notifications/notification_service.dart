@@ -13,11 +13,7 @@ enum NotificationPermissionStatus {
 /// A normalized push message — the app never passes `RemoteMessage` around so
 /// the UI/domain stay independent of Firebase (quality rule #7).
 class NotificationMessage {
-  const NotificationMessage({
-    this.title,
-    this.body,
-    this.data = const {},
-  });
+  const NotificationMessage({this.title, this.body, this.data = const {}});
 
   final String? title;
   final String? body;

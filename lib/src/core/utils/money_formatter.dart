@@ -61,8 +61,10 @@ abstract final class MoneyFormatter {
   }
 
   static String _symbolFor(String currencyCode, String? locale) =>
-      NumberFormat.simpleCurrency(locale: locale, name: currencyCode)
-          .currencySymbol;
+      NumberFormat.simpleCurrency(
+        locale: locale,
+        name: currencyCode,
+      ).currencySymbol;
 
   static num _pow10(int digits) {
     var result = 1;

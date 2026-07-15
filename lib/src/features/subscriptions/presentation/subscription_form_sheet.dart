@@ -17,8 +17,10 @@ import '../../../domain/enums/finance_enums.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/subscription_item.dart';
 import '../../../domain/models/transaction_category.dart';
+import '../../../domain/models/financial_account.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../household/application/household_providers.dart';
+import '../../accounts/application/accounts_providers.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../application/subscriptions_providers.dart';
 
@@ -48,14 +50,15 @@ class SubscriptionFormSheet extends ConsumerStatefulWidget {
 /// Days-before-charge presets offered by the reminder chips.
 const _reminderDayOptions = [0, 1, 3, 7];
 
-class _SubscriptionFormSheetState
-    extends ConsumerState<SubscriptionFormSheet> {
+class _SubscriptionFormSheetState extends ConsumerState<SubscriptionFormSheet> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late SubscriptionFrequency _frequency;
   late DateTime? _nextChargeAt;
   late String? _categoryId;
+  late String? _currency;
+  late String? _accountId;
   late bool _reminderEnabled;
   late int _reminderDaysBefore;
 
@@ -64,12 +67,12 @@ class _SubscriptionFormSheetState
     super.initState();
     final subscription = widget.subscription;
     _name = TextEditingController(text: subscription?.name ?? '');
-    _amount = TextEditingController(
-      text: _initialAmount(subscription?.amount),
-    );
+    _amount = TextEditingController(text: _initialAmount(subscription?.amount));
     _frequency = subscription?.frequency ?? SubscriptionFrequency.monthly;
     _nextChargeAt = subscription?.nextChargeAt;
     _categoryId = subscription?.categoryId;
+    _currency = subscription?.amount.currency;
+    _accountId = subscription?.accountId;
     _reminderEnabled = subscription?.reminderEnabled ?? false;
     _reminderDaysBefore = subscription?.reminderDaysBefore ?? 1;
   }
@@ -106,8 +109,8 @@ class _SubscriptionFormSheetState
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final currency =
+        _currency ??
         ref.read(currentHouseholdProvider).asData?.value?.currency ??
-        widget.subscription?.amount.currency ??
         'USD';
     final amount = _parseAmount(_amount.text, currency);
     final saved = await ref
@@ -116,6 +119,8 @@ class _SubscriptionFormSheetState
           subscriptionId: widget.subscription?.id,
           name: _name.text,
           amountMinorUnits: amount!.minorUnits,
+          currency: currency,
+          accountId: _accountId,
           frequency: _frequency,
           nextChargeAt: _nextChargeAt,
           categoryId: _categoryId,
@@ -135,9 +140,12 @@ class _SubscriptionFormSheetState
         ref.watch(categoriesProvider).asData?.value ??
         const <TransactionCategory>[];
     final currency =
+        _currency ??
         ref.watch(currentHouseholdProvider).asData?.value?.currency ??
-        widget.subscription?.amount.currency ??
         'USD';
+    final accounts =
+        ref.watch(activeAccountsProvider).asData?.value ??
+        const <FinancialAccount>[];
     final nextChargeLabel = _nextChargeAt == null
         ? l10n.subscriptionNextChargeNone
         : DateFormat.yMMMMd().format(_nextChargeAt!);
@@ -159,6 +167,23 @@ class _SubscriptionFormSheetState
               validator: (value) => value == null || value.trim().isEmpty
                   ? l10n.subscriptionNameRequired
                   : null,
+            ),
+            AppSpacing.gapLg,
+            DropdownButtonFormField<String>(
+              key: const Key('subscription-currency-field'),
+              initialValue: currency,
+              decoration: InputDecoration(labelText: l10n.billedCurrency),
+              items: const ['CAD', 'USD']
+                  .map(
+                    (code) => DropdownMenuItem(value: code, child: Text(code)),
+                  )
+                  .toList(),
+              onChanged: saving
+                  ? null
+                  : (value) => setState(() {
+                      _currency = value;
+                      _accountId = null;
+                    }),
             ),
             AppSpacing.gapLg,
             TextFormField(
@@ -184,15 +209,40 @@ class _SubscriptionFormSheetState
                 return null;
               },
             ),
+            AppSpacing.gapLg,
+            DropdownButtonFormField<String>(
+              key: const Key('subscription-account-field'),
+              initialValue: accounts.any((account) => account.id == _accountId)
+                  ? _accountId
+                  : null,
+              decoration: InputDecoration(labelText: l10n.usualAccount),
+              items: [
+                for (final account in accounts.where(
+                  (account) => account.currency == currency,
+                ))
+                  DropdownMenuItem(
+                    value: account.id,
+                    child: Text('${account.name} · ${account.currency}'),
+                  ),
+              ],
+              onChanged: saving
+                  ? null
+                  : (value) => setState(() => _accountId = value),
+            ),
             AppSpacing.gapXl,
-            Text(l10n.subscriptionFrequencyLabel, style: AppTypography.labelLarge),
+            Text(
+              l10n.subscriptionFrequencyLabel,
+              style: AppTypography.labelLarge,
+            ),
             AppSpacing.gapSm,
             CupertinoSlidingSegmentedControl<SubscriptionFrequency>(
               groupValue: _frequency,
               children: {
                 for (final frequency in SubscriptionFrequency.values)
                   frequency: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xs,
+                    ),
                     child: Text(
                       frequency.localizedLabel(l10n),
                       style: AppTypography.labelSmall,
@@ -206,7 +256,10 @@ class _SubscriptionFormSheetState
                     },
             ),
             AppSpacing.gapXl,
-            Text(l10n.subscriptionNextChargeLabel, style: AppTypography.labelLarge),
+            Text(
+              l10n.subscriptionNextChargeLabel,
+              style: AppTypography.labelLarge,
+            ),
             AppSpacing.gapSm,
             Row(
               children: [
@@ -226,7 +279,10 @@ class _SubscriptionFormSheetState
               ],
             ),
             AppSpacing.gapXl,
-            Text(l10n.subscriptionCategoryLabel, style: AppTypography.labelLarge),
+            Text(
+              l10n.subscriptionCategoryLabel,
+              style: AppTypography.labelLarge,
+            ),
             AppSpacing.gapSm,
             SizedBox(
               height: 40,
@@ -296,9 +352,10 @@ class _SubscriptionFormSheetState
                       spacing: AppSpacing.sm,
                       runSpacing: AppSpacing.sm,
                       children: [
-                        for (final days
-                            in {..._reminderDayOptions, _reminderDaysBefore}
-                                .toList()..sort())
+                        for (final days in {
+                          ..._reminderDayOptions,
+                          _reminderDaysBefore,
+                        }.toList()..sort())
                           _ReminderChip(
                             key: Key('subscription-reminder-days-$days'),
                             label: l10n.subscriptionReminderDays(days),

@@ -8,7 +8,11 @@ import '../../../core/l10n/l10n.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/theme.dart';
 import '../../../domain/enums/transaction_enums.dart';
+import '../../../domain/models/financial_account.dart';
+import '../../../domain/models/income_source.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../accounts/application/accounts_providers.dart';
+import '../../income_sources/application/income_sources_providers.dart';
 import '../application/categories_providers.dart';
 import '../application/transactions_providers.dart';
 import 'widgets/transaction_tile.dart';
@@ -23,6 +27,18 @@ class TransactionsScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final transactions = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesByIdProvider);
+    final accounts = {
+      for (final account
+          in ref.watch(accountsProvider).asData?.value ??
+              const <FinancialAccount>[])
+        account.id: account,
+    };
+    final sources = {
+      for (final source
+          in ref.watch(incomeSourcesProvider).asData?.value ??
+              const <IncomeSource>[])
+        source.id: source,
+    };
 
     return GlassScaffold(
       appBar: AppBar(
@@ -76,6 +92,8 @@ class TransactionsScreen extends ConsumerWidget {
                       child: TransactionTile(
                         transaction: tx,
                         category: categories[tx.categoryId],
+                        accountName: accounts[tx.accountId]?.name,
+                        incomeSourceName: sources[tx.incomeSourceId]?.name,
                         showDate: true,
                       ),
                     );
@@ -170,6 +188,11 @@ class _Filters extends ConsumerWidget {
     final l10n = context.l10n;
     final filter = ref.watch(transactionFilterProvider);
     final controller = ref.read(transactionFilterProvider.notifier);
+    final accounts =
+        ref.watch(accountsProvider).asData?.value ?? const <FinancialAccount>[];
+    final sources =
+        ref.watch(incomeSourcesProvider).asData?.value ??
+        const <IncomeSource>[];
 
     return SizedBox(
       height: 44,
@@ -177,6 +200,38 @@ class _Filters extends ConsumerWidget {
         scrollDirection: Axis.horizontal,
         padding: AppSpacing.screen,
         children: [
+          for (final type in TransactionType.values)
+            _Chip(
+              label: type.localizedLabel(l10n),
+              selected: filter.type == type,
+              onTap: () => controller.toggleType(type),
+            ),
+          const _Divider(),
+          for (final currency in const ['CAD', 'USD'])
+            _Chip(
+              label: currency,
+              selected: filter.currency == currency,
+              onTap: () => controller.toggleCurrency(currency),
+            ),
+          if (accounts.isNotEmpty) ...[
+            const _Divider(),
+            for (final account in accounts)
+              _Chip(
+                label: account.name,
+                selected: filter.accountId == account.id,
+                onTap: () => controller.toggleAccount(account.id),
+              ),
+          ],
+          if (sources.isNotEmpty) ...[
+            const _Divider(),
+            for (final source in sources.where((source) => !source.isArchived))
+              _Chip(
+                label: source.name,
+                selected: filter.incomeSourceId == source.id,
+                onTap: () => controller.toggleIncomeSource(source.id),
+              ),
+          ],
+          const _Divider(),
           for (final r in ResponsibleType.values)
             _Chip(
               label: r.localizedLabel(l10n),

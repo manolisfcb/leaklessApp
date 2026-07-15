@@ -36,7 +36,10 @@ class UncategorizedCard extends StatelessWidget {
                 color: colors.textSecondary,
               ),
               AppSpacing.gapSm,
-              Text(l10n.insightsUncategorizedTitle, style: AppTypography.titleLarge),
+              Text(
+                l10n.insightsUncategorizedTitle,
+                style: AppTypography.titleLarge,
+              ),
             ],
           ),
           AppSpacing.gapMd,
@@ -45,7 +48,9 @@ class UncategorizedCard extends StatelessWidget {
               uncategorized.count,
               uncategorized.amount.format(),
             ),
-            style: AppTypography.bodyMedium.copyWith(color: colors.textSecondary),
+            style: AppTypography.bodyMedium.copyWith(
+              color: colors.textSecondary,
+            ),
           ),
           AppSpacing.gapLg,
           GlassButton(

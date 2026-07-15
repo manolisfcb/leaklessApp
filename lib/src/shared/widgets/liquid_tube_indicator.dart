@@ -71,11 +71,7 @@ class _LiquidTubeIndicatorState extends State<LiquidTubeIndicator>
 }
 
 class _TubePainter extends CustomPainter {
-  _TubePainter({
-    required this.value,
-    required this.phase,
-    required this.color,
-  });
+  _TubePainter({required this.value, required this.phase, required this.color});
 
   final double value;
   final double phase;
@@ -92,7 +88,8 @@ class _TubePainter extends CustomPainter {
     const segments = 24;
     for (var i = 0; i <= segments; i++) {
       final x = size.width * (i / segments);
-      final y = fillTop + amplitude * math.sin((i / segments * 2 * math.pi) + phase);
+      final y =
+          fillTop + amplitude * math.sin((i / segments * 2 * math.pi) + phase);
       path.lineTo(x, y);
     }
     path

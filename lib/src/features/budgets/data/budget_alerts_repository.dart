@@ -53,12 +53,16 @@ class SupabaseBudgetAlertsRepository implements BudgetAlertsRepository {
       // returns no rows, so a non-empty result means "we fired first".
       final rows = await _client
           .from('budget_alert_events')
-          .upsert({
-            'household_id': budget.householdId,
-            'budget_id': budget.id,
-            'period_start': BudgetMapper.formatMonthStart(budget.periodStart),
-            'threshold_pct': thresholdPct,
-          }, onConflict: 'budget_id,period_start,threshold_pct', ignoreDuplicates: true)
+          .upsert(
+            {
+              'household_id': budget.householdId,
+              'budget_id': budget.id,
+              'period_start': BudgetMapper.formatMonthStart(budget.periodStart),
+              'threshold_pct': thresholdPct,
+            },
+            onConflict: 'budget_id,period_start,threshold_pct',
+            ignoreDuplicates: true,
+          )
           .select('id');
       return rows.isNotEmpty;
     } catch (e, s) {

@@ -38,7 +38,11 @@ class FirebaseMessagingService implements NotificationService {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     _subscriptions
       ..add(FirebaseMessaging.onMessageOpenedApp.listen(_emitOpened))
-      ..add(FirebaseMessaging.onMessage.listen((m) => _log.fine('fg: ${m.messageId}')));
+      ..add(
+        FirebaseMessaging.onMessage.listen(
+          (m) => _log.fine('fg: ${m.messageId}'),
+        ),
+      );
 
     final initial = await _messaging.getInitialMessage();
     if (initial != null) _emitOpened(initial);

@@ -40,10 +40,7 @@ class ProfileBubble extends StatelessWidget {
         ),
         boxShadow: active ? AppShadows.glow(ring) : AppShadows.card(colors),
         image: imageUrl != null
-            ? DecorationImage(
-                image: NetworkImage(imageUrl!),
-                fit: BoxFit.cover,
-              )
+            ? DecorationImage(image: NetworkImage(imageUrl!), fit: BoxFit.cover)
             : null,
       ),
       alignment: Alignment.center,

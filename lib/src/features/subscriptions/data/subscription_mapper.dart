@@ -31,6 +31,12 @@ abstract final class SubscriptionMapper {
       ),
       nextChargeAt: _parseDate(row['next_charge_at']),
       categoryId: row['category_id'] as String?,
+      accountId: row['account_id'] as String?,
+      estimatedReportingAmount: _moneyOrNull(
+        row['estimated_reporting_amount'],
+        row['reporting_currency'] as String?,
+      ),
+      exchangeRateDate: _parseDate(row['exchange_rate_date']),
       reminderEnabled: (row['reminder_enabled'] as bool?) ?? false,
       reminderDaysBefore: (row['reminder_days_before'] as num?)?.toInt() ?? 1,
       createdAt: _parseDate(row['created_at']),
@@ -51,15 +57,31 @@ abstract final class SubscriptionMapper {
     'frequency': item.frequency.name,
     'next_charge_at': item.nextChargeAt?.toUtc().toIso8601String(),
     'category_id': item.categoryId,
+    'account_id': item.accountId,
+    'estimated_reporting_amount': item.estimatedReportingAmount?.major,
+    'reporting_currency': item.estimatedReportingAmount?.currency,
+    'exchange_rate_date': item.exchangeRateDate == null
+        ? null
+        : item.exchangeRateDate!.toIso8601String().split('T').first,
     'reminder_enabled': item.reminderEnabled,
     'reminder_days_before': item.reminderDaysBefore,
   };
 
-  static T _enumByName<T extends Enum>(List<T> values, Object? raw, T fallback) {
+  static T _enumByName<T extends Enum>(
+    List<T> values,
+    Object? raw,
+    T fallback,
+  ) {
     final name = raw as String?;
     return values.firstWhere((e) => e.name == name, orElse: () => fallback);
   }
 
   static DateTime? _parseDate(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;
+
+  static Money? _moneyOrNull(Object? raw, String? currency) {
+    if (raw == null || currency == null) return null;
+    final value = raw is num ? raw : num.tryParse(raw.toString());
+    return value == null ? null : Money.fromMajor(value, currency: currency);
+  }
 }

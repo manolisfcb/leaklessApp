@@ -103,10 +103,15 @@ class CategoryPieCard extends StatelessWidget {
               center: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AmountText(money: insights.totalSpent, style: AppTypography.titleLarge),
+                  AmountText(
+                    money: insights.totalSpent,
+                    style: AppTypography.titleLarge,
+                  ),
                   Text(
                     l10n.insightsPieCenterLabel,
-                    style: AppTypography.bodySmall.copyWith(color: colors.textSecondary),
+                    style: AppTypography.bodySmall.copyWith(
+                      color: colors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -132,7 +137,11 @@ class CategoryPieCard extends StatelessWidget {
 }
 
 class _LegendRow extends StatelessWidget {
-  const _LegendRow({required this.slice, required this.color, required this.label});
+  const _LegendRow({
+    required this.slice,
+    required this.color,
+    required this.label,
+  });
 
   final CategoryPieSlice slice;
   final Color color;
@@ -142,7 +151,9 @@ class _LegendRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final percent = (slice.shareOfTotal * 100).round();
-    final shareLabel = percent == 0 && slice.shareOfTotal > 0 ? '<1%' : '$percent%';
+    final shareLabel = percent == 0 && slice.shareOfTotal > 0
+        ? '<1%'
+        : '$percent%';
 
     return Row(
       children: [

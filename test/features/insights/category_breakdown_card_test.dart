@@ -34,7 +34,11 @@ MonthInsights _insightsWith(CategoryInsight category) => MonthInsights(
     directionVsAverage: TrendDirection.stable,
     recentTotals: const [],
   ),
-  daily: const DailySpending(byDay: {}, dailyAverage: Money.zero, daysWithoutSpend: 0),
+  daily: const DailySpending(
+    byDay: {},
+    dailyAverage: Money.zero,
+    daysWithoutSpend: 0,
+  ),
   weekday: const WeekdaySpending(averageByWeekday: {}),
   uncategorized: const UncategorizedSpending(count: 0, amount: Money.zero),
   recommendations: const [],
@@ -77,7 +81,9 @@ void main() {
       expect(find.text('Quedan \$40.00'), findsOneWidget);
     });
 
-    testWidgets('shows over-budget amount when limit is exceeded', (tester) async {
+    testWidgets('shows over-budget amount when limit is exceeded', (
+      tester,
+    ) async {
       final category = CategoryInsight(
         categoryId: 'food',
         spent: const Money(minorUnits: 12000),

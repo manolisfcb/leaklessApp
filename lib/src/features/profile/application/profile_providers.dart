@@ -29,24 +29,20 @@ class ProfileController extends Notifier<AsyncValue<UserProfile?>> {
   @override
   AsyncValue<UserProfile?> build() => const AsyncData(null);
 
-  Future<UserProfile?> updateProfile({
-    String? displayName,
-    String? currency,
-  }) => _run(
-    () => ref.read(profileRepositoryProvider).updateProfile(
-      displayName: displayName,
-      currency: currency,
-    ),
-  );
+  Future<UserProfile?> updateProfile({String? displayName, String? currency}) =>
+      _run(
+        () => ref
+            .read(profileRepositoryProvider)
+            .updateProfile(displayName: displayName, currency: currency),
+      );
 
   Future<UserProfile?> uploadAvatar({
     required Uint8List bytes,
     required String fileExtension,
   }) => _run(
-    () => ref.read(profileRepositoryProvider).uploadAvatar(
-      bytes: bytes,
-      fileExtension: fileExtension,
-    ),
+    () => ref
+        .read(profileRepositoryProvider)
+        .uploadAvatar(bytes: bytes, fileExtension: fileExtension),
   );
 
   Future<UserProfile?> _run(Future<UserProfile> Function() action) async {

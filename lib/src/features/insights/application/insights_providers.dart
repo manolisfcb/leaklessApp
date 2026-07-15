@@ -4,6 +4,8 @@ import '../../budgets/application/budgets_providers.dart';
 import '../../household/application/household_providers.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../../transactions/application/transactions_providers.dart';
+import '../../income_sources/application/income_sources_providers.dart';
+import '../domain/income_insights.dart';
 import '../domain/month_insights.dart';
 
 /// Combines the existing feature streams into the [MonthInsights] read-model for
@@ -18,8 +20,12 @@ final monthInsightsProvider = Provider<AsyncValue<MonthInsights>>((ref) {
   final household = ref.watch(currentHouseholdProvider);
 
   // Propagate the first error, if any.
-  final error = [transactions, budgets, categories, household]
-      .firstWhere((v) => v.hasError, orElse: () => const AsyncData(null));
+  final error = [
+    transactions,
+    budgets,
+    categories,
+    household,
+  ].firstWhere((v) => v.hasError, orElse: () => const AsyncData(null));
   if (error.hasError) {
     return AsyncError(error.error!, error.stackTrace ?? StackTrace.current);
   }
@@ -40,6 +46,32 @@ final monthInsightsProvider = Provider<AsyncValue<MonthInsights>>((ref) {
       budgets: budgetData.value,
       categories: categoryData.value,
       currency: household.asData?.value?.currency ?? 'USD',
+    ),
+  );
+});
+
+final incomeInsightsProvider = Provider<AsyncValue<IncomeInsights>>((ref) {
+  final transactions = ref.watch(transactionsStreamProvider);
+  final sources = ref.watch(incomeSourcesProvider);
+  final household = ref.watch(currentHouseholdProvider);
+  for (final value in [transactions, sources, household]) {
+    if (value.hasError) {
+      return AsyncError(value.error!, value.stackTrace ?? StackTrace.current);
+    }
+  }
+  final tx = transactions.asData?.value;
+  final sourceData = sources.asData?.value;
+  final householdData = household.asData?.value;
+  if (tx == null || sourceData == null || householdData == null) {
+    return const AsyncLoading();
+  }
+  final now = DateTime.now();
+  return AsyncData(
+    IncomeInsights.from(
+      month: DateTime(now.year, now.month),
+      transactions: tx,
+      sources: sourceData,
+      reportingCurrency: householdData.currency,
     ),
   );
 });

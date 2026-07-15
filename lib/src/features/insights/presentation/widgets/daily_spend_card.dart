@@ -90,7 +90,9 @@ class _DayBar extends StatelessWidget {
         heightFactor: heightFactor.clamp(0.03, 1.0),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: highlighted ? colors.expense : colors.goal.withValues(alpha: 0.5),
+            color: highlighted
+                ? colors.expense
+                : colors.goal.withValues(alpha: 0.5),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(2)),
           ),
         ),

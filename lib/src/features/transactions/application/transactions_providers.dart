@@ -51,11 +51,20 @@ List<Transaction> sortTransactionsNewestFirst(List<Transaction> transactions) {
 /// Filters applied on the history screen.
 class TransactionFilter {
   const TransactionFilter({
+    this.type,
+    this.accountId,
+    this.currency,
+    this.incomeSourceId,
     this.responsible,
     this.categoryId,
     this.priority,
     this.uncategorizedOnly = false,
   });
+
+  final TransactionType? type;
+  final String? accountId;
+  final String? currency;
+  final String? incomeSourceId;
 
   final ResponsibleType? responsible;
   final String? categoryId;
@@ -66,12 +75,21 @@ class TransactionFilter {
   final bool uncategorizedOnly;
 
   bool get isActive =>
+      type != null ||
+      accountId != null ||
+      currency != null ||
+      incomeSourceId != null ||
       responsible != null ||
       categoryId != null ||
       priority != null ||
       uncategorizedOnly;
 
   bool matches(Transaction tx) {
+    if (type != null && tx.type != type) return false;
+    if (accountId != null && tx.accountId != accountId) return false;
+    if (currency != null && tx.amount.currency != currency) return false;
+    if (incomeSourceId != null && tx.incomeSourceId != incomeSourceId)
+      return false;
     if (responsible != null && tx.responsible != responsible) return false;
     if (uncategorizedOnly) {
       if (tx.categoryId != null) return false;
@@ -83,6 +101,10 @@ class TransactionFilter {
   }
 
   TransactionFilter copyWith({
+    TransactionType? type,
+    String? accountId,
+    String? currency,
+    String? incomeSourceId,
     ResponsibleType? responsible,
     String? categoryId,
     TransactionPriority? priority,
@@ -90,7 +112,17 @@ class TransactionFilter {
     bool clearResponsible = false,
     bool clearCategory = false,
     bool clearPriority = false,
+    bool clearType = false,
+    bool clearAccount = false,
+    bool clearCurrency = false,
+    bool clearIncomeSource = false,
   }) => TransactionFilter(
+    type: clearType ? null : (type ?? this.type),
+    accountId: clearAccount ? null : (accountId ?? this.accountId),
+    currency: clearCurrency ? null : (currency ?? this.currency),
+    incomeSourceId: clearIncomeSource
+        ? null
+        : (incomeSourceId ?? this.incomeSourceId),
     responsible: clearResponsible ? null : (responsible ?? this.responsible),
     categoryId: clearCategory ? null : (categoryId ?? this.categoryId),
     priority: clearPriority ? null : (priority ?? this.priority),
@@ -102,6 +134,26 @@ class TransactionFilter {
 class TransactionFilterController extends Notifier<TransactionFilter> {
   @override
   TransactionFilter build() => const TransactionFilter();
+
+  void toggleType(TransactionType value) => state = state.copyWith(
+    type: state.type == value ? null : value,
+    clearType: state.type == value,
+  );
+
+  void toggleCurrency(String value) => state = state.copyWith(
+    currency: state.currency == value ? null : value,
+    clearCurrency: state.currency == value,
+  );
+
+  void toggleAccount(String value) => state = state.copyWith(
+    accountId: state.accountId == value ? null : value,
+    clearAccount: state.accountId == value,
+  );
+
+  void toggleIncomeSource(String value) => state = state.copyWith(
+    incomeSourceId: state.incomeSourceId == value ? null : value,
+    clearIncomeSource: state.incomeSourceId == value,
+  );
 
   void toggleResponsible(ResponsibleType value) => state = state.copyWith(
     responsible: state.responsible == value ? null : value,
@@ -122,6 +174,10 @@ class TransactionFilterController extends Notifier<TransactionFilter> {
   void toggleUncategorized() => state = state.uncategorizedOnly
       ? state.copyWith(uncategorizedOnly: false)
       : TransactionFilter(
+          type: state.type,
+          accountId: state.accountId,
+          currency: state.currency,
+          incomeSourceId: state.incomeSourceId,
           responsible: state.responsible,
           priority: state.priority,
           uncategorizedOnly: true,
@@ -130,6 +186,10 @@ class TransactionFilterController extends Notifier<TransactionFilter> {
   /// Sets the uncategorized-only filter regardless of its current state, for
   /// entry points (e.g. the insights CTA) that always want it enabled.
   void showUncategorizedOnly() => state = TransactionFilter(
+    type: state.type,
+    accountId: state.accountId,
+    currency: state.currency,
+    incomeSourceId: state.incomeSourceId,
     responsible: state.responsible,
     priority: state.priority,
     uncategorizedOnly: true,
@@ -150,7 +210,12 @@ final filteredTransactionsProvider = Provider<AsyncValue<List<Transaction>>>((
   final filter = ref.watch(transactionFilterProvider);
   return ref
       .watch(transactionsStreamProvider)
-      .whenData((list) => list.where(filter.matches).toList());
+      .whenData(
+        (list) => list
+            .where((tx) => tx.transferDirection != TransferDirection.incoming)
+            .where(filter.matches)
+            .toList(),
+      );
 });
 
 /// Mutations for existing transactions. The database trigger recomputes the

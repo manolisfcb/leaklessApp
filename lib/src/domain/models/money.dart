@@ -24,10 +24,7 @@ abstract class Money with _$Money {
   /// Builds [Money] from a major-unit value (e.g. `10.99` → 1099 cents).
   factory Money.fromMajor(num major, {String currency = 'USD'}) {
     final factor = _factor(currency);
-    return Money(
-      minorUnits: (major * factor).round(),
-      currency: currency,
-    );
+    return Money(minorUnits: (major * factor).round(), currency: currency);
   }
 
   /// A zero amount in the default currency.
@@ -62,8 +59,11 @@ abstract class Money with _$Money {
       );
 
   /// Compact form for tight spaces, e.g. `$1.1K`.
-  String formatCompact({String? locale}) =>
-      MoneyFormatter.formatCompact(minorUnits, currencyCode: currency, locale: locale);
+  String formatCompact({String? locale}) => MoneyFormatter.formatCompact(
+    minorUnits,
+    currencyCode: currency,
+    locale: locale,
+  );
 
   void _assertSameCurrency(Money other) {
     assert(

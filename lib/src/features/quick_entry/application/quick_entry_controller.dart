@@ -5,8 +5,10 @@ import '../../../core/logging/app_logger.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/transaction.dart';
+import '../../../domain/models/fx_rate.dart';
 import '../../budgets/application/budget_alert_watcher.dart';
 import '../../household/application/household_providers.dart';
+import '../../fx/application/exchange_rates_providers.dart';
 import '../../transactions/application/transactions_providers.dart';
 
 /// Handles registering a quick expense/income.
@@ -26,6 +28,9 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
     required TransactionType type,
     required TransactionPriority priority,
     required ResponsibleType responsible,
+    String? currency,
+    String? accountId,
+    String? incomeSourceId,
     String? categoryId,
     String? description,
     DateTime? occurredAt,
@@ -39,17 +44,28 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
       if (household == null) {
         throw StateError('No active household to register a transaction.');
       }
+      final originalCurrency = currency ?? household.currency;
+      final snapshot = await _snapshot(
+        amountMinorUnits: amountMinorUnits,
+        originalCurrency: originalCurrency,
+        reportingCurrency: household.currency,
+        occurredAt: when,
+      );
       final transaction = Transaction(
         id: '',
         householdId: household.id,
-        amount: Money(
-          minorUnits: amountMinorUnits,
-          currency: household.currency,
-        ),
+        amount: Money(minorUnits: amountMinorUnits, currency: originalCurrency),
         type: type,
         priority: priority,
         responsible: responsible,
         categoryId: categoryId,
+        accountId: accountId,
+        incomeSourceId: incomeSourceId,
+        reportingAmount: snapshot.amount,
+        exchangeRateScaled: snapshot.scaledRate,
+        exchangeRateDate: snapshot.rateDate,
+        exchangeRateSource: snapshot.source,
+        exchangeRateEstimated: snapshot.estimated,
         occurredAt: when,
         description: description,
       );
@@ -84,6 +100,66 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
       occurredAt: when,
     );
     return true;
+  }
+
+  Future<
+    ({
+      Money amount,
+      int scaledRate,
+      DateTime rateDate,
+      String source,
+      bool estimated,
+    })
+  >
+  _snapshot({
+    required int amountMinorUnits,
+    required String originalCurrency,
+    required String reportingCurrency,
+    required DateTime occurredAt,
+  }) async {
+    final original = Money(
+      minorUnits: amountMinorUnits,
+      currency: originalCurrency,
+    );
+    if (originalCurrency == reportingCurrency) {
+      return (
+        amount: original.copyWith(currency: reportingCurrency),
+        scaledRate: FxRate.scale,
+        rateDate: occurredAt,
+        source: 'identity',
+        estimated: false,
+      );
+    }
+    final repository = ref.read(exchangeRatesRepositoryProvider);
+    FxRate? rate;
+    if (originalCurrency == 'USD' && reportingCurrency == 'CAD') {
+      rate = await repository.resolve(
+        foreignCurrency: 'USD',
+        reportingCurrency: 'CAD',
+        onOrBefore: occurredAt,
+      );
+    } else if (originalCurrency == 'CAD' && reportingCurrency == 'USD') {
+      rate = await repository.resolve(
+        foreignCurrency: 'USD',
+        reportingCurrency: 'CAD',
+        onOrBefore: occurredAt,
+      );
+    }
+    if (rate == null) throw StateError('fx_rate_unavailable');
+    final amount = ref
+        .read(currencyConverterProvider)
+        .convert(original, reportingCurrency, rate: rate);
+    final exactDay =
+        rate.rateDate.year == occurredAt.year &&
+        rate.rateDate.month == occurredAt.month &&
+        rate.rateDate.day == occurredAt.day;
+    return (
+      amount: amount,
+      scaledRate: rate.scaledRate,
+      rateDate: rate.rateDate,
+      source: exactDay ? rate.source : '${rate.source}_previous_day_fallback',
+      estimated: !exactDay,
+    );
   }
 
   /// Local half of the budget-alert pipeline: after a saved expense, record
