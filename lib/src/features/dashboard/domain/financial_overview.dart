@@ -44,8 +44,9 @@ class FinancialOverview {
       for (final transaction in transactions) {
         if (transaction.accountId != account.id ||
             transaction.status != TransactionStatus.confirmed ||
-            transaction.occurredAt.isBefore(account.openingBalanceAt))
+            transaction.occurredAt.isBefore(account.openingBalanceAt)) {
           continue;
+        }
         final amount = transaction.amount.absolute.minorUnits;
         switch (transaction.type) {
           case TransactionType.income:

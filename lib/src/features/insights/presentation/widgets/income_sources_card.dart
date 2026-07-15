@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/theme.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/theme/theme.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../domain/income_insights.dart';
 

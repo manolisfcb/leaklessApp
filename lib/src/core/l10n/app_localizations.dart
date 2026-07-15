@@ -2739,6 +2739,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudieron cargar las fuentes'**
   String get incomeSourcesLoadError;
+
+  /// No description provided for @recordCharge.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar cargo'**
+  String get recordCharge;
+
+  /// No description provided for @actualDebitedAmount.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe real debitado'**
+  String get actualDebitedAmount;
+
+  /// No description provided for @chargeAccountMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una cuenta habitual antes de registrar el cargo'**
+  String get chargeAccountMissing;
+
+  /// No description provided for @chargeSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargo registrado'**
+  String get chargeSaved;
+
+  /// No description provided for @chargeSaveError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo registrar el cargo'**
+  String get chargeSaveError;
 }
 
 class _AppLocalizationsDelegate

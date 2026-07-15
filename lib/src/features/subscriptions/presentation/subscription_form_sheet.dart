@@ -14,13 +14,13 @@ import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
 import '../../../core/utils/money_formatter.dart';
 import '../../../domain/enums/finance_enums.dart';
+import '../../../domain/models/financial_account.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/subscription_item.dart';
 import '../../../domain/models/transaction_category.dart';
-import '../../../domain/models/financial_account.dart';
 import '../../../shared/widgets/widgets.dart';
-import '../../household/application/household_providers.dart';
 import '../../accounts/application/accounts_providers.dart';
+import '../../household/application/household_providers.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../application/subscriptions_providers.dart';
 
@@ -182,7 +182,6 @@ class _SubscriptionFormSheetState extends ConsumerState<SubscriptionFormSheet> {
                   ? null
                   : (value) => setState(() {
                       _currency = value;
-                      _accountId = null;
                     }),
             ),
             AppSpacing.gapLg,
@@ -217,9 +216,7 @@ class _SubscriptionFormSheetState extends ConsumerState<SubscriptionFormSheet> {
                   : null,
               decoration: InputDecoration(labelText: l10n.usualAccount),
               items: [
-                for (final account in accounts.where(
-                  (account) => account.currency == currency,
-                ))
+                for (final account in accounts)
                   DropdownMenuItem(
                     value: account.id,
                     child: Text('${account.name} · ${account.currency}'),

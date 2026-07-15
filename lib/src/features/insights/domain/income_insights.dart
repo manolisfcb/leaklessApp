@@ -51,15 +51,17 @@ class IncomeInsights {
       if (transaction.type != TransactionType.income ||
           transaction.status != TransactionStatus.confirmed ||
           transaction.occurredAt.year != month.year ||
-          transaction.occurredAt.month != month.month)
+          transaction.occurredAt.month != month.month) {
         continue;
+      }
       final reporting =
           transaction.reportingAmount ??
           (transaction.amount.currency == reportingCurrency
               ? transaction.amount
               : null);
-      if (reporting == null || reporting.currency != reportingCurrency)
+      if (reporting == null || reporting.currency != reportingCurrency) {
         continue;
+      }
       final minor = reporting.absolute.minorUnits;
       bySourceMinor[transaction.incomeSourceId] =
           (bySourceMinor[transaction.incomeSourceId] ?? 0) + minor;

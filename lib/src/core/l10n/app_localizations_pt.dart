@@ -1511,4 +1511,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get incomeSourcesLoadError => 'Não foi possível carregar as fontes';
+
+  @override
+  String get recordCharge => 'Registrar cobrança';
+
+  @override
+  String get actualDebitedAmount => 'Valor real debitado';
+
+  @override
+  String get chargeAccountMissing =>
+      'Escolha uma conta habitual antes de registrar a cobrança';
+
+  @override
+  String get chargeSaved => 'Cobrança registrada';
+
+  @override
+  String get chargeSaveError => 'Não foi possível registrar a cobrança';
 }

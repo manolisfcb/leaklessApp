@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/theme.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/theme/theme.dart';
 import '../../../domain/models/financial_account.dart';
 import '../../../domain/models/money.dart';
 import '../../../shared/widgets/widgets.dart';
@@ -43,8 +43,9 @@ class _TransferEntrySheetState extends ConsumerState<TransferEntrySheet> {
         sentValue == null ||
         receivedValue == null ||
         sentValue <= 0 ||
-        receivedValue <= 0)
+        receivedValue <= 0) {
       return;
+    }
     final ok = await ref
         .read(transferControllerProvider.notifier)
         .submit(

@@ -23,6 +23,20 @@ supabase db push
 | `20260630000002_auto_provision_user.sql` | On sign-up, auto-create profile + starter household + owner membership + default categories. |
 | `20260701000001_enable_realtime.sql` | Add the streamed tables (`transactions`, `goals`) to the `supabase_realtime` publication. |
 | `20260701191145_add_household_invitations.sql` | Hashed, expiring household invitations plus create/inspect/accept/cancel RPCs. |
+| `20260715213856_multicurrency_accounts_income_sources.sql` | Accounts, income sources, FX cache, immutable reporting snapshots, RLS and atomic transfer RPC. |
+
+## Daily exchange rates
+
+`functions/sync-exchange-rates` caches the latest Bank of Canada USD/CAD
+observation. Deploy it without JWT verification because it authenticates
+service-to-service calls using the secret key in the `apikey` header:
+
+```bash
+supabase functions deploy sync-exchange-rates --no-verify-jwt
+```
+
+Schedule it with Supabase Cron after 17:00 Eastern and keep the project URL and
+secret key in Vault. The complete SQL/runbook is in `docs/MULTIMONEDA.md`.
 
 ## Model
 

@@ -7,9 +7,14 @@ import '../../../core/l10n/enum_labels.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
+import '../../../domain/enums/transaction_enums.dart';
+import '../../../domain/models/financial_account.dart';
+import '../../../domain/models/money.dart';
 import '../../../domain/models/subscription_item.dart';
 import '../../../domain/models/transaction_category.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../accounts/application/accounts_providers.dart';
+import '../../quick_entry/application/quick_entry_controller.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../application/subscriptions_providers.dart';
 import 'subscription_form_sheet.dart';
@@ -79,6 +84,7 @@ class SubscriptionsScreen extends ConsumerWidget {
               onTap: () =>
                   SubscriptionFormSheet.show(context, subscription: items[i]),
               onDelete: () => _confirmDelete(context, ref, items[i]),
+              onRecordCharge: () => _recordCharge(context, ref, items[i]),
             ),
           );
         },
@@ -115,6 +121,82 @@ class SubscriptionsScreen extends ConsumerWidget {
           .delete(subscription.id);
     }
   }
+
+  Future<void> _recordCharge(
+    BuildContext context,
+    WidgetRef ref,
+    SubscriptionItem subscription,
+  ) async {
+    final l10n = context.l10n;
+    final accounts =
+        ref.read(activeAccountsProvider).asData?.value ??
+        const <FinancialAccount>[];
+    final account = accounts
+        .where((item) => item.id == subscription.accountId)
+        .firstOrNull;
+    if (account == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.chargeAccountMissing)));
+      return;
+    }
+    final suggested = account.currency == subscription.amount.currency
+        ? subscription.amount
+        : subscription.estimatedReportingAmount;
+    final controller = TextEditingController(
+      text: suggested?.major.toStringAsFixed(2) ?? '',
+    );
+    final value = await showDialog<num>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.recordCharge),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(
+            labelText: l10n.actualDebitedAmount,
+            suffixText: account.currency,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.commonCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(
+              dialogContext,
+              num.tryParse(controller.text.replaceAll(',', '.')),
+            ),
+            child: Text(l10n.quickEntrySave),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (value == null || value <= 0 || !context.mounted) return;
+    final money = Money.fromMajor(value, currency: account.currency);
+    final saved = await ref
+        .read(quickEntryControllerProvider.notifier)
+        .submit(
+          amountMinorUnits: money.minorUnits,
+          type: TransactionType.expense,
+          priority: TransactionPriority.necessity,
+          responsible: ResponsibleType.shared,
+          currency: account.currency,
+          accountId: account.id,
+          categoryId: subscription.categoryId,
+          description: subscription.name,
+        );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(saved ? l10n.chargeSaved : l10n.chargeSaveError),
+        ),
+      );
+    }
+  }
 }
 
 class _SubscriptionCard extends StatelessWidget {
@@ -122,6 +204,7 @@ class _SubscriptionCard extends StatelessWidget {
     required this.subscription,
     required this.onTap,
     required this.onDelete,
+    required this.onRecordCharge,
     this.category,
   });
 
@@ -129,6 +212,7 @@ class _SubscriptionCard extends StatelessWidget {
   final TransactionCategory? category;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+  final VoidCallback onRecordCharge;
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +290,16 @@ class _SubscriptionCard extends StatelessWidget {
                 ],
               ],
             ),
+          ),
+          IconButton(
+            tooltip: l10n.recordCharge,
+            visualDensity: VisualDensity.compact,
+            icon: Icon(
+              CupertinoIcons.money_dollar_circle,
+              size: 20,
+              color: colors.income,
+            ),
+            onPressed: onRecordCharge,
           ),
           IconButton(
             tooltip: l10n.subscriptionDeleteTitle,

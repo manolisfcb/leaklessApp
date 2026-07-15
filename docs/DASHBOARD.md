@@ -84,6 +84,18 @@ Ver los tunables y el detalle de cada cálculo en los docstrings de
 - Sin categorizar (conteo + monto).
 - Recomendaciones ordenadas por impacto.
 
+## Semántica multimoneda
+
+Home ya no presenta el flujo mensual como si fuera patrimonio. `FinancialOverview`
+deriva el saldo actual por cuenta en su moneda nativa y lo valora en la moneda de
+reporte con la última tasa disponible. `DashboardSummary.balance` se conserva
+como alias compatible del flujo mensual; las APIs nuevas usan `netFlow` y
+`totalBalance` para que ambas magnitudes no puedan confundirse.
+
+Insights suma `reportingAmount`, nunca los minor units originales de monedas
+distintas. `IncomeInsights` añade ingresos por fuente y exposición por moneda;
+las transferencias quedan excluidas de ingresos, gastos y ahorro.
+
 ## Gaps de backend (no bloquean el v1)
 
 1. **Presupuesto total mensual explícito**: no existe una columna así; hoy se

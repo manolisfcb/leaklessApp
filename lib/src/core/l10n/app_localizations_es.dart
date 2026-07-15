@@ -1512,4 +1512,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get incomeSourcesLoadError => 'No se pudieron cargar las fuentes';
+
+  @override
+  String get recordCharge => 'Registrar cargo';
+
+  @override
+  String get actualDebitedAmount => 'Importe real debitado';
+
+  @override
+  String get chargeAccountMissing =>
+      'Selecciona una cuenta habitual antes de registrar el cargo';
+
+  @override
+  String get chargeSaved => 'Cargo registrado';
+
+  @override
+  String get chargeSaveError => 'No se pudo registrar el cargo';
 }

@@ -88,14 +88,14 @@ class TransactionTile extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xxs),
                 ],
                 Text(
-                  [
-                    if (transaction.isIncome)
-                      incomeSourceName ?? context.l10n.withoutSource
-                    else if (!transaction.isTransfer)
-                      transaction.priority.localizedLabel(context.l10n),
-                    if (accountName != null) accountName!,
-                    transaction.amount.currency,
-                  ].join(' · '),
+                  transaction.isExpense
+                      ? '${transaction.priority.localizedLabel(context.l10n)} · ${transaction.responsible.localizedLabel(context.l10n)}'
+                      : [
+                          if (transaction.isIncome)
+                            incomeSourceName ?? context.l10n.withoutSource,
+                          ?accountName,
+                          transaction.amount.currency,
+                        ].join(' · '),
                   style: AppTypography.bodySmall.copyWith(
                     color: colors.textSecondary,
                   ),

@@ -40,10 +40,11 @@ class MockIncomeSourcesRepository implements IncomeSourcesRepository {
         ? source.copyWith(id: 'source-${DateTime.now().microsecondsSinceEpoch}')
         : source;
     final index = _items.indexWhere((item) => item.id == saved.id);
-    if (index < 0)
+    if (index < 0) {
       _items.add(saved);
-    else
+    } else {
       _items[index] = saved;
+    }
     _controller.add(_items);
     return saved;
   }

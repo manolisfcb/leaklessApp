@@ -1506,4 +1506,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incomeSourcesLoadError => 'Income sources could not be loaded';
+
+  @override
+  String get recordCharge => 'Record charge';
+
+  @override
+  String get actualDebitedAmount => 'Actual debited amount';
+
+  @override
+  String get chargeAccountMissing =>
+      'Choose a usual account before recording the charge';
+
+  @override
+  String get chargeSaved => 'Charge recorded';
+
+  @override
+  String get chargeSaveError => 'The charge could not be recorded';
 }

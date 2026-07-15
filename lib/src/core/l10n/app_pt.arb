@@ -703,4 +703,9 @@
   "noIncomePeriod": "Sem receitas neste período"
   ,"accountsLoadError": "Não foi possível carregar as contas",
   "incomeSourcesLoadError": "Não foi possível carregar as fontes"
+  ,"recordCharge": "Registrar cobrança",
+  "actualDebitedAmount": "Valor real debitado",
+  "chargeAccountMissing": "Escolha uma conta habitual antes de registrar a cobrança",
+  "chargeSaved": "Cobrança registrada",
+  "chargeSaveError": "Não foi possível registrar a cobrança"
 }

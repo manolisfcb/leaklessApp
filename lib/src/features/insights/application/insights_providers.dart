@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../budgets/application/budgets_providers.dart';
 import '../../household/application/household_providers.dart';
+import '../../income_sources/application/income_sources_providers.dart';
 import '../../transactions/application/categories_providers.dart';
 import '../../transactions/application/transactions_providers.dart';
-import '../../income_sources/application/income_sources_providers.dart';
 import '../domain/income_insights.dart';
 import '../domain/month_insights.dart';
 

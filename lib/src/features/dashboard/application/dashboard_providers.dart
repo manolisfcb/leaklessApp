@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../budgets/application/budgets_providers.dart';
 import '../../accounts/application/accounts_providers.dart';
+import '../../budgets/application/budgets_providers.dart';
 import '../../fx/application/exchange_rates_providers.dart';
 import '../../household/application/household_providers.dart';
 import '../../subscriptions/application/subscriptions_providers.dart';

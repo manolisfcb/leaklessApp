@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/theme.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/theme/theme.dart';
 import '../../../domain/enums/finance_enums.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/financial_account.dart';
@@ -28,7 +28,7 @@ class _IncomeEntrySheetState extends ConsumerState<IncomeEntrySheet> {
   String? _currency;
   String? _accountId;
   String? _sourceId;
-  DateTime _occurredAt = DateTime.now();
+  final DateTime _occurredAt = DateTime.now();
 
   @override
   void dispose() {
@@ -43,8 +43,9 @@ class _IncomeEntrySheetState extends ConsumerState<IncomeEntrySheet> {
     if (parsed == null ||
         parsed <= 0 ||
         _sourceId == null ||
-        _accountId == null)
+        _accountId == null) {
       return;
+    }
     final amount = Money.fromMajor(parsed, currency: currency);
     final ok = await ref
         .read(quickEntryControllerProvider.notifier)

@@ -56,7 +56,7 @@ abstract class FxRate with _$FxRate {
         ? '0000000000'
         : parts[1].padRight(10, '0').substring(0, 10);
     final result = whole * scale + int.parse(fraction);
-    if (result <= 0) throw FormatException('FX rate must be positive.');
+    if (result <= 0) throw const FormatException('FX rate must be positive.');
     return result;
   }
 }

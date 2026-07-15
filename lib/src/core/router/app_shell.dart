@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/quick_entry/presentation/quick_entry_sheet.dart';
 import '../../features/income_sources/presentation/income_entry_sheet.dart';
+import '../../features/quick_entry/presentation/quick_entry_sheet.dart';
 import '../../features/transfers/presentation/transfer_entry_sheet.dart';
 import '../../shared/widgets/widgets.dart';
 import '../l10n/l10n.dart';
@@ -97,7 +97,7 @@ class _EntryChoice extends StatelessWidget {
     leading: Icon(icon, color: context.colors.primary),
     title: Text(label, style: AppTypography.labelLarge),
     trailing: const Icon(CupertinoIcons.chevron_forward),
-    shape: RoundedRectangleBorder(borderRadius: AppRadii.cardRadius),
+    shape: const RoundedRectangleBorder(borderRadius: AppRadii.cardRadius),
     tileColor: context.colors.glassFill,
     onTap: onTap,
   );

@@ -1,7 +1,7 @@
 import '../../../domain/enums/transaction_enums.dart';
+import '../../../domain/models/fx_rate.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/transaction.dart';
-import '../../../domain/models/fx_rate.dart';
 
 /// Translates between the Supabase `transactions` row shape (snake_case, amount
 /// as a numeric major value) and the domain [Transaction].

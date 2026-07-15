@@ -139,6 +139,9 @@ as $$
 declare reporting text;
 begin
   select h.currency into reporting from public.households h where h.id = new.household_id;
+  if auth.uid() is not null and not public.is_household_member(new.household_id) then
+    raise exception using errcode = '42501', message = 'not_household_member';
+  end if;
   if new.account_id is null then
     select a.id into new.account_id from public.accounts a
     where a.household_id = new.household_id and a.currency = new.currency
@@ -200,6 +203,30 @@ $$;
 create trigger provision_household_default_account
   after insert on public.households for each row
   execute function public.provision_household_default_account();
+
+create or replace function public.sync_empty_household_account_currency()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if old.currency is distinct from new.currency then
+    update public.accounts a
+    set currency = new.currency
+    where a.household_id = new.id
+      and a.is_default
+      and not exists (
+        select 1 from public.transactions t where t.account_id = a.id
+      );
+  end if;
+  return new;
+end;
+$$;
+
+create trigger sync_empty_household_account_currency
+  after update of currency on public.households for each row
+  execute function public.sync_empty_household_account_currency();
 
 create index transactions_account_idx on public.transactions(account_id);
 create index transactions_income_source_idx on public.transactions(income_source_id);
@@ -390,6 +417,7 @@ revoke all on function public.provision_household_default_account() from public,
 revoke all on function public.validate_financial_relationships() from public, anon, authenticated;
 revoke all on function public.validate_income_source_account() from public, anon, authenticated;
 revoke all on function public.prevent_account_currency_change() from public, anon, authenticated;
+revoke all on function public.sync_empty_household_account_currency() from public, anon, authenticated;
 
 do $$
 declare t text;

@@ -105,8 +105,9 @@ class PushTokenRegistrar {
 
   Future<void> _register(String userId) async {
     final token = await _service.getToken();
-    if (token == null)
+    if (token == null) {
       return; // No Firebase, or iOS permission not granted yet.
+    }
     _lastToken = token;
     await _upsert(userId, token);
   }

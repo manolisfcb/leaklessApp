@@ -703,4 +703,9 @@
   "noIncomePeriod": "No income in this period"
   ,"accountsLoadError": "Accounts could not be loaded",
   "incomeSourcesLoadError": "Income sources could not be loaded"
+  ,"recordCharge": "Record charge",
+  "actualDebitedAmount": "Actual debited amount",
+  "chargeAccountMissing": "Choose a usual account before recording the charge",
+  "chargeSaved": "Charge recorded",
+  "chargeSaveError": "The charge could not be recorded"
 }

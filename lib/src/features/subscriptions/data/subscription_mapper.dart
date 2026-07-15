@@ -60,9 +60,7 @@ abstract final class SubscriptionMapper {
     'account_id': item.accountId,
     'estimated_reporting_amount': item.estimatedReportingAmount?.major,
     'reporting_currency': item.estimatedReportingAmount?.currency,
-    'exchange_rate_date': item.exchangeRateDate == null
-        ? null
-        : item.exchangeRateDate!.toIso8601String().split('T').first,
+    'exchange_rate_date': item.exchangeRateDate?.toIso8601String().split('T').first,
     'reminder_enabled': item.reminderEnabled,
     'reminder_days_before': item.reminderDaysBefore,
   };

@@ -88,8 +88,9 @@ class TransactionFilter {
     if (type != null && tx.type != type) return false;
     if (accountId != null && tx.accountId != accountId) return false;
     if (currency != null && tx.amount.currency != currency) return false;
-    if (incomeSourceId != null && tx.incomeSourceId != incomeSourceId)
+    if (incomeSourceId != null && tx.incomeSourceId != incomeSourceId) {
       return false;
+    }
     if (responsible != null && tx.responsible != responsible) return false;
     if (uncategorizedOnly) {
       if (tx.categoryId != null) return false;

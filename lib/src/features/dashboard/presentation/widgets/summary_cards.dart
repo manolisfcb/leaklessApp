@@ -7,7 +7,8 @@ import '../../../../core/theme/theme.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../domain/dashboard_summary.dart';
 
-/// The horizontally-scrolling summary cards under the hydrometer.
+/// The two-up stat cards under the savings card: recurring expenses and
+/// budget limit alerts, each tappable into its feature.
 class SummaryCards extends StatelessWidget {
   const SummaryCards({required this.summary, super.key});
 
@@ -17,37 +18,37 @@ class SummaryCards extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final cards = [
-      _CardData(
-        icon: CupertinoIcons.chart_pie,
-        accent: colors.income,
-        value: '${(summary.savingsRate * 100).round()}%',
-        label: l10n.dashboardSavingsRate,
-      ),
-      _CardData(
-        icon: CupertinoIcons.creditcard,
-        accent: colors.goal,
-        value: '${summary.activeSubscriptions}',
-        label: l10n.dashboardRecurringExpenses,
-        onTap: () => context.push(AppRoutes.subscriptions),
-      ),
-      _CardData(
-        icon: CupertinoIcons.exclamationmark_triangle,
-        accent: colors.alert,
-        value: '${summary.activeAlerts}',
-        label: l10n.dashboardLimitAlerts,
-        onTap: () => context.push(AppRoutes.budgets),
-      ),
-    ];
-
-    return SizedBox(
-      height: 132,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: AppSpacing.screen,
-        itemCount: cards.length,
-        separatorBuilder: (_, _) => AppSpacing.gapMd,
-        itemBuilder: (context, i) => _SummaryCard(data: cards[i]),
+    return Padding(
+      padding: AppSpacing.screen,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: _SummaryCard(
+                data: _CardData(
+                  icon: CupertinoIcons.creditcard,
+                  accent: colors.goal,
+                  value: '${summary.activeSubscriptions}',
+                  label: l10n.dashboardRecurringExpenses,
+                  onTap: () => context.push(AppRoutes.subscriptions),
+                ),
+              ),
+            ),
+            AppSpacing.gapMd,
+            Expanded(
+              child: _SummaryCard(
+                data: _CardData(
+                  icon: CupertinoIcons.exclamationmark_triangle,
+                  accent: colors.alert,
+                  value: '${summary.activeAlerts}',
+                  label: l10n.dashboardLimitAlerts,
+                  onTap: () => context.push(AppRoutes.budgets),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -75,33 +76,35 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return SizedBox(
-      width: 160,
-      child: GlassCard(
-        onTap: data.onTap,
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: 38,
-              width: 38,
-              decoration: BoxDecoration(
-                color: data.accent.withValues(alpha: 0.14),
-                borderRadius: AppRadii.pillRadius,
+    return GlassCard(
+      onTap: data.onTap,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 38,
+                width: 38,
+                decoration: BoxDecoration(
+                  color: data.accent.withValues(alpha: 0.14),
+                  borderRadius: AppRadii.pillRadius,
+                ),
+                child: Icon(data.icon, size: 20, color: data.accent),
               ),
-              child: Icon(data.icon, size: 20, color: data.accent),
+              const Spacer(),
+              Text(data.value, style: AppTypography.displaySmall),
+            ],
+          ),
+          AppSpacing.gapSm,
+          Text(
+            data.label,
+            style: AppTypography.bodySmall.copyWith(
+              color: colors.textSecondary,
             ),
-            Text(data.value, style: AppTypography.displaySmall),
-            Text(
-              data.label,
-              style: AppTypography.bodySmall.copyWith(
-                color: colors.textSecondary,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

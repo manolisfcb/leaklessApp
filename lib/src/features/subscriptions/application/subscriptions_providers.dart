@@ -61,13 +61,23 @@ class SubscriptionsController extends Notifier<AsyncValue<void>> {
         throw StateError('No active household to save a subscription.');
       }
       final billingCurrency = currency ?? household.currency;
-      final accounts = await ref.read(accountsProvider.future);
+      final accounts =
+          ref.read(activeAccountsProvider).asData?.value ?? const [];
+      final householdCurrencyAccounts = accounts.where(
+        (account) => account.currency == household.currency,
+      );
       final resolvedAccountId =
           accountId ??
-          accounts
-              .where((account) => account.currency == billingCurrency)
+          householdCurrencyAccounts
+              .where((account) => account.isDefault)
               .map((account) => account.id)
-              .firstOrNull;
+              .firstOrNull ??
+          householdCurrencyAccounts.map((account) => account.id).firstOrNull ??
+          accounts
+              .where((account) => account.isDefault)
+              .map((account) => account.id)
+              .firstOrNull ??
+          accounts.map((account) => account.id).firstOrNull;
       Money? reportingAmount;
       DateTime? rateDate;
       if (billingCurrency == household.currency) {

@@ -776,4 +776,9 @@
   "noIncomePeriod": "Sin ingresos en este período"
   ,"accountsLoadError": "No se pudieron cargar las cuentas",
   "incomeSourcesLoadError": "No se pudieron cargar las fuentes"
+  ,"recordCharge": "Registrar cargo",
+  "actualDebitedAmount": "Importe real debitado",
+  "chargeAccountMissing": "Selecciona una cuenta habitual antes de registrar el cargo",
+  "chargeSaved": "Cargo registrado",
+  "chargeSaveError": "No se pudo registrar el cargo"
 }

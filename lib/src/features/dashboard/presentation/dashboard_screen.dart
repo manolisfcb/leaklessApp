@@ -14,7 +14,7 @@ import '../../transactions/presentation/widgets/transaction_tile.dart';
 import '../application/dashboard_providers.dart';
 import '../domain/dashboard_summary.dart';
 import 'widgets/couple_header.dart';
-import 'widgets/hydrometer_gauge.dart';
+import 'widgets/savings_rate_card.dart';
 import 'widgets/summary_cards.dart';
 
 /// Home screen — the "frente a frente" dashboard with the financial hydrometer.
@@ -54,7 +54,6 @@ class _DashboardBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.colors;
     final l10n = context.l10n;
     final recent =
         ref.watch(transactionsStreamProvider).asData?.value ?? const [];
@@ -65,87 +64,19 @@ class _DashboardBody extends ConsumerWidget {
       children: [
         const Padding(padding: AppSpacing.screen, child: _MonthSelector()),
         AppSpacing.gapLg,
-        Center(
-          child: Column(
-            children: [
-              Text(
-                l10n.totalBalance,
-                style: AppTypography.bodyMedium.copyWith(
-                  color: colors.textSecondary,
-                ),
-              ),
-              AppSpacing.gapXs,
-              AmountText(
-                money: summary.totalBalance,
-                style: AppTypography.displayLarge,
-                color: summary.totalBalance.isNegative
-                    ? colors.expense
-                    : colors.textPrimary,
-              ),
-              if (summary.overview?.isPartial ?? false)
-                Text(
-                  l10n.partialTotal,
-                  style: AppTypography.bodySmall.copyWith(color: colors.alert),
-                ),
-              if (summary.overview?.rate case final rate?)
-                Text(
-                  '1 ${rate.foreignCurrency} = ${rate.decimalValue} '
-                  '${rate.reportingCurrency} · ${DateFormat.yMMMd().format(rate.rateDate)}',
-                  style: AppTypography.bodySmall.copyWith(
-                    color: colors.textTertiary,
-                  ),
-                ),
-            ],
-          ),
-        ),
-        if (summary.overview case final overview?) ...[
-          AppSpacing.gapLg,
-          Padding(
-            padding: AppSpacing.screen,
-            child: GlassCard(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                children: [
-                  for (final valuation in overview.accounts)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xs,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(child: Text(valuation.account.name)),
-                          Text(valuation.balance.format(showSymbol: false)),
-                          if (valuation.reportingValue != null &&
-                              valuation.balance.currency !=
-                                  valuation.reportingValue!.currency)
-                            Text(
-                              ' ≈ ${valuation.reportingValue!.format(showSymbol: false)}',
-                            ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
-        AppSpacing.gapLg,
-        Center(
-          child: Text(
-            '${l10n.monthlyNetFlow}: ${summary.netFlow.format(showSymbol: false)}',
-            style: AppTypography.labelLarge.copyWith(
-              color: colors.textSecondary,
-            ),
-          ),
-        ),
-        AppSpacing.gapLg,
         Padding(
           padding: AppSpacing.screen,
-          child: CoupleHeader(members: summary.members),
+          child: _BalanceHeroCard(summary: summary),
         ),
-        AppSpacing.gapLg,
-        HydrometerGauge(savingsRate: summary.savingsRate, leak: summary.leak),
-        AppSpacing.gapXl,
+        AppSpacing.gapMd,
+        Padding(
+          padding: AppSpacing.screen,
+          child: SavingsRateCard(
+            savingsRate: summary.savingsRate,
+            leak: summary.leak,
+          ),
+        ),
+        AppSpacing.gapMd,
         SummaryCards(summary: summary),
         AppSpacing.gapXl,
         Padding(
@@ -176,6 +107,125 @@ class _DashboardBody extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The hero card that anchors the home: total balance with its FX context,
+/// the couple thread, per-account balances and the month's net flow — all in
+/// one glass surface so nothing important lives below the fold.
+class _BalanceHeroCard extends StatelessWidget {
+  const _BalanceHeroCard({required this.summary});
+  final DashboardSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final overview = summary.overview;
+    final accounts = overview?.accounts ?? const [];
+    final netFlow = summary.netFlow;
+
+    return GlassCard(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.totalBalance,
+            textAlign: TextAlign.center,
+            style: AppTypography.bodyMedium.copyWith(
+              color: colors.textSecondary,
+            ),
+          ),
+          AppSpacing.gapXs,
+          Center(
+            child: AmountText(
+              money: summary.totalBalance,
+              style: AppTypography.displayLarge,
+              color: summary.totalBalance.isNegative
+                  ? colors.expense
+                  : colors.textPrimary,
+            ),
+          ),
+          if (overview?.isPartial ?? false)
+            Text(
+              l10n.partialTotal,
+              textAlign: TextAlign.center,
+              style: AppTypography.bodySmall.copyWith(color: colors.alert),
+            ),
+          if (overview?.rate case final rate?)
+            Text(
+              '1 ${rate.foreignCurrency} = ${rate.decimalValue} '
+              '${rate.reportingCurrency} · ${DateFormat.yMMMd().format(rate.rateDate)}',
+              textAlign: TextAlign.center,
+              style: AppTypography.bodySmall.copyWith(
+                color: colors.textTertiary,
+              ),
+            ),
+          if (summary.members.isNotEmpty) ...[
+            AppSpacing.gapMd,
+            CoupleHeader(members: summary.members, dense: true),
+          ],
+          if (accounts.isNotEmpty) ...[
+            AppSpacing.gapMd,
+            Container(height: 1, color: colors.divider),
+            AppSpacing.gapSm,
+            for (final valuation in accounts)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        valuation.account.name,
+                        style: AppTypography.bodyMedium,
+                      ),
+                    ),
+                    Text(
+                      valuation.balance.format(showSymbol: false),
+                      style: AppTypography.labelLarge,
+                    ),
+                    if (valuation.reportingValue != null &&
+                        valuation.balance.currency !=
+                            valuation.reportingValue!.currency)
+                      Text(
+                        ' ≈ ${valuation.reportingValue!.format(showSymbol: false)}',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+          ],
+          AppSpacing.gapSm,
+          Container(height: 1, color: colors.divider),
+          AppSpacing.gapMd,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.monthlyNetFlow,
+                  style: AppTypography.labelLarge.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+              ),
+              AmountText(
+                money: netFlow,
+                style: AppTypography.titleLarge,
+                signDisplay: SignDisplay.always,
+                color: netFlow.isNegative
+                    ? colors.expense
+                    : netFlow.isPositive
+                    ? colors.income
+                    : colors.textPrimary,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

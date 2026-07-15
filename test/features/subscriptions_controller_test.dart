@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leakless/src/domain/enums/finance_enums.dart';
+import 'package:leakless/src/domain/models/financial_account.dart';
+import 'package:leakless/src/domain/models/money.dart';
 import 'package:leakless/src/domain/models/subscription_item.dart';
+import 'package:leakless/src/features/accounts/application/accounts_providers.dart';
 import 'package:leakless/src/features/subscriptions/application/subscriptions_providers.dart';
 import 'package:leakless/src/features/subscriptions/data/subscriptions_repository.dart';
 
@@ -11,6 +14,9 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         subscriptionsRepositoryProvider.overrideWithValue(repository),
+        activeAccountsProvider.overrideWithValue(
+          AsyncData([_account(currency: 'USD')]),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -41,6 +47,9 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         subscriptionsRepositoryProvider.overrideWithValue(repository),
+        activeAccountsProvider.overrideWithValue(
+          AsyncData([_account(currency: 'USD')]),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -56,6 +65,33 @@ void main() {
     expect(saved, isTrue);
     expect(repository.updated?.id, 'sub-existing');
     expect(repository.created, isNull);
+  });
+
+  test('changing billing currency preserves the usual debit account', () async {
+    final repository = _FakeSubscriptionsRepository();
+    final container = ProviderContainer(
+      overrides: [
+        subscriptionsRepositoryProvider.overrideWithValue(repository),
+        activeAccountsProvider.overrideWithValue(
+          AsyncData([_account(currency: 'USD')]),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final saved = await container
+        .read(subscriptionsControllerProvider.notifier)
+        .save(
+          subscriptionId: 'sub-existing',
+          name: 'Rent',
+          amountMinorUnits: 185000,
+          currency: 'CAD',
+          accountId: 'account-usd-default',
+        );
+
+    expect(saved, isTrue);
+    expect(repository.updated?.amount.currency, 'CAD');
+    expect(repository.updated?.accountId, 'account-usd-default');
   });
 
   test('delete returns false and exposes repository failures', () async {
@@ -127,6 +163,16 @@ void main() {
     );
   });
 }
+
+FinancialAccount _account({required String currency}) => FinancialAccount(
+  id: 'account-${currency.toLowerCase()}-default',
+  householdId: 'demo-household',
+  name: '$currency account',
+  currency: currency,
+  openingBalance: Money(minorUnits: 0, currency: currency),
+  openingBalanceAt: DateTime(2026),
+  isDefault: true,
+);
 
 class _FakeSubscriptionsRepository implements SubscriptionsRepository {
   _FakeSubscriptionsRepository({this.failDelete = false});
