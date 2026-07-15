@@ -185,6 +185,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'We couldn\'t read the receipt. Please try again.';
 
   @override
+  String get transactionDeleteTitle => 'Delete transaction';
+
+  @override
+  String get transactionDeleteMessage =>
+      'This transaction will be permanently deleted and the totals will be recalculated.';
+
+  @override
+  String get transactionDeleteSuccess => 'Transaction deleted.';
+
+  @override
+  String get transactionDeleteError =>
+      'We couldn\'t delete the transaction. Please try again.';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

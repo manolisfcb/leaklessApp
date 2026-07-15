@@ -424,6 +424,30 @@ abstract class AppLocalizations {
   /// **'No pudimos leer el recibo. Inténtalo de nuevo.'**
   String get quickEntryScanGenericError;
 
+  /// No description provided for @transactionDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar movimiento'**
+  String get transactionDeleteTitle;
+
+  /// No description provided for @transactionDeleteMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Este movimiento se eliminará definitivamente y los totales se recalcularán.'**
+  String get transactionDeleteMessage;
+
+  /// No description provided for @transactionDeleteSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Movimiento eliminado.'**
+  String get transactionDeleteSuccess;
+
+  /// No description provided for @transactionDeleteError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos eliminar el movimiento. Inténtalo de nuevo.'**
+  String get transactionDeleteError;
+
   /// No description provided for @settingsTitle.
   ///
   /// In es, this message translates to:

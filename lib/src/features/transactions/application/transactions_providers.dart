@@ -152,3 +152,26 @@ final filteredTransactionsProvider = Provider<AsyncValue<List<Transaction>>>((
       .watch(transactionsStreamProvider)
       .whenData((list) => list.where(filter.matches).toList());
 });
+
+/// Mutations for existing transactions. The database trigger recomputes the
+/// affected monthly budget after a deletion.
+class TransactionsController extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() => const AsyncData(null);
+
+  Future<bool> delete(String transactionId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(
+      () => ref.read(transactionsRepositoryProvider).delete(transactionId),
+    );
+    state = result;
+    if (result.hasError) return false;
+    ref.invalidate(transactionsStreamProvider);
+    return true;
+  }
+}
+
+final transactionsControllerProvider =
+    NotifierProvider<TransactionsController, AsyncValue<void>>(
+      TransactionsController.new,
+    );

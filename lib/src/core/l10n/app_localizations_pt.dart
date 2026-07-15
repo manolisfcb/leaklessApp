@@ -186,6 +186,20 @@ class AppLocalizationsPt extends AppLocalizations {
       'Não conseguimos ler o recibo. Tente novamente.';
 
   @override
+  String get transactionDeleteTitle => 'Excluir movimento';
+
+  @override
+  String get transactionDeleteMessage =>
+      'Este movimento será excluído permanentemente e os totais serão recalculados.';
+
+  @override
+  String get transactionDeleteSuccess => 'Movimento excluído.';
+
+  @override
+  String get transactionDeleteError =>
+      'Não conseguimos excluir o movimento. Tente novamente.';
+
+  @override
   String get settingsTitle => 'Ajustes';
 
   @override

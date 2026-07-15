@@ -12,6 +12,7 @@ abstract interface class TransactionsRepository {
   Future<List<Transaction>> fetchForHousehold(String householdId);
   Stream<List<Transaction>> watchForHousehold(String householdId);
   Future<Transaction> add(Transaction transaction);
+  Future<void> delete(String transactionId);
 }
 
 /// In-memory repository so the app is fully usable before the backend exists.
@@ -47,6 +48,12 @@ class MockTransactionsRepository implements TransactionsRepository {
     _items.add(saved);
     _controller.add(_sorted);
     return saved;
+  }
+
+  @override
+  Future<void> delete(String transactionId) async {
+    _items.removeWhere((transaction) => transaction.id == transactionId);
+    _controller.add(_sorted);
   }
 
   void dispose() => unawaited(_controller.close());
@@ -102,6 +109,26 @@ class SupabaseTransactionsRepository implements TransactionsRepository {
     } catch (e, s) {
       throw ServerException(
         'Failed to save transaction',
+        cause: e,
+        stackTrace: s,
+      );
+    }
+  }
+
+  @override
+  Future<void> delete(String transactionId) async {
+    try {
+      await _table.delete().eq('id', transactionId);
+    } on PostgrestException catch (e, s) {
+      throw ServerException(
+        'Failed to delete transaction',
+        code: e.code,
+        cause: e,
+        stackTrace: s,
+      );
+    } catch (e, s) {
+      throw ServerException(
+        'Failed to delete transaction',
         cause: e,
         stackTrace: s,
       );

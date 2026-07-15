@@ -59,6 +59,10 @@
   "quickEntryScanInvalidImage": "We couldn't process that image. Try another photo.",
   "quickEntryScanUnavailable": "The receipt reader is unavailable right now. Try again later.",
   "quickEntryScanGenericError": "We couldn't read the receipt. Please try again.",
+  "transactionDeleteTitle": "Delete transaction",
+  "transactionDeleteMessage": "This transaction will be permanently deleted and the totals will be recalculated.",
+  "transactionDeleteSuccess": "Transaction deleted.",
+  "transactionDeleteError": "We couldn't delete the transaction. Please try again.",
 
   "settingsTitle": "Settings",
   "settingsProfileFallback": "Your profile",

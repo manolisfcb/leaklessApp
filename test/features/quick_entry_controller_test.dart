@@ -120,6 +120,11 @@ class _FakeTransactionsRepository implements TransactionsRepository {
   }
 
   @override
+  Future<void> delete(String transactionId) async {
+    added = null;
+  }
+
+  @override
   Future<List<Transaction>> fetchForHousehold(String householdId) async =>
       added == null ? const [] : [added!];
 

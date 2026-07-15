@@ -186,6 +186,20 @@ class AppLocalizationsEs extends AppLocalizations {
       'No pudimos leer el recibo. Inténtalo de nuevo.';
 
   @override
+  String get transactionDeleteTitle => 'Eliminar movimiento';
+
+  @override
+  String get transactionDeleteMessage =>
+      'Este movimiento se eliminará definitivamente y los totales se recalcularán.';
+
+  @override
+  String get transactionDeleteSuccess => 'Movimiento eliminado.';
+
+  @override
+  String get transactionDeleteError =>
+      'No pudimos eliminar el movimiento. Inténtalo de nuevo.';
+
+  @override
   String get settingsTitle => 'Ajustes';
 
   @override

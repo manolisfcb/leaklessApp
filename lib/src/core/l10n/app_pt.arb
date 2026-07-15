@@ -59,6 +59,10 @@
   "quickEntryScanInvalidImage": "Não conseguimos processar essa imagem. Tente outra foto.",
   "quickEntryScanUnavailable": "O leitor de recibos não está disponível agora. Tente mais tarde.",
   "quickEntryScanGenericError": "Não conseguimos ler o recibo. Tente novamente.",
+  "transactionDeleteTitle": "Excluir movimento",
+  "transactionDeleteMessage": "Este movimento será excluído permanentemente e os totais serão recalculados.",
+  "transactionDeleteSuccess": "Movimento excluído.",
+  "transactionDeleteError": "Não conseguimos excluir o movimento. Tente novamente.",
 
   "settingsTitle": "Ajustes",
   "settingsProfileFallback": "Seu perfil",

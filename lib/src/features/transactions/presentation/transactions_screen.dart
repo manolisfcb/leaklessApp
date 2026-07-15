@@ -64,10 +64,20 @@ class TransactionsScreen extends ConsumerWidget {
                   itemCount: items.length,
                   itemBuilder: (context, i) {
                     final tx = items[i];
-                    return TransactionTile(
-                      transaction: tx,
-                      category: categories[tx.categoryId],
-                      showDate: true,
+                    return Dismissible(
+                      key: ValueKey(tx.id),
+                      direction: DismissDirection.endToStart,
+                      background: _DeleteBackground(label: l10n.commonDelete),
+                      confirmDismiss: (_) => _deleteTransaction(
+                        context: context,
+                        ref: ref,
+                        transactionId: tx.id,
+                      ),
+                      child: TransactionTile(
+                        transaction: tx,
+                        category: categories[tx.categoryId],
+                        showDate: true,
+                      ),
                     );
                   },
                 );
@@ -78,6 +88,78 @@ class TransactionsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<bool> _deleteTransaction({
+  required BuildContext context,
+  required WidgetRef ref,
+  required String transactionId,
+}) async {
+  final l10n = context.l10n;
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(l10n.transactionDeleteTitle),
+      content: Text(l10n.transactionDeleteMessage),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(false),
+          child: Text(l10n.commonCancel),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(true),
+          child: Text(
+            l10n.commonDelete,
+            style: TextStyle(color: dialogContext.colors.expense),
+          ),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return false;
+
+  final deleted = await ref
+      .read(transactionsControllerProvider.notifier)
+      .delete(transactionId);
+  if (!context.mounted) return false;
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        deleted ? l10n.transactionDeleteSuccess : l10n.transactionDeleteError,
+      ),
+    ),
+  );
+
+  // The provider refresh removes the row. Returning false lets Dismissible
+  // settle safely instead of requiring the refreshed list in the same frame.
+  return false;
+}
+
+class _DeleteBackground extends StatelessWidget {
+  const _DeleteBackground({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    alignment: Alignment.centerRight,
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+    decoration: BoxDecoration(
+      color: context.colors.expense,
+      borderRadius: AppRadii.cardRadius,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(CupertinoIcons.trash, color: Colors.white),
+        AppSpacing.gapSm,
+        Text(
+          label,
+          style: AppTypography.labelLarge.copyWith(color: Colors.white),
+        ),
+      ],
+    ),
+  );
 }
 
 class _Filters extends ConsumerWidget {
