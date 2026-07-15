@@ -352,6 +352,72 @@ abstract class AppLocalizations {
   /// **'Elegir de la galería'**
   String get quickEntryPickFromGallery;
 
+  /// No description provided for @quickEntryScanSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Recibo leído. Revisa los datos antes de guardar.'**
+  String get quickEntryScanSuccess;
+
+  /// No description provided for @quickEntryScanEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos leer el recibo. Prueba con otra foto o escríbelo.'**
+  String get quickEntryScanEmpty;
+
+  /// No description provided for @quickEntryScanPhotoAccessDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'Permite el acceso a tus fotos desde Ajustes para elegir una imagen.'**
+  String get quickEntryScanPhotoAccessDenied;
+
+  /// No description provided for @quickEntryScanCameraAccessDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'Permite el acceso a la cámara desde Ajustes para tomar una foto.'**
+  String get quickEntryScanCameraAccessDenied;
+
+  /// No description provided for @quickEntryScanPickerError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir la cámara o la galería. Inténtalo de nuevo.'**
+  String get quickEntryScanPickerError;
+
+  /// No description provided for @quickEntryScanNetworkError.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión con el servicio de lectura. Revisa tu internet.'**
+  String get quickEntryScanNetworkError;
+
+  /// No description provided for @quickEntryScanRateLimited.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicio ocupado. Espera unos segundos y reintenta.'**
+  String get quickEntryScanRateLimited;
+
+  /// No description provided for @quickEntryScanUnauthorized.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión para escanear recibos.'**
+  String get quickEntryScanUnauthorized;
+
+  /// No description provided for @quickEntryScanInvalidImage.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos procesar esa imagen. Prueba con otra foto.'**
+  String get quickEntryScanInvalidImage;
+
+  /// No description provided for @quickEntryScanUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'El lector de recibos no está disponible ahora. Inténtalo más tarde.'**
+  String get quickEntryScanUnavailable;
+
+  /// No description provided for @quickEntryScanGenericError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos leer el recibo. Inténtalo de nuevo.'**
+  String get quickEntryScanGenericError;
+
   /// No description provided for @settingsTitle.
   ///
   /// In es, this message translates to:

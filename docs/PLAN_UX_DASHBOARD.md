@@ -60,14 +60,22 @@ monto es visible (`find.text(...)` + `tester.getRect` dentro del viewport) y act
 
 ---
 
-## Tarea B — El FAB "+" no debe tapar contenido (feedback #3) ✅ HECHA
+## Tarea B — El FAB "+" no debe tapar contenido (feedback #3) ✅ RESUELTA
 
-**Problema**: el FAB de registro rápido ([app_shell.dart:26](../lib/src/core/router/app_shell.dart))
-usa la posición por defecto (`endFloat`) y flota por encima de las cards; al final de las listas tapa
-la última card. Las listas usan un padding inferior de ~120 px que no alcanza (nav bar 64 + margen +
-FAB 60 quedan por encima).
+**Estado real (2026-07-06)**: el solapamiento quedó resuelto con una
+implementación distinta de la propuesta original. El botón "+" ya no es un
+`floatingActionButton` superpuesto al `body`: vive dentro de `_GlassNavBar`, en
+el `bottomNavigationBar` del `Scaffold`, que reserva su propio espacio. Por eso
+no se implementaron `UserScrollNotification`, animaciones para ocultarlo ni
+`AppSpacing.bottomBarClearance`; las pantallas conservan su padding inferior de
+120 px. La tarea está cerrada por el resultado de UX, no porque se hayan
+ejecutado literalmente los pasos que siguen.
 
-**Solución (dos partes, ambas)**:
+**Problema original**: el FAB de registro rápido usaba la posición por defecto
+(`endFloat`) y flotaba por encima de las cards; al final de las listas tapaba la
+última card.
+
+**Propuesta original (no aplicada)**:
 1. **Ocultar el FAB durante el scroll hacia abajo, mostrarlo al subir o al parar.**
    - Convertir `AppShell` en `StatefulWidget` (sigue sin providers; es puro UI de shell).
    - Envolver `body: navigationShell` con un `NotificationListener<UserScrollNotification>`:
@@ -84,15 +92,16 @@ FAB 60 quedan por encima).
    - Definir una constante compartida (p. ej. `AppSpacing.bottomBarClearance` en
      `lib/src/core/theme/app_spacing.dart`) con valor ~**180** y reemplazar los `120` mágicos.
 
-**Criterio de aceptación**:
-- Al hacer scroll hacia abajo en cualquier tab, el FAB desaparece y el texto de las cards se lee completo.
-- Al soltar o subir, el FAB reaparece.
-- Con el scroll al fondo, la última card se ve entera por encima del nav bar.
+**Criterio de aceptación aplicado**:
+- El botón permanece accesible dentro de la barra inferior sin cubrir las cards.
+- Con el scroll al fondo, la última card se ve entera por encima de la barra.
+- Ocultarlo al bajar y mostrarlo al subir dejó de ser necesario y no forma parte
+  del comportamiento implementado.
 
-**Tests**: widget test del shell (o de un `Scaffold` reducido con la misma lógica) que emita
-notificaciones de scroll y verifique visibilidad del FAB. Si montar `AppShell` completo exige mucho
-mock de router, extraer la lógica de visibilidad a un widget propio (p. ej. `_HideOnScroll`) y
-testear ese widget aislado.
+**Tests**: no se añadió el test de notificaciones de scroll descrito originalmente,
+porque esa lógica no existe. Sigue siendo recomendable añadir un widget/golden
+test del shell que compruebe que el botón central pertenece a la barra y no tapa
+el contenido al final de una lista.
 
 ---
 
@@ -187,8 +196,8 @@ en rojo) bajo su barra, en los 3 idiomas.
 
 - [ ] `flutter analyze` limpio.
 - [ ] `flutter test` completo en verde.
-- [ ] Probar en la app real: registro rápido (monto visible), scroll en los 5 tabs (FAB se oculta,
-      última card legible), dashboard con datos categorizados (donut + desglose coherentes), cambiar
+- [ ] Probar en la app real: registro rápido (monto visible), scroll en los tabs (botón "+" dentro
+      de la barra inferior y última card legible), dashboard con datos categorizados (donut + desglose coherentes), cambiar
       idioma a EN y PT y revisar las cadenas nuevas, y probar modo claro y oscuro.
 - [ ] Un commit por tarea, mensajes estilo repo (`feat(quick-entry): ...`, `fix(shell): ...`,
       `feat(insights): ...`).

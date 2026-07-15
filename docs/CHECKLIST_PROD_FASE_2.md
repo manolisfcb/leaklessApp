@@ -6,7 +6,7 @@
 >
 > Fase anterior: [CHECKLIST_PROD.md](CHECKLIST_PROD.md). Roadmap completo:
 > [PRODUCCION_Y_MONETIZACION.md](PRODUCCION_Y_MONETIZACION.md).
-> Última actualización: 2026-07-03.
+> Última actualización: 2026-07-10.
 
 ---
 
@@ -126,7 +126,8 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
   - Si se habilita: OAuth/deep links, nonce de Apple, account linking, errores y
     pruebas en iOS/Android. Si se difiere, aprobar explícitamente la decisión y
     retirar cualquier affordance social del release.
-- [ ] **F2-T8 — Borrado seguro de cuenta + cierre de sesión definitivo.**
+- [x] **F2-T8 — Borrado seguro de cuenta + cierre de sesión definitivo.**
+  ✅ **IMPLEMENTADO (2026-07-04)**
   - Diseñar transferencia de owner cuando haya pareja; borrar el household sólo
     si el usuario es el único miembro y el producto lo confirma explícitamente.
   - Implementar operación server-side autenticada para eliminar/exportar lo que
@@ -134,6 +135,7 @@ deep link/QR` → `auth si hace falta` → `RPC acepta y mueve al household` →
     Ajustes. Probar que nunca se borren por cascade los datos del miembro que
     permanece.
 - [ ] **F2-T9 — Checkpoint e2e de Fase 2 (dos usuarios reales).**
+  ⏭️ **SIGUIENTE**
   - Owner invita → receptor abre enlace, se autentica y acepta → ambos quedan en
     el mismo household y ven los mismos miembros/datos.
   - Confirmar revocación/expiración/reuso, recovery, sign out/in sin caché
@@ -522,3 +524,32 @@ _(Detente aquí. F2-T4 implementada; ⏭️ SIGUIENTE tras checkpoint = F2-T5.)_
 **Reversibilidad:** habilitar social en el futuro es una tarea propia (OAuth,
 nonce de Apple, account linking, allowlist de redirect y pruebas por plataforma)
 y no requiere deshacer nada de lo entregado aquí.
+
+---
+
+### F2-T8 — Borrado seguro de cuenta — ✅ IMPLEMENTADO (2026-07-04)
+
+**Implementación:**
+- La RPC autenticada `delete_account(boolean)` ejecuta el borrado de forma
+  server-side. Si quien sale es owner de un hogar compartido, transfiere antes
+  la propiedad al miembro restante y conserva el hogar y sus datos; un miembro
+  no owner simplemente abandona el hogar.
+- Si el usuario es la única persona del hogar, la RPC exige confirmación
+  explícita antes de borrar el household y sus datos. También elimina los
+  objetos de avatar privados y, al final, el usuario de Auth.
+- Ajustes ofrece una hoja de confirmación adaptada a owner individual, owner
+  compartido o miembro. Exige reautenticación con contraseña, llama a la RPC y
+  limpia la sesión local después del borrado.
+
+**Seguridad y cobertura:**
+- La función es `security definer`, fija un `search_path` vacío, revoca ejecución
+  a `public`/`anon` y la concede sólo a `authenticated`.
+- `account_deletion.test.sql` contiene 21 aserciones pgTAP: permisos, traspaso
+  de ownership, conservación de datos compartidos, confirmación del borrado
+  individual, salida de un miembro y limpieza de avatar/Auth.
+- Los tests de `AccountDeletionController` cubren el éxito con cierre de sesión
+  y el rechazo por contraseña incorrecta sin borrar la cuenta.
+
+**Pendiente de evidencia humana:** validar el flujo completo contra el proyecto
+real con dos usuarios y comprobar la redirección posterior al borrado. Esa
+evidencia pertenece al checkpoint **F2-T9**, que queda como siguiente tarea.

@@ -138,6 +138,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickEntryPickFromGallery => 'Choose from gallery';
 
   @override
+  String get quickEntryScanSuccess =>
+      'Receipt read. Check the details before saving.';
+
+  @override
+  String get quickEntryScanEmpty =>
+      'We couldn\'t read the receipt. Try another photo or enter it manually.';
+
+  @override
+  String get quickEntryScanPhotoAccessDenied =>
+      'Allow photo access in Settings to choose an image.';
+
+  @override
+  String get quickEntryScanCameraAccessDenied =>
+      'Allow camera access in Settings to take a photo.';
+
+  @override
+  String get quickEntryScanPickerError =>
+      'We couldn\'t open the camera or gallery. Please try again.';
+
+  @override
+  String get quickEntryScanNetworkError =>
+      'Couldn\'t reach the receipt reader. Check your connection.';
+
+  @override
+  String get quickEntryScanRateLimited =>
+      'The reader is busy. Wait a few seconds and try again.';
+
+  @override
+  String get quickEntryScanUnauthorized => 'Sign in to scan receipts.';
+
+  @override
+  String get quickEntryScanInvalidImage =>
+      'We couldn\'t process that image. Try another photo.';
+
+  @override
+  String get quickEntryScanUnavailable =>
+      'The receipt reader is unavailable right now. Try again later.';
+
+  @override
+  String get quickEntryScanGenericError =>
+      'We couldn\'t read the receipt. Please try again.';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

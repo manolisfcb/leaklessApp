@@ -13,7 +13,6 @@ class AppConfig {
     required this.supabaseAnonKey,
     required this.revenueCatKeyIos,
     required this.revenueCatKeyAndroid,
-    required this.receiptScanEnabled,
     required this.appEnv,
   });
 
@@ -23,11 +22,6 @@ class AppConfig {
     supabaseAnonKey: Env.get('SUPABASE_ANON_KEY'),
     revenueCatKeyIos: Env.get('REVENUECAT_PUBLIC_KEY_IOS'),
     revenueCatKeyAndroid: Env.get('REVENUECAT_PUBLIC_KEY_ANDROID'),
-    // Off by default: receipt OCR needs the `scan-receipt` Edge Function
-    // deployed and its `GEMINI_API_KEY` secret set (server-side). Flip this on
-    // only once that's in place — the Gemini key never lives in the app.
-    receiptScanEnabled:
-        Env.get('RECEIPT_SCAN_ENABLED').toLowerCase() == 'true',
     appEnv: Env.get('APP_ENV', fallback: 'dev'),
   );
 
@@ -35,9 +29,6 @@ class AppConfig {
   final String supabaseAnonKey;
   final String revenueCatKeyIos;
   final String revenueCatKeyAndroid;
-
-  /// Whether receipt photo OCR (via the server-side Edge Function) is enabled.
-  final bool receiptScanEnabled;
 
   final String appEnv;
 

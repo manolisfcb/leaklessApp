@@ -5,9 +5,9 @@ read by Google's Gemini vision model and the amount, merchant, date and a
 category suggestion are dropped into the form for the user to review before
 saving.
 
-> **Status: off by default.** Until the steps below are done, Quick Entry is
-> **manual only** and the "Escanear recibo" button is hidden. Nothing about OCR
-> ships in the app until you flip it on.
+The scanner is available to **every authenticated user** when Supabase is
+configured. It has no premium or entitlement gate. The user always reviews the
+extracted fields before saving the expense.
 
 ## Why it's server-side
 
@@ -48,13 +48,9 @@ the server without touching the app.
    authenticated caller (verifies the Supabase JWT) so anonymous users can't
    burn the OCR quota.
 
-4. **Enable the client flag** in `.env`:
-
-   ```env
-   RECEIPT_SCAN_ENABLED=true
-   ```
-
-   The button appears only when this is `true` **and** Supabase is configured.
+The button appears whenever Supabase is configured in the app. If the function
+or its secret is missing, the user receives an actionable error and can still
+enter the expense manually.
 
 ## Testing
 
@@ -68,5 +64,7 @@ the server without touching the app.
 
 - Images are re-encoded and downscaled on-device (`maxWidth/Height: 1600`,
   `imageQuality: 80`) before upload to keep payloads small.
+- The function rejects unsupported formats and oversized request bodies before
+  calling Gemini.
 - The function does not persist the image; it forwards it to Gemini and returns
   the extracted fields. Add logging/retention deliberately if you need it.

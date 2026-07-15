@@ -107,6 +107,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
   /// Lets the user snap a receipt (or pick an existing photo), runs it through
   /// Gemini OCR and prefills whatever the scan recovered.
   Future<void> _scanReceipt() async {
+    final l10n = context.l10n;
     final source = await _chooseImageSource();
     if (source == null) return;
 
@@ -119,7 +120,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
         imageQuality: 80,
       );
     } on PlatformException catch (e) {
-      _showMessage(_pickerErrorMessage(e));
+      _showMessage(_pickerErrorMessage(e, l10n));
       return;
     }
     if (picked == null) return;
@@ -140,20 +141,19 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
           .scan(
             bytes,
             currency: currency,
+            mimeType: _receiptMimeType(picked),
             categoryNames: [
-              for (final c in categories) categoryDisplayName(c, context.l10n),
+              for (final c in categories) categoryDisplayName(c, l10n),
             ],
           );
     } catch (e) {
-      _showMessage(_scanErrorMessage(e));
+      _showMessage(_scanErrorMessage(e, l10n));
       return;
     }
     if (!mounted || result == null) return;
 
     if (result.isEmpty) {
-      _showMessage(
-        'No pudimos leer el recibo. Prueba con otra foto o escríbelo.',
-      );
+      _showMessage(l10n.quickEntryScanEmpty);
       return;
     }
     _applyScan(result, categories);
@@ -172,7 +172,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
       final match = _matchCategory(result.categoryName, categories);
       if (match != null) _categoryId = match.id;
     });
-    _showMessage('Recibo leído. Revisa los datos antes de guardar.');
+    _showMessage(context.l10n.quickEntryScanSuccess);
   }
 
   TransactionCategory? _matchCategory(
@@ -193,19 +193,19 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
   Future<ImageSource?> _chooseImageSource() =>
       GlassBottomSheet.show<ImageSource>(
         context,
-        title: 'Escanear recibo',
+        title: context.l10n.quickEntryScanReceipt,
         builder: (sheetContext) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             _SourceTile(
               icon: CupertinoIcons.camera,
-              label: 'Tomar una foto',
+              label: context.l10n.quickEntryTakePhoto,
               onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
             ),
             const SizedBox(height: AppSpacing.sm),
             _SourceTile(
               icon: CupertinoIcons.photo,
-              label: 'Elegir de la galería',
+              label: context.l10n.quickEntryPickFromGallery,
               onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
             ),
           ],
@@ -248,7 +248,9 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
               children: [
                 if (scanEnabled) ...[
                   GlassButton(
-                    label: scanning ? 'Leyendo recibo…' : 'Escanear recibo',
+                    label: scanning
+                        ? context.l10n.quickEntryScanningReceipt
+                        : context.l10n.quickEntryScanReceipt,
                     icon: CupertinoIcons.camera_viewfinder,
                     variant: GlassButtonVariant.glass,
                     loading: scanning,
@@ -552,23 +554,36 @@ class _SourceTile extends StatelessWidget {
 }
 
 /// Maps an image-picker platform error to a friendly, actionable message.
-String _pickerErrorMessage(PlatformException e) => switch (e.code) {
-  'photo_access_denied' =>
-    'Permite el acceso a tus fotos desde Ajustes para elegir una imagen.',
-  'camera_access_denied' =>
-    'Permite el acceso a la cámara desde Ajustes para tomar una foto.',
-  _ => 'No pudimos abrir la cámara. Inténtalo de nuevo.',
-};
+String _pickerErrorMessage(PlatformException e, AppLocalizations l10n) =>
+    switch (e.code) {
+      'photo_access_denied' => l10n.quickEntryScanPhotoAccessDenied,
+      'camera_access_denied' => l10n.quickEntryScanCameraAccessDenied,
+      _ => l10n.quickEntryScanPickerError,
+    };
 
 /// Maps a receipt scan failure to a friendly message.
-String _scanErrorMessage(Object error) {
+String _scanErrorMessage(Object error, AppLocalizations l10n) {
   if (error is ReceiptScanException) {
     return switch (error.code) {
-      'network' =>
-        'Sin conexión con el servicio de lectura. Revisa tu internet.',
-      'rate_limited' => 'Servicio ocupado. Espera unos segundos y reintenta.',
+      'network' => l10n.quickEntryScanNetworkError,
+      'rate_limited' => l10n.quickEntryScanRateLimited,
+      'unauthorized' => l10n.quickEntryScanUnauthorized,
+      'invalid_image' => l10n.quickEntryScanInvalidImage,
+      'unavailable' => l10n.quickEntryScanUnavailable,
       _ => error.message,
     };
   }
-  return 'No pudimos leer el recibo. Inténtalo de nuevo.';
+  return l10n.quickEntryScanGenericError;
+}
+
+/// `image_picker` normally reports a MIME type. Some platform implementations
+/// leave it null, so fall back to the selected file extension.
+String _receiptMimeType(XFile file) {
+  final reported = file.mimeType?.toLowerCase();
+  if (reported != null && reported.startsWith('image/')) return reported;
+  final path = file.path.toLowerCase();
+  if (path.endsWith('.png')) return 'image/png';
+  if (path.endsWith('.webp')) return 'image/webp';
+  if (path.endsWith('.heic') || path.endsWith('.heif')) return 'image/heic';
+  return 'image/jpeg';
 }

@@ -22,6 +22,7 @@ abstract interface class ReceiptScanService {
     Uint8List imageBytes, {
     required String currency,
     required List<String> categoryNames,
+    required String mimeType,
   });
 }
 
@@ -30,7 +31,12 @@ abstract interface class ReceiptScanService {
 /// Kept standalone (not an `AppException`, which is a sealed data-layer type) so
 /// the Quick Entry UI can map [code] straight to a friendly, actionable message.
 class ReceiptScanException implements Exception {
-  const ReceiptScanException(this.message, {this.code, this.cause, this.stackTrace});
+  const ReceiptScanException(
+    this.message, {
+    this.code,
+    this.cause,
+    this.stackTrace,
+  });
 
   final String message;
   final String? code;
@@ -48,7 +54,10 @@ class ReceiptScanException implements Exception {
 /// `docs/RECEIPT_OCR.md`. The client only forwards the image plus context and
 /// maps the normalized JSON the function returns.
 class SupabaseReceiptScanService implements ReceiptScanService {
-  const SupabaseReceiptScanService(this._client, {this.functionName = 'scan-receipt'});
+  const SupabaseReceiptScanService(
+    this._client, {
+    this.functionName = 'scan-receipt',
+  });
 
   final SupabaseClient _client;
   final String functionName;
@@ -58,6 +67,7 @@ class SupabaseReceiptScanService implements ReceiptScanService {
     Uint8List imageBytes, {
     required String currency,
     required List<String> categoryNames,
+    required String mimeType,
   }) async {
     FunctionResponse res;
     try {
@@ -65,7 +75,7 @@ class SupabaseReceiptScanService implements ReceiptScanService {
         functionName,
         body: {
           'image': base64Encode(imageBytes),
-          'mimeType': 'image/jpeg',
+          'mimeType': mimeType,
           'currency': currency,
           'categories': categoryNames,
         },
@@ -98,13 +108,17 @@ class SupabaseReceiptScanService implements ReceiptScanService {
 
   static String _codeForStatus(int status) => switch (status) {
     401 || 403 => 'unauthorized',
+    400 || 413 => 'invalid_image',
     429 => 'rate_limited',
+    500 || 502 || 503 => 'unavailable',
     _ => 'http_$status',
   };
 
   static String _messageForStatus(int status) => switch (status) {
     401 || 403 => 'Inicia sesión para escanear recibos.',
+    400 || 413 => 'La imagen no se pudo procesar.',
     429 => 'Servicio de lectura ocupado. Inténtalo en un momento.',
+    500 || 502 || 503 => 'El servicio de lectura no está disponible.',
     _ => 'El servicio de lectura devolvió un error.',
   };
 

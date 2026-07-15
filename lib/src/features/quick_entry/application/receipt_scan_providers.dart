@@ -2,21 +2,16 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/config/config_providers.dart';
 import '../../../core/supabase/supabase_providers.dart';
 import '../data/receipt_scan_result.dart';
 import '../data/receipt_scan_service.dart';
 
-/// The receipt OCR service, or `null` when scanning isn't available yet.
+/// The receipt OCR service, or `null` when Supabase isn't configured.
 ///
 /// Scanning runs through the `scan-receipt` Supabase Edge Function (which holds
-/// the Gemini key server-side), so it needs both Supabase configured and the
-/// `RECEIPT_SCAN_ENABLED` flag on. Until the function is deployed and the flag
-/// flipped, this stays `null` and Quick Entry is manual-only — the UI keys the
-/// "Escanear recibo" button off this being non-null.
+/// the Gemini key server-side). It is available to every authenticated user;
+/// there is deliberately no entitlement or premium gate.
 final receiptScanServiceProvider = Provider<ReceiptScanService?>((ref) {
-  final config = ref.watch(appConfigProvider);
-  if (!config.receiptScanEnabled) return null;
   if (!ref.watch(supabaseEnabledProvider)) return null;
   return SupabaseReceiptScanService(ref.watch(supabaseClientProvider));
 });
@@ -41,20 +36,25 @@ class ReceiptScanController extends Notifier<AsyncValue<ReceiptScanResult?>> {
     Uint8List imageBytes, {
     required String currency,
     required List<String> categoryNames,
+    required String mimeType,
   }) async {
     final service = ref.read(receiptScanServiceProvider);
     if (service == null) return null;
 
     state = const AsyncLoading();
-    final result = await AsyncValue.guard(
-      () => service.scan(
+    try {
+      final result = await service.scan(
         imageBytes,
         currency: currency,
         categoryNames: categoryNames,
-      ),
-    );
-    state = result;
-    return result.asData?.value;
+        mimeType: mimeType,
+      );
+      state = AsyncData(result);
+      return result;
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      Error.throwWithStackTrace(error, stackTrace);
+    }
   }
 
   /// Clears any lingering error/result once the sheet has consumed it.

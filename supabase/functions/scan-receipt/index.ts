@@ -15,6 +15,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const GEMINI_MODEL = "gemini-flash-latest";
+const MAX_IMAGE_BASE64_LENGTH = 8_000_000;
+const SUPPORTED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -91,9 +99,24 @@ Deno.serve(async (req: Request) => {
   if (!image || typeof image !== "string") {
     return json({ error: "missing_image" }, 400);
   }
-  const currency = payload.currency ?? "USD";
-  const categories = Array.isArray(payload.categories) ? payload.categories : [];
-  const mimeType = payload.mimeType ?? "image/jpeg";
+  if (image.length > MAX_IMAGE_BASE64_LENGTH) {
+    return json({ error: "image_too_large" }, 413);
+  }
+  const requestedCurrency = payload.currency?.trim().toUpperCase() ?? "USD";
+  const currency = /^[A-Z]{3}$/.test(requestedCurrency)
+    ? requestedCurrency
+    : "USD";
+  const categories = Array.isArray(payload.categories)
+    ? payload.categories
+      .filter((value): value is string => typeof value === "string")
+      .map((value) => value.trim().slice(0, 60))
+      .filter(Boolean)
+      .slice(0, 50)
+    : [];
+  const mimeType = payload.mimeType?.toLowerCase() ?? "image/jpeg";
+  if (!SUPPORTED_IMAGE_TYPES.has(mimeType)) {
+    return json({ error: "unsupported_image_type" }, 400);
+  }
 
   const geminiUrl =
     `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;

@@ -138,6 +138,50 @@ class AppLocalizationsPt extends AppLocalizations {
   String get quickEntryPickFromGallery => 'Escolher da galeria';
 
   @override
+  String get quickEntryScanSuccess =>
+      'Recibo lido. Confira os dados antes de salvar.';
+
+  @override
+  String get quickEntryScanEmpty =>
+      'Não conseguimos ler o recibo. Tente outra foto ou preencha manualmente.';
+
+  @override
+  String get quickEntryScanPhotoAccessDenied =>
+      'Permita o acesso às fotos nos Ajustes para escolher uma imagem.';
+
+  @override
+  String get quickEntryScanCameraAccessDenied =>
+      'Permita o acesso à câmera nos Ajustes para tirar uma foto.';
+
+  @override
+  String get quickEntryScanPickerError =>
+      'Não conseguimos abrir a câmera ou a galeria. Tente novamente.';
+
+  @override
+  String get quickEntryScanNetworkError =>
+      'Sem conexão com o leitor de recibos. Verifique sua internet.';
+
+  @override
+  String get quickEntryScanRateLimited =>
+      'O leitor está ocupado. Aguarde alguns segundos e tente novamente.';
+
+  @override
+  String get quickEntryScanUnauthorized =>
+      'Entre na sua conta para escanear recibos.';
+
+  @override
+  String get quickEntryScanInvalidImage =>
+      'Não conseguimos processar essa imagem. Tente outra foto.';
+
+  @override
+  String get quickEntryScanUnavailable =>
+      'O leitor de recibos não está disponível agora. Tente mais tarde.';
+
+  @override
+  String get quickEntryScanGenericError =>
+      'Não conseguimos ler o recibo. Tente novamente.';
+
+  @override
   String get settingsTitle => 'Ajustes';
 
   @override
