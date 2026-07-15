@@ -7,6 +7,7 @@ import '../../../core/l10n/enum_labels.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/utils/category_icons.dart';
+import '../../../core/utils/currencies.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/financial_account.dart';
 import '../../../domain/models/money.dart';
@@ -219,6 +220,7 @@ class _SubscriptionCard extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final nextCharge = subscription.nextChargeAt;
+    final flag = currencyFlag(subscription.amount.currency);
 
     return GlassCard(
       onTap: onTap,
@@ -266,14 +268,20 @@ class _SubscriptionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
+                    if (flag.isNotEmpty)
+                      Text('$flag ', style: AppTypography.titleLarge),
                     AmountText(
                       money: subscription.amount,
                       style: AppTypography.titleLarge,
                     ),
-                    Text(
-                      ' · ${subscription.frequency.localizedLabel(l10n)}',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: colors.textSecondary,
+                    Expanded(
+                      child: Text(
+                        ' · ${subscription.frequency.localizedLabel(l10n)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: colors.textSecondary,
+                        ),
                       ),
                     ),
                   ],
