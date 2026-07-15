@@ -328,6 +328,12 @@ abstract class AppLocalizations {
   /// **'Guardar'**
   String get quickEntrySave;
 
+  /// No description provided for @quickEntrySaveError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el gasto. Revisa tu conexión e inténtalo de nuevo.'**
+  String get quickEntrySaveError;
+
   /// No description provided for @quickEntryScanReceipt.
   ///
   /// In es, this message translates to:

@@ -17,15 +17,36 @@ final transactionsRepositoryProvider = Provider<TransactionsRepository>((ref) {
 });
 
 /// Live transactions for the active household.
-final transactionsStreamProvider =
-    StreamProvider<List<Transaction>>((ref) async* {
+final transactionsStreamProvider = StreamProvider<List<Transaction>>((
+  ref,
+) async* {
   final household = await ref.watch(currentHouseholdProvider.future);
   if (household == null) {
     yield const [];
     return;
   }
-  yield* ref.watch(transactionsRepositoryProvider).watchForHousehold(household.id);
+  yield* ref
+      .watch(transactionsRepositoryProvider)
+      .watchForHousehold(household.id)
+      .map(sortTransactionsNewestFirst);
 });
+
+/// Canonical transaction order for every consumer (History, Dashboard and
+/// Insights). Keeping it here makes the UI independent from PostgREST/Realtime
+/// ordering details and also sorts mock/test repository emissions consistently.
+List<Transaction> sortTransactionsNewestFirst(List<Transaction> transactions) {
+  final sorted = [...transactions];
+  sorted.sort((a, b) {
+    final byOccurrence = b.occurredAt.compareTo(a.occurredAt);
+    if (byOccurrence != 0) return byOccurrence;
+    final byCreation = (b.createdAt ?? b.occurredAt).compareTo(
+      a.createdAt ?? a.occurredAt,
+    );
+    if (byCreation != 0) return byCreation;
+    return b.id.compareTo(a.id);
+  });
+  return sorted;
+}
 
 /// Filters applied on the history screen.
 class TransactionFilter {
@@ -123,10 +144,11 @@ final transactionFilterProvider =
     );
 
 /// Transactions after applying the active filter.
-final filteredTransactionsProvider =
-    Provider<AsyncValue<List<Transaction>>>((ref) {
+final filteredTransactionsProvider = Provider<AsyncValue<List<Transaction>>>((
+  ref,
+) {
   final filter = ref.watch(transactionFilterProvider);
-  return ref.watch(transactionsStreamProvider).whenData(
-        (list) => list.where(filter.matches).toList(),
-      );
+  return ref
+      .watch(transactionsStreamProvider)
+      .whenData((list) => list.where(filter.matches).toList());
 });

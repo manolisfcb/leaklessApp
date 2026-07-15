@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/core_providers.dart';
+import '../../../core/logging/app_logger.dart';
 import '../../../domain/enums/transaction_enums.dart';
 import '../../../domain/models/money.dart';
 import '../../../domain/models/transaction.dart';
@@ -14,6 +15,8 @@ import '../../transactions/application/transactions_providers.dart';
 /// domain object, persisting, analytics) lives here (quality rule #4/#6). Works
 /// against the mock repository until Supabase is configured.
 class QuickEntryController extends Notifier<AsyncValue<void>> {
+  static final _log = AppLogger.of('QuickEntry');
+
   @override
   AsyncValue<void> build() => const AsyncData(null);
 
@@ -39,7 +42,10 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
       final transaction = Transaction(
         id: '',
         householdId: household.id,
-        amount: Money(minorUnits: amountMinorUnits, currency: household.currency),
+        amount: Money(
+          minorUnits: amountMinorUnits,
+          currency: household.currency,
+        ),
         type: type,
         priority: priority,
         responsible: responsible,
@@ -48,17 +54,36 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
         description: description,
       );
       await ref.read(transactionsRepositoryProvider).add(transaction);
-      await ref.read(analyticsServiceProvider).transactionCreated();
     });
     state = result;
-    if (!result.hasError) {
-      await _maybeAlertBudget(
-        type: type,
-        categoryId: categoryId,
-        occurredAt: when,
+    if (result.hasError) {
+      _log.severe(
+        'Failed to save quick-entry transaction',
+        result.error,
+        result.stackTrace,
       );
+      return false;
     }
-    return !result.hasError;
+
+    // Do not rely solely on the Realtime event to refresh the UI. A delayed or
+    // temporarily disconnected channel must not make a successful insert look
+    // like it was lost.
+    ref.invalidate(transactionsStreamProvider);
+
+    // Analytics is observability, not part of the financial write. A Firebase
+    // failure must never turn a persisted expense into an apparent save error.
+    try {
+      await ref.read(analyticsServiceProvider).transactionCreated();
+    } catch (error, stackTrace) {
+      _log.warning('Could not track transaction_created', error, stackTrace);
+    }
+
+    await _maybeAlertBudget(
+      type: type,
+      categoryId: categoryId,
+      occurredAt: when,
+    );
+    return true;
   }
 
   /// Local half of the budget-alert pipeline: after a saved expense, record

@@ -67,6 +67,7 @@ class TransactionsScreen extends ConsumerWidget {
                     return TransactionTile(
                       transaction: tx,
                       category: categories[tx.categoryId],
+                      showDate: true,
                     );
                   },
                 );

@@ -126,6 +126,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get quickEntrySave => 'Guardar';
 
   @override
+  String get quickEntrySaveError =>
+      'No pudimos guardar el gasto. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
   String get quickEntryScanReceipt => 'Escanear recibo';
 
   @override

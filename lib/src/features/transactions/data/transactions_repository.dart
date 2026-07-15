@@ -69,7 +69,11 @@ class SupabaseTransactionsRepository implements TransactionsRepository {
           .order('occurred_at', ascending: false);
       return rows.map(TransactionMapper.fromRow).toList();
     } catch (e, s) {
-      throw ServerException('Failed to load transactions', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to load transactions',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -77,7 +81,7 @@ class SupabaseTransactionsRepository implements TransactionsRepository {
   Stream<List<Transaction>> watchForHousehold(String householdId) => _table
       .stream(primaryKey: ['id'])
       .eq('household_id', householdId)
-      .order('occurred_at')
+      .order('occurred_at', ascending: false)
       .map((rows) => rows.map(TransactionMapper.fromRow).toList());
 
   @override
@@ -88,8 +92,19 @@ class SupabaseTransactionsRepository implements TransactionsRepository {
           .select()
           .single();
       return TransactionMapper.fromRow(row);
+    } on PostgrestException catch (e, s) {
+      throw ServerException(
+        'Failed to save transaction',
+        code: e.code,
+        cause: e,
+        stackTrace: s,
+      );
     } catch (e, s) {
-      throw ServerException('Failed to save transaction', cause: e, stackTrace: s);
+      throw ServerException(
+        'Failed to save transaction',
+        cause: e,
+        stackTrace: s,
+      );
     }
   }
 }

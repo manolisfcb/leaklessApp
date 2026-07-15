@@ -57,6 +57,7 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
 
   Future<void> _save() async {
     if (_cents == 0) return;
+    final l10n = context.l10n;
     final note = _note.text.trim();
     final ok = await ref
         .read(quickEntryControllerProvider.notifier)
@@ -72,6 +73,8 @@ class _QuickEntrySheetState extends ConsumerState<QuickEntrySheet> {
     if (ok && mounted) {
       _showBudgetAlertIfAny();
       Navigator.of(context).pop();
+    } else if (mounted) {
+      _showMessage(l10n.quickEntrySaveError);
     }
   }
 

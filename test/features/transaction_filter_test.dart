@@ -5,18 +5,37 @@ import 'package:leakless/src/domain/models/money.dart';
 import 'package:leakless/src/domain/models/transaction.dart';
 import 'package:leakless/src/features/transactions/application/transactions_providers.dart';
 
-Transaction _tx({String? categoryId}) => Transaction(
-  id: 'tx-1',
+Transaction _tx({
+  String id = 'tx-1',
+  String? categoryId,
+  DateTime? occurredAt,
+}) => Transaction(
+  id: id,
   householdId: 'hh-1',
   amount: const Money(minorUnits: 1000, currency: 'USD'),
   type: TransactionType.expense,
   priority: TransactionPriority.ant,
   responsible: ResponsibleType.me,
-  occurredAt: DateTime(2026, 7, 1),
+  occurredAt: occurredAt ?? DateTime(2026, 7, 1),
   categoryId: categoryId,
 );
 
 void main() {
+  test('canonical transaction order is newest first', () {
+    final oldest = _tx(
+      id: 'oldest',
+      categoryId: 'food',
+      occurredAt: DateTime(2026, 7, 1),
+    );
+    final newest = _tx(
+      id: 'newest',
+      categoryId: 'food',
+      occurredAt: DateTime(2026, 7, 15),
+    );
+
+    expect(sortTransactionsNewestFirst([oldest, newest]), [newest, oldest]);
+  });
+
   group('TransactionFilter.matches', () {
     test('uncategorizedOnly matches only transactions with no category', () {
       const filter = TransactionFilter(uncategorizedOnly: true);
@@ -25,7 +44,10 @@ void main() {
     });
 
     test('uncategorizedOnly ignores a stale categoryId', () {
-      const filter = TransactionFilter(categoryId: 'cat-1', uncategorizedOnly: true);
+      const filter = TransactionFilter(
+        categoryId: 'cat-1',
+        uncategorizedOnly: true,
+      );
       expect(filter.matches(_tx()), isTrue);
     });
 
@@ -44,9 +66,15 @@ void main() {
     test('toggleUncategorized turns the filter on and off', () {
       final notifier = container.read(transactionFilterProvider.notifier);
       notifier.toggleUncategorized();
-      expect(container.read(transactionFilterProvider).uncategorizedOnly, isTrue);
+      expect(
+        container.read(transactionFilterProvider).uncategorizedOnly,
+        isTrue,
+      );
       notifier.toggleUncategorized();
-      expect(container.read(transactionFilterProvider).uncategorizedOnly, isFalse);
+      expect(
+        container.read(transactionFilterProvider).uncategorizedOnly,
+        isFalse,
+      );
     });
 
     test('toggleCategory clears uncategorizedOnly', () {
