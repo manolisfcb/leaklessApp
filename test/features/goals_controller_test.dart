@@ -80,6 +80,20 @@ void main() {
     expect(contributed, isFalse);
     expect(container.read(goalsControllerProvider).hasError, isTrue);
   });
+
+  test('withdraw delegates to the repository', () async {
+    final repository = _FakeGoalsRepository();
+    final container = _container(repository);
+    addTearDown(container.dispose);
+
+    final withdrawn = await container
+        .read(goalsControllerProvider.notifier)
+        .withdraw(goalId: 'goal-1', amountMinorUnits: 10000);
+
+    expect(withdrawn, isTrue);
+    expect(repository.withdrawnGoalId, 'goal-1');
+    expect(repository.withdrawnAmount, 10000);
+  });
 }
 
 ProviderContainer _container(_FakeGoalsRepository repository) =>
@@ -109,6 +123,8 @@ class _FakeGoalsRepository implements GoalsRepository {
   final bool failContribute;
   Goal? created;
   Goal? updated;
+  String? withdrawnGoalId;
+  int? withdrawnAmount;
 
   @override
   Future<Goal> create(Goal goal) async {
@@ -133,6 +149,15 @@ class _FakeGoalsRepository implements GoalsRepository {
     required int amountMinorUnits,
   }) async {
     if (failContribute) throw StateError('contribute failed');
+  }
+
+  @override
+  Future<void> withdraw({
+    required String goalId,
+    required int amountMinorUnits,
+  }) async {
+    withdrawnGoalId = goalId;
+    withdrawnAmount = amountMinorUnits;
   }
 
   @override

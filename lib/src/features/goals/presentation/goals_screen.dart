@@ -11,6 +11,7 @@ import '../../../domain/models/money.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../application/goals_providers.dart';
 import 'goal_form_sheet.dart';
+import 'goal_withdrawal_sheet.dart';
 
 /// Goals screen: the "translucent chest". Each goal shows a liquid progress bar
 /// and one-tap express contributions.
@@ -219,6 +220,17 @@ class _GoalCard extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+          if (goal.saved.minorUnits > 0) ...[
+            AppSpacing.gapMd,
+            GlassButton(
+              key: Key('goal-withdraw-button-${goal.id}'),
+              label: 'Retirar dinero',
+              icon: Icons.remove_circle_outline,
+              variant: GlassButtonVariant.glass,
+              accent: colors.expense,
+              onPressed: () => GoalWithdrawalSheet.show(context, goal: goal),
             ),
           ],
         ],

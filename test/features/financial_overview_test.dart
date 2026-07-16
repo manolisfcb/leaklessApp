@@ -84,4 +84,35 @@ void main() {
     expect(overview.total, const Money(minorUnits: -30508, currency: 'CAD'));
     expect(overview.isPartial, isFalse);
   });
+
+  test('zero opening balance does not hide an earlier local-time movement', () {
+    final account = FinancialAccount(
+      id: 'main',
+      householdId: 'h',
+      name: 'Cuenta principal',
+      currency: 'CAD',
+      openingBalance: const Money(minorUnits: 0, currency: 'CAD'),
+      openingBalanceAt: DateTime.utc(2026, 7, 16, 1, 21),
+    );
+    final expense = Transaction(
+      id: 'expense',
+      householdId: 'h',
+      accountId: account.id,
+      amount: const Money(minorUnits: 71792, currency: 'CAD'),
+      reportingAmount: const Money(minorUnits: 71792, currency: 'CAD'),
+      type: TransactionType.expense,
+      priority: TransactionPriority.necessity,
+      responsible: ResponsibleType.me,
+      // Simulates a Toronto local time previously sent without its UTC offset.
+      occurredAt: DateTime.utc(2026, 7, 15, 21, 28),
+    );
+
+    final overview = FinancialOverview.calculate(
+      accounts: [account],
+      transactions: [expense],
+      reportingCurrency: 'CAD',
+    );
+
+    expect(overview.total, const Money(minorUnits: -71792, currency: 'CAD'));
+  });
 }

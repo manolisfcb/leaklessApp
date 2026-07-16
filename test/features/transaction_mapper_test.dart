@@ -50,6 +50,24 @@ void main() {
       expect(insert.containsKey('external_id'), isFalse);
     });
 
+    test('manual insert always serializes occurred_at with a UTC offset', () {
+      final occurredAt = DateTime(2026, 7, 15, 21, 28);
+      final insert = TransactionMapper.toInsert(
+        Transaction(
+          id: '',
+          householdId: 'hh-1',
+          amount: Money.fromMajor(12.50, currency: 'CAD'),
+          type: TransactionType.expense,
+          priority: TransactionPriority.necessity,
+          responsible: ResponsibleType.me,
+          occurredAt: occurredAt,
+        ),
+      );
+
+      expect(insert['occurred_at'], occurredAt.toUtc().toIso8601String());
+      expect(insert['occurred_at'], endsWith('Z'));
+    });
+
     test('aggregator insert carries source + external_id for dedup', () {
       final insert = TransactionMapper.toInsert(
         Transaction(

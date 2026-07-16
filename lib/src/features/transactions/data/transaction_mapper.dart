@@ -88,7 +88,10 @@ abstract final class TransactionMapper {
     'category_id': tx.categoryId,
     'responsible_member_id': tx.responsibleMemberId,
     'description': tx.description,
-    'occurred_at': tx.occurredAt.toIso8601String(),
+    // Postgres stores timestamptz in UTC. A local DateTime serialized without
+    // an offset is interpreted as UTC by PostgREST, shifting Toronto entries
+    // several hours into the past and potentially before the account opened.
+    'occurred_at': tx.occurredAt.toUtc().toIso8601String(),
     if (tx.reportingAmount != null) ...{
       'reporting_currency': tx.reportingAmount!.currency,
       'amount_reporting': tx.reportingAmount!.major,

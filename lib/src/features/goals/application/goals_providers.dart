@@ -83,6 +83,15 @@ class GoalsController extends Notifier<AsyncValue<void>> {
     await ref.read(analyticsServiceProvider).goalContribution();
   });
 
+  Future<bool> withdraw({
+    required String goalId,
+    required int amountMinorUnits,
+  }) => _run(
+    () => ref
+        .read(goalsRepositoryProvider)
+        .withdraw(goalId: goalId, amountMinorUnits: amountMinorUnits),
+  );
+
   Future<bool> _run(Future<void> Function() action) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(action);

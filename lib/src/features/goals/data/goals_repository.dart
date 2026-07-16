@@ -19,6 +19,10 @@ abstract interface class GoalsRepository {
     required String goalId,
     required int amountMinorUnits,
   });
+  Future<void> withdraw({
+    required String goalId,
+    required int amountMinorUnits,
+  });
 }
 
 /// In-memory goals so the express-contribution button works end-to-end before
@@ -85,6 +89,35 @@ class MockGoalsRepository implements GoalsRepository {
     _items[index] = goal.copyWith(
       saved: newSaved,
       status: completed ? GoalStatus.completed : goal.status,
+      updatedAt: DateTime.now(),
+    );
+    _emit();
+  }
+
+  @override
+  Future<void> withdraw({
+    required String goalId,
+    required int amountMinorUnits,
+  }) async {
+    if (amountMinorUnits <= 0) {
+      throw ArgumentError.value(amountMinorUnits, 'amountMinorUnits');
+    }
+    final index = _items.indexWhere((g) => g.id == goalId);
+    if (index == -1) throw StateError('Goal not found: $goalId');
+    final goal = _items[index];
+    if (amountMinorUnits > goal.saved.minorUnits) {
+      throw StateError('Withdrawal exceeds saved amount');
+    }
+    final newSaved = goal.saved.copyWith(
+      minorUnits: goal.saved.minorUnits - amountMinorUnits,
+    );
+    _items[index] = goal.copyWith(
+      saved: newSaved,
+      status:
+          goal.status == GoalStatus.completed &&
+              newSaved.minorUnits < goal.target.minorUnits
+          ? GoalStatus.active
+          : goal.status,
       updatedAt: DateTime.now(),
     );
     _emit();
@@ -192,6 +225,41 @@ class SupabaseGoalsRepository implements GoalsRepository {
     } catch (e, s) {
       throw ServerException(
         'Failed to contribute to goal',
+        cause: e,
+        stackTrace: s,
+      );
+    }
+  }
+
+  @override
+  Future<void> withdraw({
+    required String goalId,
+    required int amountMinorUnits,
+  }) async {
+    if (amountMinorUnits <= 0) {
+      throw ArgumentError.value(amountMinorUnits, 'amountMinorUnits');
+    }
+    try {
+      final row = await _table.select().eq('id', goalId).single();
+      final goal = GoalMapper.fromRow(row);
+      if (amountMinorUnits > goal.saved.minorUnits) {
+        throw StateError('Withdrawal exceeds saved amount');
+      }
+      final newSaved = goal.saved.copyWith(
+        minorUnits: goal.saved.minorUnits - amountMinorUnits,
+      );
+      final shouldReactivate =
+          goal.status == GoalStatus.completed &&
+          newSaved.minorUnits < goal.target.minorUnits;
+      await _table
+          .update({
+            'saved_amount': newSaved.major,
+            if (shouldReactivate) 'status': GoalStatus.active.name,
+          })
+          .eq('id', goalId);
+    } catch (e, s) {
+      throw ServerException(
+        'Failed to withdraw from goal',
         cause: e,
         stackTrace: s,
       );

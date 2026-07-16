@@ -60,9 +60,12 @@ class FinancialOverview {
       var reportingMinor = reportingOpening?.minorUnits ?? 0;
       if (reportingOpening == null) partial = true;
       for (final transaction in transactions) {
+        final predatesNonZeroOpeningBalance =
+            !account.openingBalance.isZero &&
+            transaction.occurredAt.isBefore(account.openingBalanceAt);
         if (transaction.accountId != account.id ||
             transaction.status != TransactionStatus.confirmed ||
-            transaction.occurredAt.isBefore(account.openingBalanceAt)) {
+            predatesNonZeroOpeningBalance) {
           continue;
         }
         final amount = transaction.amount.absolute.minorUnits;

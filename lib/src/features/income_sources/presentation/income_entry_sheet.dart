@@ -25,6 +25,7 @@ class _IncomeEntrySheetState extends ConsumerState<IncomeEntrySheet> {
   final _note = TextEditingController();
   String? _currency;
   String? _sourceId;
+  IncomeSource? _pendingSource;
   final DateTime _occurredAt = DateTime.now();
 
   @override
@@ -86,7 +87,10 @@ class _IncomeEntrySheetState extends ConsumerState<IncomeEntrySheet> {
             defaultAccountId: null,
           ),
         );
-    if (saved != null && mounted) _selectSource(saved);
+    if (saved != null && mounted) {
+      _pendingSource = saved;
+      _selectSource(saved);
+    }
   }
 
   @override
@@ -94,9 +98,22 @@ class _IncomeEntrySheetState extends ConsumerState<IncomeEntrySheet> {
     final householdCurrency =
         ref.watch(currentHouseholdProvider).asData?.value?.currency ?? 'CAD';
     final currency = _currency ?? householdCurrency;
-    final sources =
+    final streamedSources =
         ref.watch(incomeSourcesProvider).asData?.value ??
         const <IncomeSource>[];
+    final sourcesById = <String, IncomeSource>{
+      for (final source in streamedSources) source.id: source,
+    };
+    final pendingSource = _pendingSource;
+    if (pendingSource != null) {
+      sourcesById.putIfAbsent(pendingSource.id, () => pendingSource);
+    }
+    final sources = sourcesById.values
+        .where((source) => !source.isArchived)
+        .toList(growable: false);
+    final selectedSourceId = sourcesById[_sourceId]?.isArchived == false
+        ? _sourceId
+        : null;
     final saving = ref.watch(quickEntryControllerProvider).isLoading;
     return SingleChildScrollView(
       child: Column(
@@ -118,23 +135,17 @@ class _IncomeEntrySheetState extends ConsumerState<IncomeEntrySheet> {
           AppSpacing.gapLg,
           DropdownButtonFormField<String>(
             key: const Key('income-source-field'),
-            initialValue: _sourceId,
+            initialValue: selectedSourceId,
             decoration: InputDecoration(
               labelText: context.l10n.incomeSourceLabel,
             ),
             items: [
-              for (final source in sources.where(
-                (source) => !source.isArchived,
-              ))
+              for (final source in sources)
                 DropdownMenuItem(value: source.id, child: Text(source.name)),
             ],
             onChanged: (id) {
-              for (final source in sources) {
-                if (source.id == id) {
-                  _selectSource(source);
-                  break;
-                }
-              }
+              final source = sourcesById[id];
+              if (source != null && !source.isArchived) _selectSource(source);
             },
           ),
           TextButton.icon(
