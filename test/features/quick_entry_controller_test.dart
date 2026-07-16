@@ -5,6 +5,8 @@ import 'package:leakless/src/core/core_providers.dart';
 import 'package:leakless/src/domain/enums/transaction_enums.dart';
 import 'package:leakless/src/domain/models/household.dart';
 import 'package:leakless/src/domain/models/transaction.dart';
+import 'package:leakless/src/features/fx/application/exchange_rates_providers.dart';
+import 'package:leakless/src/features/fx/data/exchange_rates_repository.dart';
 import 'package:leakless/src/features/household/application/household_providers.dart';
 import 'package:leakless/src/features/quick_entry/application/quick_entry_controller.dart';
 import 'package:leakless/src/features/transactions/application/transactions_providers.dart';
@@ -36,6 +38,27 @@ void main() {
     expect(repository.added?.categoryId, 'category-1');
     expect(repository.added?.occurredAt, receiptDate);
     expect(container.read(quickEntryControllerProvider).hasError, isFalse);
+  });
+
+  test('stores USD income and reports its converted CAD value', () async {
+    final repository = _FakeTransactionsRepository();
+    final container = _container(repository);
+    addTearDown(container.dispose);
+
+    final saved = await container
+        .read(quickEntryControllerProvider.notifier)
+        .submit(
+          amountMinorUnits: 10000,
+          type: TransactionType.income,
+          priority: TransactionPriority.future,
+          responsible: ResponsibleType.me,
+          currency: 'USD',
+        );
+
+    expect(saved, isTrue);
+    expect(repository.added?.amount.currency, 'USD');
+    expect(repository.added?.reportingAmount?.currency, 'CAD');
+    expect(repository.added?.reportingAmount?.minorUnits, 13700);
   });
 
   test(
@@ -88,6 +111,9 @@ ProviderContainer _container(
   overrides: [
     transactionsRepositoryProvider.overrideWithValue(repository),
     analyticsServiceProvider.overrideWithValue(analytics ?? AnalyticsService()),
+    exchangeRatesRepositoryProvider.overrideWithValue(
+      MockExchangeRatesRepository(),
+    ),
     currentHouseholdProvider.overrideWith(
       (ref) async => const Household(
         id: 'household-1',

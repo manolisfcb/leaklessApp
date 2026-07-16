@@ -24,6 +24,7 @@ supabase db push
 | `20260701000001_enable_realtime.sql` | Add the streamed tables (`transactions`, `goals`) to the `supabase_realtime` publication. |
 | `20260701191145_add_household_invitations.sql` | Hashed, expiring household invitations plus create/inspect/accept/cancel RPCs. |
 | `20260715213856_multicurrency_accounts_income_sources.sql` | Accounts, income sources, FX cache, immutable reporting snapshots, RLS and atomic transfer RPC. |
+| `20260716005118_simplify_to_single_multicurrency_account.sql` | One internal account per household; original transaction currency stays independent from CAD reporting. |
 
 ## Daily exchange rates
 

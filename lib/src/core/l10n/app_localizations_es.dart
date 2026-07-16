@@ -127,7 +127,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get quickEntrySaveError =>
-      'No pudimos guardar el gasto. Revisa tu conexión e inténtalo de nuevo.';
+      'No pudimos guardar el movimiento. Inténtalo de nuevo.';
 
   @override
   String get quickEntryScanReceipt => 'Escanear recibo';

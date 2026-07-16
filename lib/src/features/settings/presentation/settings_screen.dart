@@ -116,12 +116,6 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const _RowDivider(),
                 _SettingsRow(
-                  icon: CupertinoIcons.creditcard,
-                  label: l10n.accountsTitle,
-                  onTap: () => context.push(AppRoutes.accounts),
-                ),
-                const _RowDivider(),
-                _SettingsRow(
                   icon: CupertinoIcons.briefcase,
                   label: l10n.incomeSourcesTitle,
                   onTap: () => context.push(AppRoutes.incomeSources),

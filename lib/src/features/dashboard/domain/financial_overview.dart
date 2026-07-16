@@ -41,6 +41,20 @@ class FinancialOverview {
     final valuations = <AccountValuation>[];
     for (final account in accounts.where((account) => !account.isArchived)) {
       var nativeMinor = account.openingBalance.minorUnits;
+      Money? reportingOpening;
+      if (account.currency == reportingCurrency) {
+        reportingOpening = account.openingBalance.copyWith(
+          currency: reportingCurrency,
+        );
+      } else if (latestRate != null) {
+        reportingOpening = converter.convert(
+          account.openingBalance,
+          reportingCurrency,
+          rate: latestRate,
+        );
+      }
+      var reportingMinor = reportingOpening?.minorUnits ?? 0;
+      if (reportingOpening == null) partial = true;
       for (final transaction in transactions) {
         if (transaction.accountId != account.id ||
             transaction.status != TransactionStatus.confirmed ||
@@ -48,34 +62,47 @@ class FinancialOverview {
           continue;
         }
         final amount = transaction.amount.absolute.minorUnits;
+        final reportingAmount =
+            transaction.reportingAmount ??
+            (transaction.amount.currency == reportingCurrency
+                ? transaction.amount.copyWith(currency: reportingCurrency)
+                : null);
+        if (reportingAmount == null ||
+            reportingAmount.currency != reportingCurrency) {
+          partial = true;
+        }
+        final reporting = reportingAmount?.absolute.minorUnits ?? 0;
         switch (transaction.type) {
           case TransactionType.income:
-            nativeMinor += amount;
+            if (transaction.amount.currency == account.currency) {
+              nativeMinor += amount;
+            }
+            reportingMinor += reporting;
           case TransactionType.expense:
-            nativeMinor -= amount;
+            if (transaction.amount.currency == account.currency) {
+              nativeMinor -= amount;
+            }
+            reportingMinor -= reporting;
           case TransactionType.transfer:
-            nativeMinor +=
-                transaction.transferDirection == TransferDirection.incoming
-                ? amount
-                : -amount;
+            final direction = transaction.transferDirection;
+            if (transaction.amount.currency == account.currency) {
+              nativeMinor += direction == TransferDirection.incoming
+                  ? amount
+                  : -amount;
+            }
+            reportingMinor += direction == TransferDirection.incoming
+                ? reporting
+                : -reporting;
         }
       }
-      final balance = Money(
-        minorUnits: nativeMinor,
-        currency: account.currency,
-      );
+      final balance =
+          account.currency == reportingCurrency && reportingOpening != null
+          ? Money(minorUnits: reportingMinor, currency: account.currency)
+          : Money(minorUnits: nativeMinor, currency: account.currency);
       Money? reportingValue;
-      if (account.currency == reportingCurrency) {
-        reportingValue = balance.copyWith(currency: reportingCurrency);
-      } else if (latestRate != null) {
-        reportingValue = converter.convert(
-          balance,
-          reportingCurrency,
-          rate: latestRate,
-        );
-      } else {
-        partial = true;
-      }
+      reportingValue = reportingOpening == null
+          ? null
+          : Money(minorUnits: reportingMinor, currency: reportingCurrency);
       if (reportingValue != null) {
         totalMinor += account.balanceNature == BalanceNature.liability
             ? -reportingValue.minorUnits

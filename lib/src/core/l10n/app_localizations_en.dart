@@ -127,7 +127,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickEntrySaveError =>
-      'We couldn\'t save the expense. Check your connection and try again.';
+      'We couldn\'t save the transaction. Try again.';
 
   @override
   String get quickEntryScanReceipt => 'Scan receipt';

@@ -43,7 +43,7 @@
   "quickEntryNoteHint": "Descrição (ex.: loja)",
   "quickEntryPriority": "Prioridade",
   "quickEntrySave": "Salvar",
-  "quickEntrySaveError": "Não conseguimos salvar o gasto. Verifique sua conexão e tente novamente.",
+  "quickEntrySaveError": "Não conseguimos salvar a transação. Tente novamente.",
   "quickEntryScanReceipt": "Escanear recibo",
   "quickEntryScanningReceipt": "Lendo recibo…",
   "quickEntryTakePhoto": "Tirar uma foto",

@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/income_sources/presentation/income_entry_sheet.dart';
 import '../../features/quick_entry/presentation/quick_entry_sheet.dart';
-import '../../features/transfers/presentation/transfer_entry_sheet.dart';
 import '../../shared/widgets/widgets.dart';
 import '../l10n/l10n.dart';
 import '../theme/theme.dart';
@@ -54,12 +53,6 @@ class AppShell extends StatelessWidget {
             label: context.l10n.movementIncome,
             onTap: () => Navigator.pop(sheetContext, _EntryKind.income),
           ),
-          AppSpacing.gapSm,
-          _EntryChoice(
-            icon: CupertinoIcons.arrow_right_arrow_left_circle,
-            label: context.l10n.movementTransfer,
-            onTap: () => Navigator.pop(sheetContext, _EntryKind.transfer),
-          ),
         ],
       ),
     );
@@ -69,18 +62,16 @@ class AppShell extends StatelessWidget {
       title: switch (choice) {
         _EntryKind.expense => context.l10n.movementExpense,
         _EntryKind.income => context.l10n.movementIncome,
-        _EntryKind.transfer => context.l10n.movementTransfer,
       },
       builder: (_) => switch (choice) {
         _EntryKind.expense => const QuickEntrySheet(),
         _EntryKind.income => const IncomeEntrySheet(),
-        _EntryKind.transfer => const TransferEntrySheet(),
       },
     );
   }
 }
 
-enum _EntryKind { expense, income, transfer }
+enum _EntryKind { expense, income }
 
 class _EntryChoice extends StatelessWidget {
   const _EntryChoice({

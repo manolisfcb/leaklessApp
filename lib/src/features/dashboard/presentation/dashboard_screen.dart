@@ -123,7 +123,6 @@ class _BalanceHeroCard extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final overview = summary.overview;
-    final accounts = overview?.accounts ?? const [];
     final netFlow = summary.netFlow;
 
     return GlassCard(
@@ -166,38 +165,6 @@ class _BalanceHeroCard extends StatelessWidget {
           if (summary.members.isNotEmpty) ...[
             AppSpacing.gapMd,
             CoupleHeader(members: summary.members, dense: true),
-          ],
-          if (accounts.isNotEmpty) ...[
-            AppSpacing.gapMd,
-            Container(height: 1, color: colors.divider),
-            AppSpacing.gapSm,
-            for (final valuation in accounts)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        valuation.account.name,
-                        style: AppTypography.bodyMedium,
-                      ),
-                    ),
-                    Text(
-                      valuation.balance.format(showSymbol: false),
-                      style: AppTypography.labelLarge,
-                    ),
-                    if (valuation.reportingValue != null &&
-                        valuation.balance.currency !=
-                            valuation.reportingValue!.currency)
-                      Text(
-                        ' ≈ ${valuation.reportingValue!.format(showSymbol: false)}',
-                        style: AppTypography.bodySmall.copyWith(
-                          color: colors.textSecondary,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
           ],
           AppSpacing.gapSm,
           Container(height: 1, color: colors.divider),

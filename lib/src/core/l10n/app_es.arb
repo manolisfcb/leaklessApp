@@ -51,7 +51,7 @@
   "quickEntryNoteHint": "Descripción (ej. comercio)",
   "quickEntryPriority": "Prioridad",
   "quickEntrySave": "Guardar",
-  "quickEntrySaveError": "No pudimos guardar el gasto. Revisa tu conexión e inténtalo de nuevo.",
+  "quickEntrySaveError": "No pudimos guardar el movimiento. Inténtalo de nuevo.",
   "quickEntryScanReceipt": "Escanear recibo",
   "quickEntryScanningReceipt": "Leyendo recibo…",
   "quickEntryTakePhoto": "Tomar una foto",

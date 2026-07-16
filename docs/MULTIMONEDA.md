@@ -6,25 +6,23 @@ para que los informes históricos no cambien cuando cambia el mercado.
 
 ## Componentes
 
-- `accounts`: saldos nativos, cuenta predeterminada por hogar y moneda, activos
-  y pasivos. La moneda queda bloqueada cuando existe historial.
+- `accounts`: una única Cuenta principal interna por hogar. No se crean cuentas
+  separadas por moneda; cada movimiento conserva su propia moneda original.
 - `income_sources`: fuentes independientes de las categorías de gasto; una
   fuente puede recordar moneda y cuenta habituales.
 - `exchange_rates`: cache global de tasas diarias. El cliente solo puede leer;
   `sync-exchange-rates` escribe con credenciales de backend.
-- `transactions`: cuenta obligatoria, snapshot CAD e identificación de las dos
-  patas de una transferencia.
+- `transactions`: Cuenta principal obligatoria y snapshot CAD histórico.
 - `CurrencyConverter`: conversión entera con tasa escalada a 10 decimales; no
   persiste cálculos en `double` y respeta los decimales ISO de la moneda destino.
 
 ## Semántica de lectura
 
-- Home: saldo inicial más movimientos confirmados por cuenta, valorados con la
-  tasa más reciente. Si falta una tasa, el total se marca como parcial.
+- Home: saldo inicial más los snapshots CAD de todos los movimientos
+  confirmados, aunque hayan sido introducidos en USD.
 - Dashboard/Insights: ingresos y gastos usan exclusivamente el snapshot
   histórico. Las transferencias quedan fuera del flujo neto.
-- Historial: conserva importe ISO original, cuenta, fuente y snapshot; las dos
-  patas de una transferencia se presentan como una operación.
+- Historial: conserva importe ISO original, fuente y snapshot CAD.
 
 ## Operación de tasas
 

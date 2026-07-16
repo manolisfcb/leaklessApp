@@ -48,6 +48,7 @@ class MockTransactionsRepository
     final saved = transaction.id.isEmpty
         ? transaction.copyWith(
             id: 'tx-${DateTime.now().microsecondsSinceEpoch}',
+            accountId: transaction.accountId ?? 'account-main',
             createdAt: DateTime.now(),
           )
         : transaction;
