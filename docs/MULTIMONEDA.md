@@ -12,6 +12,9 @@ para que los informes históricos no cambien cuando cambia el mercado.
   fuente puede recordar moneda y cuenta habituales.
 - `exchange_rates`: cache global de tasas diarias. El cliente solo puede leer;
   `sync-exchange-rates` escribe con credenciales de backend.
+- Si el cache todavía está vacío o temporalmente inaccesible, Flutter consulta
+  directamente el feed público USD/CAD del Bank of Canada y guarda esa tasa en
+  el snapshot de la transacción. El cliente no intenta escribir el cache.
 - `transactions`: Cuenta principal obligatoria y snapshot CAD histórico.
 - `CurrencyConverter`: conversión entera con tasa escalada a 10 decimales; no
   persiste cálculos en `double` y respeta los decimales ISO de la moneda destino.

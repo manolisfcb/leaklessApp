@@ -35,7 +35,20 @@ final transactionsStreamProvider = StreamProvider<List<Transaction>>((
 /// Insights). Keeping it here makes the UI independent from PostgREST/Realtime
 /// ordering details and also sorts mock/test repository emissions consistently.
 List<Transaction> sortTransactionsNewestFirst(List<Transaction> transactions) {
-  final sorted = [...transactions];
+  // Supabase's combined PostgREST + Realtime stream can briefly contain the
+  // same inserted row twice when an initial SELECT races the INSERT event.
+  // The database row is unique; keep the UI and every aggregate unique by the
+  // same primary key as the Realtime stream.
+  final byId = <String, Transaction>{};
+  final withoutId = <Transaction>[];
+  for (final transaction in transactions) {
+    if (transaction.id.isEmpty) {
+      withoutId.add(transaction);
+    } else {
+      byId[transaction.id] = transaction;
+    }
+  }
+  final sorted = [...byId.values, ...withoutId];
   sorted.sort((a, b) {
     final byOccurrence = b.occurredAt.compareTo(a.occurredAt);
     if (byOccurrence != 0) return byOccurrence;
@@ -232,7 +245,6 @@ class TransactionsController extends Notifier<AsyncValue<void>> {
     );
     state = result;
     if (result.hasError) return false;
-    ref.invalidate(transactionsStreamProvider);
     return true;
   }
 }

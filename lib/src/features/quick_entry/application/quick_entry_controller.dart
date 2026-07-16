@@ -18,6 +18,7 @@ import '../../transactions/application/transactions_providers.dart';
 /// against the mock repository until Supabase is configured.
 class QuickEntryController extends Notifier<AsyncValue<void>> {
   static final _log = AppLogger.of('QuickEntry');
+  bool _isSubmitting = false;
 
   @override
   AsyncValue<void> build() => const AsyncData(null);
@@ -35,71 +36,79 @@ class QuickEntryController extends Notifier<AsyncValue<void>> {
     String? description,
     DateTime? occurredAt,
   }) async {
-    state = const AsyncLoading();
-    // A scanned receipt carries its own purchase date; manual entries fall
-    // back to now.
-    final when = occurredAt ?? DateTime.now();
-    final result = await AsyncValue.guard(() async {
-      final household = await ref.read(currentHouseholdProvider.future);
-      if (household == null) {
-        throw StateError('No active household to register a transaction.');
-      }
-      final originalCurrency = currency ?? household.currency;
-      final snapshot = await _snapshot(
-        amountMinorUnits: amountMinorUnits,
-        originalCurrency: originalCurrency,
-        reportingCurrency: household.currency,
-        occurredAt: when,
-      );
-      final transaction = Transaction(
-        id: '',
-        householdId: household.id,
-        amount: Money(minorUnits: amountMinorUnits, currency: originalCurrency),
-        type: type,
-        priority: priority,
-        responsible: responsible,
-        categoryId: categoryId,
-        accountId: accountId,
-        incomeSourceId: incomeSourceId,
-        reportingAmount: snapshot.amount,
-        exchangeRateScaled: snapshot.scaledRate,
-        exchangeRateDate: snapshot.rateDate,
-        exchangeRateSource: snapshot.source,
-        exchangeRateEstimated: snapshot.estimated,
-        occurredAt: when,
-        description: description,
-      );
-      await ref.read(transactionsRepositoryProvider).add(transaction);
-    });
-    state = result;
-    if (result.hasError) {
-      _log.severe(
-        'Failed to save quick-entry transaction',
-        result.error,
-        result.stackTrace,
-      );
-      return false;
-    }
-
-    // Do not rely solely on the Realtime event to refresh the UI. A delayed or
-    // temporarily disconnected channel must not make a successful insert look
-    // like it was lost.
-    ref.invalidate(transactionsStreamProvider);
-
-    // Analytics is observability, not part of the financial write. A Firebase
-    // failure must never turn a persisted expense into an apparent save error.
+    // Disabling the button on rebuild is not enough: two taps can arrive in
+    // the same frame. Keep the financial write single-flight at the shared
+    // controller so every entry surface gets the same protection.
+    if (_isSubmitting) return false;
+    _isSubmitting = true;
     try {
-      await ref.read(analyticsServiceProvider).transactionCreated();
-    } catch (error, stackTrace) {
-      _log.warning('Could not track transaction_created', error, stackTrace);
-    }
+      state = const AsyncLoading();
+      // A scanned receipt carries its own purchase date; manual entries fall
+      // back to now.
+      final when = occurredAt ?? DateTime.now();
+      final result = await AsyncValue.guard(() async {
+        final household = await ref.read(currentHouseholdProvider.future);
+        if (household == null) {
+          throw StateError('No active household to register a transaction.');
+        }
+        final originalCurrency = currency ?? household.currency;
+        final snapshot = await _snapshot(
+          amountMinorUnits: amountMinorUnits,
+          originalCurrency: originalCurrency,
+          reportingCurrency: household.currency,
+          occurredAt: when,
+        );
+        final transaction = Transaction(
+          id: '',
+          householdId: household.id,
+          amount: Money(
+            minorUnits: amountMinorUnits,
+            currency: originalCurrency,
+          ),
+          type: type,
+          priority: priority,
+          responsible: responsible,
+          categoryId: categoryId,
+          accountId: accountId,
+          incomeSourceId: incomeSourceId,
+          reportingAmount: snapshot.amount,
+          exchangeRateScaled: snapshot.scaledRate,
+          exchangeRateDate: snapshot.rateDate,
+          exchangeRateSource: snapshot.source,
+          exchangeRateEstimated: snapshot.estimated,
+          occurredAt: when,
+          description: description,
+        );
+        await ref.read(transactionsRepositoryProvider).add(transaction);
+      });
+      state = result;
+      if (result.hasError) {
+        _log.severe(
+          'Failed to save quick-entry transaction',
+          result.error,
+          result.stackTrace,
+        );
+        return false;
+      }
 
-    await _maybeAlertBudget(
-      type: type,
-      categoryId: categoryId,
-      occurredAt: when,
-    );
-    return true;
+      // Analytics is observability, not part of the financial write. A
+      // Firebase failure must never turn a persisted expense into an apparent
+      // save error.
+      try {
+        await ref.read(analyticsServiceProvider).transactionCreated();
+      } catch (error, stackTrace) {
+        _log.warning('Could not track transaction_created', error, stackTrace);
+      }
+
+      await _maybeAlertBudget(
+        type: type,
+        categoryId: categoryId,
+        occurredAt: when,
+      );
+      return true;
+    } finally {
+      _isSubmitting = false;
+    }
   }
 
   Future<

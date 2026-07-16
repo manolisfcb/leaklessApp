@@ -63,7 +63,6 @@ class TransferController extends Notifier<AsyncValue<void>> {
     });
     state = result;
     if (result.hasError) return false;
-    ref.invalidate(transactionsStreamProvider);
     return true;
   }
 

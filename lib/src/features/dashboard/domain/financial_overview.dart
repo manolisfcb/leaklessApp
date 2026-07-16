@@ -39,7 +39,11 @@ class FinancialOverview {
     var totalMinor = 0;
     var partial = false;
     final valuations = <AccountValuation>[];
-    for (final account in accounts.where((account) => !account.isArchived)) {
+    final knownAccountIds = accounts.map((account) => account.id).toSet();
+    final activeAccounts = accounts
+        .where((account) => !account.isArchived)
+        .toList();
+    for (final account in activeAccounts) {
       var nativeMinor = account.openingBalance.minorUnits;
       Money? reportingOpening;
       if (account.currency == reportingCurrency) {
@@ -115,6 +119,40 @@ class FinancialOverview {
           reportingValue: reportingValue,
         ),
       );
+    }
+
+    // Older rows can predate account assignment, and a newly provisioned
+    // account can briefly arrive after the transaction stream. Do not make
+    // those confirmed movements disappear from the household total. Rows that
+    // belong to a known archived account remain excluded intentionally.
+    for (final transaction in transactions.where(
+      (transaction) =>
+          transaction.status == TransactionStatus.confirmed &&
+          (transaction.accountId == null ||
+              !knownAccountIds.contains(transaction.accountId)),
+    )) {
+      final reportingAmount =
+          transaction.reportingAmount ??
+          (transaction.amount.currency == reportingCurrency
+              ? transaction.amount.copyWith(currency: reportingCurrency)
+              : null);
+      if (reportingAmount == null ||
+          reportingAmount.currency != reportingCurrency) {
+        partial = true;
+        continue;
+      }
+      final reporting = reportingAmount.absolute.minorUnits;
+      switch (transaction.type) {
+        case TransactionType.income:
+          totalMinor += reporting;
+        case TransactionType.expense:
+          totalMinor -= reporting;
+        case TransactionType.transfer:
+          totalMinor +=
+              transaction.transferDirection == TransferDirection.incoming
+              ? reporting
+              : -reporting;
+      }
     }
     return FinancialOverview(
       total: Money(minorUnits: totalMinor, currency: reportingCurrency),

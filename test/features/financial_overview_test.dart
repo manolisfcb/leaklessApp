@@ -50,4 +50,38 @@ void main() {
     );
     expect(overview.isPartial, isFalse);
   });
+
+  test('includes confirmed movements that have no visible account', () {
+    final transactions = [
+      Transaction(
+        id: 'usd-income',
+        householdId: 'h',
+        amount: const Money(minorUnits: 73400, currency: 'USD'),
+        reportingAmount: const Money(minorUnits: 104492, currency: 'CAD'),
+        type: TransactionType.income,
+        priority: TransactionPriority.future,
+        responsible: ResponsibleType.me,
+        occurredAt: DateTime(2026, 7, 15),
+      ),
+      Transaction(
+        id: 'cad-expense',
+        householdId: 'h',
+        amount: const Money(minorUnits: 135000, currency: 'CAD'),
+        reportingAmount: const Money(minorUnits: 135000, currency: 'CAD'),
+        type: TransactionType.expense,
+        priority: TransactionPriority.necessity,
+        responsible: ResponsibleType.me,
+        occurredAt: DateTime(2026, 7, 15),
+      ),
+    ];
+
+    final overview = FinancialOverview.calculate(
+      accounts: const [],
+      transactions: transactions,
+      reportingCurrency: 'CAD',
+    );
+
+    expect(overview.total, const Money(minorUnits: -30508, currency: 'CAD'));
+    expect(overview.isPartial, isFalse);
+  });
 }

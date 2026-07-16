@@ -39,6 +39,7 @@ dependencies:
 
   # --- Backend: Supabase (auth, db, realtime, storage) ---
   supabase_flutter: ^2.15.2
+  http: ^1.6.0
 
   # --- Infra: Firebase (push, crashlytics, analytics) ---
   firebase_core: ^4.11.0

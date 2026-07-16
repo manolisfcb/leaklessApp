@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leakless/src/core/analytics/analytics_service.dart';
@@ -102,6 +104,34 @@ void main() {
     expect(saved, isFalse);
     expect(container.read(quickEntryControllerProvider).hasError, isTrue);
   });
+
+  test('ignores a second submit while the first insert is in flight', () async {
+    final gate = Completer<void>();
+    final repository = _FakeTransactionsRepository(addGate: gate);
+    final container = _container(repository);
+    addTearDown(container.dispose);
+    final controller = container.read(quickEntryControllerProvider.notifier);
+
+    final first = controller.submit(
+      amountMinorUnits: 73400,
+      type: TransactionType.income,
+      priority: TransactionPriority.future,
+      responsible: ResponsibleType.me,
+    );
+    await Future<void>.delayed(Duration.zero);
+    final second = await controller.submit(
+      amountMinorUnits: 73400,
+      type: TransactionType.income,
+      priority: TransactionPriority.future,
+      responsible: ResponsibleType.me,
+    );
+
+    expect(second, isFalse);
+    expect(repository.addCalls, 1);
+    gate.complete();
+    expect(await first, isTrue);
+    expect(repository.addCalls, 1);
+  });
 }
 
 ProviderContainer _container(
@@ -133,14 +163,18 @@ class _FailingAnalyticsService extends AnalyticsService {
 }
 
 class _FakeTransactionsRepository implements TransactionsRepository {
-  _FakeTransactionsRepository({this.failAdd = false});
+  _FakeTransactionsRepository({this.failAdd = false, this.addGate});
 
   final bool failAdd;
+  final Completer<void>? addGate;
   Transaction? added;
+  int addCalls = 0;
 
   @override
   Future<Transaction> add(Transaction transaction) async {
+    addCalls += 1;
     if (failAdd) throw StateError('insert failed');
+    await addGate?.future;
     added = transaction;
     return transaction.copyWith(id: 'transaction-1');
   }

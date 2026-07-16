@@ -36,6 +36,14 @@ void main() {
     expect(sortTransactionsNewestFirst([oldest, newest]), [newest, oldest]);
   });
 
+  test('canonical transaction list removes transient realtime duplicates', () {
+    final transaction = _tx(id: 'same-database-row');
+
+    expect(sortTransactionsNewestFirst([transaction, transaction]), [
+      transaction,
+    ]);
+  });
+
   group('TransactionFilter.matches', () {
     test('uncategorizedOnly matches only transactions with no category', () {
       const filter = TransactionFilter(uncategorizedOnly: true);
